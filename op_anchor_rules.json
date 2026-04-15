@@ -1,0 +1,26 @@
+{
+  "generated_from": "phase7_live_rules.json",
+  "notes": [
+    "Conservative OP-first anchor ruleset for live scanning and paper trading.",
+    "Use this when you want the safest current forward-evidence entrypoint, not the broadest research coverage.",
+    "Rationale: OP_DURABLE_K7 has the largest 2024-2025 holdout sample among active rules and the strongest walk-forward selection frequency.",
+    "No unsupported track aliasing is applied. BAQ is not treated as BEL."
+  ],
+  "rules": [
+    {
+      "rule_id": "OP_DURABLE_K7",
+      "track": "OP",
+      "card_names": [
+        "Oaklawn Park"
+      ],
+      "k": 7,
+      "field_min": 11,
+      "field_max": 12,
+      "gap_min": 0.05,
+      "fav_prob_min": 0.0,
+      "condition": "all",
+      "card_min": 7,
+      "plain_english": "Oaklawn Park, race 7+, 11-12 runners, favorite-second gap at least 5%, play Key-1-with-7."
+    }
+  ]
+}

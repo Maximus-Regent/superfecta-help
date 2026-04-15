@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Superfecta Project Report • 2026-04-15</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e16;
+      --bg-2: #101826;
+      --panel: rgba(15, 22, 35, 0.88);
+      --panel-solid: #0f1623;
+      --panel-soft: #131d2f;
+      --ink: #ecf2ff;
+      --muted: #9fb0cc;
+      --line: rgba(182, 201, 233, 0.16);
+      --line-strong: rgba(223, 190, 122, 0.30);
+      --gold: #dfbe7a;
+      --gold-soft: rgba(223, 190, 122, 0.14);
+      --green: #60d7a7;
+      --green-soft: rgba(96, 215, 167, 0.14);
+      --blue: #8fb2ff;
+      --blue-soft: rgba(143, 178, 255, 0.16);
+      --red: #ff8c84;
+      --red-soft: rgba(255, 140, 132, 0.14);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      --max: 1220px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background:
+        radial-gradient(circle at 15% 20%, rgba(223, 190, 122, 0.08), transparent 26%),
+        radial-gradient(circle at 82% 14%, rgba(113, 160, 255, 0.10), transparent 28%),
+        linear-gradient(180deg, #070a11 0%, var(--bg) 42%, #06090f 100%);
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+      line-height: 1.65;
+      letter-spacing: 0.01em;
+      background:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(223, 190, 122, 0.08), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,0.03), transparent 18%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 140px);
+      mix-blend-mode: screen;
+      opacity: 0.6;
+    }
+
+    .page {
+      position: relative;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 38px 22px 72px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(24, 33, 52, 0.96), rgba(10, 14, 22, 0.96)),
+        linear-gradient(135deg, #13203a, #0f1623);
+      border: 1px solid var(--line-strong);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 34px;
+      margin-bottom: 22px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(8px);
+      opacity: 0.65;
+    }
+
+    .hero::before {
+      width: 340px;
+      height: 340px;
+      right: -80px;
+      top: -110px;
+      background: radial-gradient(circle, rgba(223, 190, 122, 0.18), transparent 68%);
+    }
+
+    .hero::after {
+      width: 320px;
+      height: 320px;
+      left: -120px;
+      bottom: -160px;
+      background: radial-gradient(circle, rgba(143, 178, 255, 0.15), transparent 70%);
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(290px, 0.85fr);
+      gap: 24px;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    h1, h2, h3, h4 {
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 0.95;
+      max-width: 760px;
+    }
+
+    .subtitle {
+      margin: 18px 0 0;
+      max-width: 760px;
+      color: #d7e2f8;
+      font-size: 18px;
+    }
+
+    .summary-ribbon {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-note {
+      margin-top: 24px;
+      padding: 18px 18px 17px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(223, 190, 122, 0.14), rgba(223, 190, 122, 0.06));
+      border: 1px solid rgba(223, 190, 122, 0.24);
+      color: #fff6df;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .hero-note strong {
+      color: #ffe9b8;
+    }
+
+    .hero-panel {
+      align-self: stretch;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+      backdrop-filter: blur(14px);
+    }
+
+    .hero-panel h2 {
+      margin: 0 0 6px;
+      font-size: 26px;
+      color: #fff7e6;
+    }
+
+    .score-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .score-item:first-of-type { border-top: 0; }
+
+    .score-item .label {
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      font-weight: 700;
+    }
+
+    .score-item .value {
+      text-align: right;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      font-weight: 700;
+      border: 1px solid transparent;
+      width: fit-content;
+    }
+
+    .status-chip.gold {
+      background: var(--gold-soft);
+      color: #ffe5a9;
+      border-color: rgba(223, 190, 122, 0.22);
+    }
+
+    .status-chip.green {
+      background: var(--green-soft);
+      color: #9bf2c8;
+      border-color: rgba(96, 215, 167, 0.22);
+    }
+
+    .status-chip.blue {
+      background: var(--blue-soft);
+      color: #c8d7ff;
+      border-color: rgba(143, 178, 255, 0.24);
+    }
+
+    .status-chip.red {
+      background: var(--red-soft);
+      color: #ffb9b2;
+      border-color: rgba(255, 140, 132, 0.22);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      position: relative;
+      background: linear-gradient(180deg, rgba(18, 27, 43, 0.95), rgba(12, 18, 29, 0.96));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px 18px 16px;
+      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.26);
+      overflow: hidden;
+    }
+
+    .metric::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(223,190,122,0.08), transparent 40%);
+      pointer-events: none;
+    }
+
+    .metric .kicker {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .metric .big {
+      font-size: clamp(28px, 3.8vw, 40px);
+      line-height: 0.95;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .metric .small {
+      margin-top: 9px;
+      color: #c7d5f0;
+      font-size: 13px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.45fr 0.95fr;
+      gap: 18px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(16, 24, 38, 0.96), rgba(11, 17, 27, 0.98));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(223, 190, 122, 0.45), transparent);
+    }
+
+    .section-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-top h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1;
+    }
+
+    .section-top p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    .eyeline {
+      color: var(--gold);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .split-callout {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .split-callout .cell {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .split-callout .cell strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .split-callout .cell .mini-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .story {
+      border-radius: 18px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--line);
+    }
+
+    .story .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--gold-soft);
+      color: #ffe3a2;
+      font-weight: 700;
+      margin-bottom: 14px;
+      border: 1px solid rgba(223, 190, 122, 0.26);
+    }
+
+    .story h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .story p,
+    .story ul,
+    .story li,
+    .card p,
+    .card li,
+    .card td,
+    .card th {
+      font-size: 14px;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .bar-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .bar-value {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #7da1ff, #dfbe7a);
+      box-shadow: inset 0 0 16px rgba(255,255,255,0.18);
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      overflow: hidden;
+      border-radius: 18px;
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 14px 14px;
+      text-align: left;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      vertical-align: top;
+    }
+
+    .compare-table thead th {
+      border-top: 0;
+      background: rgba(255,255,255,0.04);
+      color: #f4f7ff;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 700;
+    }
+
+    .compare-table tbody tr:nth-child(even) td {
+      background: rgba(255,255,255,0.012);
+    }
+
+    .mono {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+      white-space: nowrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.10);
+      white-space: nowrap;
+    }
+
+    .badge.paper { background: var(--green-soft); color: #a2f6cd; }
+    .badge.shadow { background: var(--gold-soft); color: #ffe1a0; }
+    .badge.benchmark { background: var(--blue-soft); color: #cfddff; }
+    .badge.research { background: rgba(174, 162, 255, 0.14); color: #d9d1ff; }
+    .badge.skip { background: var(--red-soft); color: #ffc7c2; }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .decision {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .decision h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .decision p { margin: 0; color: #d5def2; }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 14px;
+      padding: 14px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .timeline-item:first-child { border-top: 0; padding-top: 0; }
+
+    .timeline-date {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      font-weight: 700;
+      padding-top: 6px;
+    }
+
+    .timeline-body {
+      border-left: 1px solid rgba(223, 190, 122, 0.22);
+      padding-left: 18px;
+    }
+
+    .timeline-body h4 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .timeline-body p { margin: 0; color: #d5def2; }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+    }
+
+    .check .dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 14px;
+      background: var(--red-soft);
+      color: #ffb8b1;
+      border: 1px solid rgba(255, 140, 132, 0.22);
+    }
+
+    .check.good .dot {
+      background: var(--green-soft);
+      color: #9ff0c6;
+      border-color: rgba(96, 215, 167, 0.22);
+    }
+
+    .live-status {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .live-box {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .ladder {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .ladder-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .ladder-track {
+      position: relative;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.04);
+      margin-top: 6px;
+    }
+
+    .ladder-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #6ae0aa, #dfbe7a);
+    }
+
+    .pull-quote {
+      margin-top: 16px;
+      padding: 18px 18px 18px 22px;
+      border-left: 2px solid rgba(223, 190, 122, 0.5);
+      background: rgba(223, 190, 122, 0.08);
+      border-radius: 0 18px 18px 0;
+      color: #fff0c9;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.03em;
+    }
+
+    .footer strong { color: #dbe4f8; }
+
+    @media (max-width: 1080px) {
+      .hero-grid,
+      .layout,
+      .live-status,
+      .decision-grid,
+      .split-callout,
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page { padding: 20px 14px 52px; }
+      .hero,
+      .card,
+      .metric { border-radius: 20px; }
+      .hero { padding: 24px; }
+      h1 { font-size: 44px; }
+      .metrics { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .timeline-body { border-left: 0; padding-left: 0; }
+      .compare-table,
+      .compare-table thead,
+      .compare-table tbody,
+      .compare-table th,
+      .compare-table td,
+      .compare-table tr { display: block; }
+      .compare-table thead { display: none; }
+      .compare-table td {
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding: 10px 12px;
+      }
+      .compare-table td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 4px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        font-weight: 700;
+      }
+    }
+
+    @media print {
+      :root {
+        --bg: #ffffff;
+        --bg-2: #ffffff;
+        --panel: #ffffff;
+        --panel-solid: #ffffff;
+        --panel-soft: #ffffff;
+        --ink: #162033;
+        --muted: #5f6a7c;
+        --line: rgba(17, 24, 39, 0.14);
+        --line-strong: rgba(141, 112, 53, 0.34);
+        --shadow: none;
+      }
+
+      html, body {
+        background: #ffffff !important;
+      }
+
+      body::before,
+      .hero::before,
+      .hero::after,
+      .metric::after,
+      .card::before {
+        display: none !important;
+      }
+
+      .hero,
+      .metric,
+      .card,
+      .hero-panel,
+      .story,
+      .decision,
+      .live-box,
+      .check,
+      .split-callout .cell {
+        background: #ffffff !important;
+        color: #162033 !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+
+      .subtitle,
+      .card p,
+      .card li,
+      .section-top p,
+      .hero-note,
+      .pull-quote,
+      .value,
+      .score-item .label,
+      .score-item .value,
+      .footer,
+      .metric .small,
+      .metric .kicker,
+      .bar-value,
+      .timeline-body p { color: #162033 !important; }
+
+      .status-chip,
+      .badge,
+      .tag { border-color: rgba(17,24,39,0.14) !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Honest Status Report • Superfecta Help • 2026-04-15</div>
+          <h1>Superfecta Project Report</h1>
+          <p class="subtitle">
+            A clean, report-safe read on what actually improved, what deserves paper-trade trust now, and what still does <em>not</em> deserve hype.
+          </p>
+          <div class="summary-ribbon">
+            <span class="tag">Phase 7 = primary paper baseline</span>
+            <span class="tag">Phase 8 = shadow challenger</span>
+            <span class="tag">Selective rules = only live-worthy family</span>
+          </div>
+          <div class="hero-note">
+            <strong>Main conclusion:</strong> the project got meaningfully better through <strong>validation cleanup</strong>, <strong>decision clarity</strong>, and <strong>operational hardening</strong>, not through fake “overnight edge” claims.
+          </div>
+        </div>
+        <aside class="hero-panel">
+          <div>
+            <span class="status-chip gold">Best clean gain</span>
+            <h2>+7.96 pts</h2>
+            <p style="margin:0;color:#d6e0f5;">Walk-forward selector ROI improved from <strong>+22.46%</strong> to <strong>+30.42%</strong> with sqrt-dampened scoring.</p>
+          </div>
+          <div class="score-item">
+            <div>
+              <div class="label">Primary baseline</div>
+              <div>Phase 7 live portfolio</div>
+            </div>
+            <div class="value">+38.68%</div>
+          </div>
+          <div class="score-item">
+            <div>
+              <div class="label">Shadow challenger</div>
+              <div>Phase 8 frozen portfolio</div>
+            </div>
+            <div class="value">+21.45%</div>
+          </div>
+          <div class="score-item">
+            <div>
+              <div class="label">Live peak today</div>
+              <div>Best demo EV seen</div>
+            </div>
+            <div class="value">+23.24%</div>
+          </div>
+          <div class="score-item">
+            <div>
+              <div class="label">Alert bar</div>
+              <div>Watcher threshold</div>
+            </div>
+            <div class="value">+30.00%</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <article class="metric">
+        <div class="kicker">Holdout winner</div>
+        <div class="big">+38.68%</div>
+        <div class="small">Phase 7 holdout ROI on <strong>175 races</strong>, currently the strongest practical paper baseline.</div>
+      </article>
+      <article class="metric">
+        <div class="kicker">Selector upgrade</div>
+        <div class="big">+30.42%</div>
+        <div class="small">Best validated walk-forward selector result after scoring cleanup, up from <strong>+22.46%</strong>.</div>
+      </article>
+      <article class="metric">
+        <div class="kicker">Operational shift</div>
+        <div class="big">Paperable</div>
+        <div class="small">Daily paper-trade, settlement, forward-check, lane monitor, and preflight note path are now in place.</div>
+      </article>
+      <article class="metric">
+        <div class="kicker">Live status</div>
+        <div class="big">No +30 yet</div>
+        <div class="small">Demo/watcher lane is working, but today’s best live EV stayed below the real alert threshold.</div>
+      </article>
+    </section>
+
+    <section class="layout">
+      <div class="stack">
+        <article class="card">
+          <span class="eyeline">What actually got better</span>
+          <div class="section-top">
+            <div>
+              <h2>The biggest real improvements</h2>
+              <p>This repo is stronger now because the evidence is cleaner, the operating path is real, and the live/demo lane no longer gets confused with production.</p>
+            </div>
+          </div>
+
+          <div class="story-grid">
+            <div class="story">
+              <div class="num">1</div>
+              <h3>Validation got sharper</h3>
+              <p>The strongest clean numeric gain is the selector improvement from <strong>+22.46%</strong> to <strong>+30.42%</strong>, using frozen artifacts and no new rule mining.</p>
+            </div>
+            <div class="story">
+              <div class="num">2</div>
+              <h3>Portfolio hierarchy got clearer</h3>
+              <p>Phase 7 remains the live paper baseline. Phase 8 stays useful, but only as a shadow challenger until it beats Phase 7 on better forward evidence.</p>
+            </div>
+            <div class="story">
+              <div class="num">3</div>
+              <h3>Operations got real</h3>
+              <p>The project now has daily paper-trade runners, settlement tooling, forward checks, lane monitors, and preflight context for quiet race days.</p>
+            </div>
+          </div>
+
+          <div class="split-callout">
+            <div class="cell">
+              <div class="mini-label">Before</div>
+              <strong>Strong but messy</strong>
+              <div>Good research, too much drift, too many files saying half of the story.</div>
+            </div>
+            <div class="cell">
+              <div class="mini-label">Now</div>
+              <strong>Defensible + usable</strong>
+              <div>Cleaner deployment logic, clearer ranking of what is paper / shadow / benchmark / skip.</div>
+            </div>
+            <div class="cell">
+              <div class="mini-label">Net effect</div>
+              <strong>Less bullshit</strong>
+              <div>Better odds of saying the true thing quickly, especially under pressure or while showing work to Cole.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="eyeline">Quantified change</span>
+          <div class="section-top">
+            <div>
+              <h2>Numbers that matter</h2>
+              <p>These are the metrics worth saying out loud. They hold up better than the older shiny-but-looser headline stats.</p>
+            </div>
+          </div>
+
+          <div class="bar-list">
+            <div class="bar-row">
+              <div class="bar-head">
+                <div class="bar-title">Walk-forward selector ROI</div>
+                <div class="bar-value mono">+22.46% → +30.42%</div>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 76%;"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-head">
+                <div class="bar-title">Phase 7 holdout ROI</div>
+                <div class="bar-value mono">+38.68% on 175 races</div>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 97%;"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-head">
+                <div class="bar-title">Phase 8 holdout ROI</div>
+                <div class="bar-value mono">+21.45% on 118 races</div>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 54%;"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-head">
+                <div class="bar-title">Train-only yearly selector holdout ROI</div>
+                <div class="bar-value mono">+14.36% on 65 races</div>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width: 36%;"></div></div>
+            </div>
+          </div>
+
+          <div class="pull-quote">
+            The cleanest sentence in the whole project is still this: <strong>Phase 7 beats Phase 8 on the current holdout, even though Phase 8 looks prettier on paper.</strong>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="eyeline">Portfolio call</span>
+          <div class="section-top">
+            <div>
+              <h2>What to run, what to watch, what to cite</h2>
+              <p>The live choice, the shadow choice, and the benchmark choice are not the same thing anymore. That’s good.</p>
+            </div>
+          </div>
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Approach</th>
+                <th>Role</th>
+                <th>Holdout</th>
+                <th>Walk-forward</th>
+                <th>Read</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Approach"><strong>Phase 7 live portfolio</strong></td>
+                <td data-label="Role"><span class="badge paper">Paper now</span></td>
+                <td data-label="Holdout" class="mono">+38.68% • 175 races</td>
+                <td data-label="Walk-forward" class="mono">+31.34% • 806 races</td>
+                <td data-label="Read">Strongest current paper baseline. BEL is dormant, so this is effectively the OP+CD lane.</td>
+              </tr>
+              <tr>
+                <td data-label="Approach"><strong>Phase 8 frozen portfolio</strong></td>
+                <td data-label="Role"><span class="badge shadow">Shadow only</span></td>
+                <td data-label="Holdout" class="mono">+21.45% • 118 races</td>
+                <td data-label="Walk-forward" class="mono">+55.04% • 625 races</td>
+                <td data-label="Read">Useful challenger, but weaker on the current holdout despite looking hotter in broader mined views.</td>
+              </tr>
+              <tr>
+                <td data-label="Approach"><strong>Train-only yearly selector</strong></td>
+                <td data-label="Role"><span class="badge benchmark">Benchmark</span></td>
+                <td data-label="Holdout" class="mono">+14.36% • 65 races</td>
+                <td data-label="Walk-forward" class="mono">+22.46% • 470 races</td>
+                <td data-label="Read">Still the honesty yardstick, just not the best operating recipe for daily use.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="decision-grid">
+            <div class="decision">
+              <span class="status-chip green">Primary call</span>
+              <h3>Phase 7 first</h3>
+              <p>Use the Phase 7 live basket as the real paper-trade default because it owns the best current holdout evidence.</p>
+            </div>
+            <div class="decision">
+              <span class="status-chip gold">Challenge lane</span>
+              <h3>Phase 8 in shadow</h3>
+              <p>Log it, compare it, but do not promote it just because it has more moving pieces or a prettier walk-forward headline.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="eyeline">Method-family triage</span>
+          <div class="section-top">
+            <div>
+              <h2>Which family deserves trust?</h2>
+              <p>This may be the most useful cleanup in the whole repo: what belongs in the real decision path versus what should stay benchmark or research.</p>
+            </div>
+          </div>
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Method family</th>
+                <th>Status</th>
+                <th>Best honest evidence</th>
+                <th>Read</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Method family"><strong>Selective rule path</strong></td>
+                <td data-label="Status"><span class="badge paper">Paper now</span></td>
+                <td data-label="Best honest evidence" class="mono">+38.68% holdout • +31.34% WF</td>
+                <td data-label="Read">Only family with positive current frozen holdout evidence and a practical live paper-trade path.</td>
+              </tr>
+              <tr>
+                <td data-label="Method family"><strong>Harville-ranked probabilities</strong></td>
+                <td data-label="Status"><span class="badge benchmark">Benchmark only</span></td>
+                <td data-label="Best honest evidence" class="mono">-24.05% ROI • 90,004 races</td>
+                <td data-label="Read">Useful structural baseline, but the takeout still wins if you stop at Harville ranking alone.</td>
+              </tr>
+              <tr>
+                <td data-label="Method family"><strong>XGBoost residual correction</strong></td>
+                <td data-label="Status"><span class="badge research">Research only</span></td>
+                <td data-label="Best honest evidence" class="mono">-24.16% ML betting ROI • 16,724 races</td>
+                <td data-label="Read">Improves payout prediction a bit, but the downstream EV betting behavior barely changes. Not enough to promote.</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+
+      <div class="stack">
+        <article class="card">
+          <span class="eyeline">Rule stack</span>
+          <div class="section-top">
+            <div>
+              <h2>Current rule hierarchy</h2>
+              <p>These are the rules worth naming first when somebody asks what the project actually trusts.</p>
+            </div>
+          </div>
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Rule</th>
+                <th>Tier</th>
+                <th>Holdout</th>
+                <th>WF</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Rule"><strong>OP_DURABLE_K7</strong></td>
+                <td data-label="Tier"><span class="badge paper">Anchor</span></td>
+                <td data-label="Holdout" class="mono">+22.9% • 115</td>
+                <td data-label="WF" class="mono">7/10 selected</td>
+              </tr>
+              <tr>
+                <td data-label="Rule"><strong>CD_CORE_K8</strong></td>
+                <td data-label="Tier"><span class="badge paper">Paper</span></td>
+                <td data-label="Holdout" class="mono">+56.0% • 60</td>
+                <td data-label="WF" class="mono">1/10 selected</td>
+              </tr>
+              <tr>
+                <td data-label="Rule"><strong>OP_REFINED_K7</strong></td>
+                <td data-label="Tier"><span class="badge shadow">Watch</span></td>
+                <td data-label="Holdout" class="mono">+51.4% • 49</td>
+                <td data-label="WF" class="mono">2/10 selected</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="card">
+          <span class="eyeline">Operational hardening</span>
+          <div class="section-top">
+            <div>
+              <h2>Why the project feels more real now</h2>
+              <p>The strongest practical gain is not a headline stat, it’s that the daily operating path stopped being hand-wavy.</p>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-date">Daily</div>
+              <div class="timeline-body">
+                <h4>Primary + shadow runners</h4>
+                <p>Separate paper lanes make it obvious what is the real baseline versus what is only being watched.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">After races</div>
+              <div class="timeline-body">
+                <h4>Settlement sync + helper</h4>
+                <p>There is now a clean place to record actual outcomes and returns instead of hand-editing ledgers and hoping nothing drifts.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">Validation</div>
+              <div class="timeline-body">
+                <h4>Forward checks + lane monitors</h4>
+                <p>Forward evidence can now be read as <em>no data</em>, <em>too early</em>, <em>running cold</em>, or <em>within noise</em> instead of being guessed from raw CSVs.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">Quiet days</div>
+              <div class="timeline-body">
+                <h4>Preflight note</h4>
+                <p>Quiet days now explain whether OP/CD simply were not racing, instead of making the project look broken or low-signal by accident.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="eyeline">Live / demo lane</span>
+          <div class="section-top">
+            <div>
+              <h2>Today’s live reality</h2>
+              <p>The live model lane works. The watcher works. The threshold discipline is the point.</p>
+            </div>
+          </div>
+          <div class="live-status">
+            <div class="live-box">
+              <span class="status-chip blue">Working now</span>
+              <h3 style="margin:10px 0 8px;font-size:28px;">Separate demo lane</h3>
+              <p style="margin:0;color:#d7e1f4;">`demo_live_predictions.py` now handles real available cards without pretending the production OP/CD basket changed.</p>
+              <ul style="margin:14px 0 0;padding-left:18px;">
+                <li>Best-live selection mode</li>
+                <li>PLAY / FLOW / PASS labeling</li>
+                <li>Candidate leaderboard output</li>
+                <li>Cache hardening + latest JSON snapshots</li>
+                <li>Silent watcher unless a true +30% EV spot appears</li>
+              </ul>
+            </div>
+            <div class="live-box">
+              <span class="status-chip gold">Today’s best</span>
+              <h3 style="margin:10px 0 8px;font-size:28px;">Laurel R9 • +23.24%</h3>
+              <p style="margin:0;color:#d7e1f4;">Encouraging, but still below the alert bar. That is why the watcher stays quiet.</p>
+              <div class="ladder">
+                <div>
+                  <div class="ladder-row"><strong>Best seen today</strong><span class="mono">+23.24%</span></div>
+                  <div class="ladder-track"><div class="ladder-fill" style="width:77.5%;"></div></div>
+                </div>
+                <div>
+                  <div class="ladder-row"><strong>Alert threshold</strong><span class="mono">+30.00%</span></div>
+                  <div class="ladder-track"><div class="ladder-fill" style="width:100%;background:linear-gradient(90deg,#dfbe7a,#ffdf97);"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="eyeline">What still does not clear</span>
+          <div class="section-top">
+            <div>
+              <h2>Do not over-claim these</h2>
+              <p>This project got better partly because some tempting stories were explicitly rejected.</p>
+            </div>
+          </div>
+          <div class="checklist">
+            <div class="check">
+              <div class="dot">✕</div>
+              <div><strong>Do not say Phase 8 replaced Phase 7.</strong><br>It didn’t. Phase 8 is still shadow-only until it wins on better forward evidence.</div>
+            </div>
+            <div class="check">
+              <div class="dot">✕</div>
+              <div><strong>Do not say ML fixed the betting case.</strong><br>Horse-history features improved prediction quality, but downstream EV decisions barely changed.</div>
+            </div>
+            <div class="check">
+              <div class="dot">✕</div>
+              <div><strong>Do not claim a +30 live opportunity happened today.</strong><br>Best seen was +23.24%, which is below the real alert bar.</div>
+            </div>
+            <div class="check good">
+              <div class="dot">✓</div>
+              <div><strong>Do say the project is much more defensible now.</strong><br>The report hierarchy, paper-trade path, and live/demo separation are all materially better than before.</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <span class="eyeline">Final stance</span>
+      <div class="section-top">
+        <div>
+          <h2>The clean recommendation</h2>
+          <p>If somebody only remembers one paragraph from this report, it should be this one.</p>
+        </div>
+      </div>
+      <div class="pull-quote" style="margin-top:0; font-size:18px;">
+        The project improved meaningfully, but in the right way: <strong>better validation</strong>, <strong>better decision hygiene</strong>, <strong>better paper-trade operations</strong>, and a <strong>working live/demo lane</strong> that does not fake production readiness. The strongest current deployment stance is still conservative: <strong>paper trade the selective rule path, keep Phase 7 as the primary baseline, keep Phase 8 as shadow-only, and keep Harville/XGBoost out of the live betting decision path.</strong>
+      </div>
+    </section>
+
+    <div class="footer">
+      Built from the current Superfecta evidence stack on <strong>2026-04-15</strong>.<br>
+      Core inputs: compare_main_approaches, forward_evidence_scorecard, portfolio decision card, method-family decision card, selector experiment, sample-size experiment, overnight progress, and the live demo watcher outputs.
+    </div>
+  </main>
+</body>
+</html>

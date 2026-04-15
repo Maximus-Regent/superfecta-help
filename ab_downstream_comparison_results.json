@@ -1,0 +1,94 @@
+{
+  "test_set": {
+    "n_races": 22244,
+    "split_date": "2020-12-19",
+    "date_range": "2020-12-19 \u2192 2025-06-01"
+  },
+  "prediction_accuracy": {
+    "baseline": {
+      "label": "baseline",
+      "log_ratio_rmse": 0.420546,
+      "log_ratio_r2": 0.601585,
+      "log_ratio_corr": 0.782167,
+      "payout_rmse": 6191.69,
+      "payout_mae": 721.71,
+      "payout_rmse_improvement_vs_harville_pct": 75.77
+    },
+    "enriched": {
+      "label": "enriched",
+      "log_ratio_rmse": 0.411458,
+      "log_ratio_r2": 0.618619,
+      "log_ratio_corr": 0.790892,
+      "payout_rmse": 5929.4,
+      "payout_mae": 707.5,
+      "payout_rmse_improvement_vs_harville_pct": 76.8
+    },
+    "delta": {
+      "log_ratio_rmse": -0.009088,
+      "log_ratio_r2": 0.017034,
+      "payout_rmse": -262.29
+    }
+  },
+  "ev_engine_comparison": {
+    "baseline": {
+      "label": "baseline",
+      "ev_pass_count": 178,
+      "ev_pass_pct": 0.8002,
+      "total_wagered": 178.0,
+      "total_returned": 70785.03,
+      "implied_flat_roi_pct": 39666.87,
+      "avg_ev_profit_at_filter": 0.2213
+    },
+    "enriched": {
+      "label": "enriched",
+      "ev_pass_count": 171,
+      "ev_pass_pct": 0.7687,
+      "total_wagered": 171.0,
+      "total_returned": 69907.03,
+      "implied_flat_roi_pct": 40781.3,
+      "avg_ev_profit_at_filter": 0.2277
+    }
+  },
+  "disagreement_analysis": {
+    "both_pass": {
+      "count": 108,
+      "total_returned": 39143.53,
+      "roi_pct": 36144.01
+    },
+    "only_baseline_pass": {
+      "count": 70,
+      "total_returned": 31641.5,
+      "roi_pct": 45102.14
+    },
+    "only_enriched_pass": {
+      "count": 63,
+      "total_returned": 30763.5,
+      "roi_pct": 48730.95
+    },
+    "neither_pass": 22003
+  },
+  "payout_error_percentiles": {
+    "p10": {
+      "baseline_mae": 11.02,
+      "enriched_mae": 10.54
+    },
+    "p25": {
+      "baseline_mae": 33.17,
+      "enriched_mae": 32.08
+    },
+    "p50": {
+      "baseline_mae": 109.1,
+      "enriched_mae": 105.06
+    },
+    "p75": {
+      "baseline_mae": 363.29,
+      "enriched_mae": 355.47
+    },
+    "p90": {
+      "baseline_mae": 1140.67,
+      "enriched_mae": 1119.38
+    }
+  },
+  "elapsed_seconds": 37.9,
+  "limitation": "This comparison tests predictions on actual winning combos only. It does NOT test whether the enriched model changes the ranking of non-winning combos. The EV pass rates here indicate how often each model's payout prediction for the *true winner* would have cleared the conservative EV filter."
+}

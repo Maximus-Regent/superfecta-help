@@ -1,0 +1,11 @@
+variant,scoring,guardrail,total_wagered,total_profit,total_roi,positive_years,total_years,cd_core_folds,cd_refined_folds,cd_none_folds,op_durable_folds,op_refined_folds
+raw|strict,raw,strict,78108,17541.35,22.46,8,10,1,7,2,7,2
+raw|relaxed_n150,raw,relaxed_n150,78108,17541.35,22.46,8,10,1,7,2,7,2
+sqrt|strict,sqrt,strict,78228,23798.15,30.42,8,10,1,6,3,8,2
+sqrt|relaxed_n150,sqrt,relaxed_n150,78228,23798.15,30.42,8,10,1,6,3,8,2
+log|strict,log,strict,89904,12271.35,13.65,8,10,2,7,1,9,1
+log|relaxed_n150,log,relaxed_n150,89904,12271.35,13.65,8,10,2,7,1,9,1
+sqrt_cost|strict,sqrt_cost,strict,73260,20284.3,27.69,7,10,1,3,6,8,2
+sqrt_cost|relaxed_n150,sqrt_cost,relaxed_n150,73260,20284.3,27.69,7,10,1,3,6,8,2
+log_cost|strict,log_cost,strict,81912,11425.3,13.95,7,10,2,2,6,9,1
+log_cost|relaxed_n150,log_cost,relaxed_n150,81912,11425.3,13.95,7,10,2,2,6,9,1

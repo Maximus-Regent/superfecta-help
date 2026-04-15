@@ -1,0 +1,168 @@
+{
+  "baseline": {
+    "label": "baseline",
+    "n_features": 52,
+    "train_size": 66730,
+    "test_size": 22244,
+    "train_end": "2020-12-19",
+    "test_start": "2020-12-19",
+    "log_ratio_rmse": 0.42006789210534984,
+    "log_ratio_mae": 0.33244791819101743,
+    "log_ratio_r2": 0.6026617971768595,
+    "log_ratio_corr": 0.7824594787686299,
+    "payout_harville_rmse": 25559.071468556573,
+    "payout_corrected_rmse": 6204.44909195818,
+    "payout_rmse_improvement_pct": 75.72506067135086,
+    "payout_harville_mae": 3094.05605194371,
+    "payout_corrected_mae": 724.071327603024,
+    "payout_mae_improvement_pct": 76.5979893238147,
+    "top_features": [
+      [
+        "prob_product",
+        90.73252868652344
+      ],
+      [
+        "field_size",
+        26.0146541595459
+      ],
+      [
+        "number_of_runners",
+        17.95384407043457
+      ],
+      [
+        "prob_sum",
+        10.380640029907227
+      ],
+      [
+        "logit1",
+        5.642611980438232
+      ],
+      [
+        "logit4",
+        5.6295318603515625
+      ],
+      [
+        "prob3",
+        5.128865718841553
+      ],
+      [
+        "max_prob",
+        5.0710577964782715
+      ],
+      [
+        "prob4",
+        4.324969291687012
+      ],
+      [
+        "prob1",
+        3.695979356765747
+      ],
+      [
+        "logit3",
+        3.6006171703338623
+      ],
+      [
+        "favorite_odds",
+        3.4141154289245605
+      ],
+      [
+        "prob2",
+        3.308871030807495
+      ],
+      [
+        "logit2",
+        3.0114259719848633
+      ],
+      [
+        "longshot_odds",
+        2.8935296535491943
+      ]
+    ]
+  },
+  "enriched": {
+    "label": "enriched",
+    "n_features": 172,
+    "train_size": 66730,
+    "test_size": 22244,
+    "train_end": "2020-12-19",
+    "test_start": "2020-12-19",
+    "log_ratio_rmse": 0.41093701869535554,
+    "log_ratio_mae": 0.3247618161695223,
+    "log_ratio_r2": 0.6197476735692338,
+    "log_ratio_corr": 0.7910923312291582,
+    "payout_harville_rmse": 25559.071468556573,
+    "payout_corrected_rmse": 5954.886825539086,
+    "payout_rmse_improvement_pct": 76.70147433616692,
+    "payout_harville_mae": 3094.05605194371,
+    "payout_corrected_mae": 708.5313768420064,
+    "payout_mae_improvement_pct": 77.10024107685763,
+    "top_features": [
+      [
+        "prob_product",
+        108.71036529541016
+      ],
+      [
+        "field_size",
+        27.876079559326172
+      ],
+      [
+        "prob_entropy",
+        25.28438377380371
+      ],
+      [
+        "number_of_runners",
+        21.98615264892578
+      ],
+      [
+        "prob_sum",
+        14.584755897521973
+      ],
+      [
+        "prob3",
+        9.669661521911621
+      ],
+      [
+        "logit4",
+        9.135538101196289
+      ],
+      [
+        "logit1",
+        7.877868175506592
+      ],
+      [
+        "prob1",
+        7.4140944480896
+      ],
+      [
+        "max_prob",
+        7.395511150360107
+      ],
+      [
+        "prob4",
+        6.8006367683410645
+      ],
+      [
+        "favorite_odds",
+        5.705269813537598
+      ],
+      [
+        "harville_log",
+        5.370645046234131
+      ],
+      [
+        "logit3",
+        4.709384441375732
+      ],
+      [
+        "logit2",
+        4.651432037353516
+      ]
+    ]
+  },
+  "improvement": {
+    "log_ratio_rmse_delta": -0.0091308734099943,
+    "log_ratio_r2_delta": 0.017085876392374244,
+    "payout_rmse_improvement_delta": 0.9764136648160644
+  },
+  "elapsed_seconds": 48.48363494873047
+}

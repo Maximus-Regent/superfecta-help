@@ -1,0 +1,14 @@
+{
+  "dataset_races": 88974,
+  "feature_count": 52,
+  "harville_rmse": 25559.071468556573,
+  "corrected_rmse": 6204.44909195818,
+  "harville_mae": 3094.05605194371,
+  "corrected_mae": 724.071327603024,
+  "harville_r2": -5.061261154641516,
+  "corrected_r2": 0.642826439880309,
+  "harville_corr": 0.711877544020406,
+  "corrected_corr": 0.8158279015828509,
+  "rmse_improvement_pct": 75.72506067135086,
+  "mae_improvement_pct": 76.5979893238147
+}

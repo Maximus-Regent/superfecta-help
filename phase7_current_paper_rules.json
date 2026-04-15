@@ -1,0 +1,37 @@
+{
+  "generated_from": "phase7_live_rules.json",
+  "notes": [
+    "Current paper-trade basket for the active Phase 7 portfolio.",
+    "This keeps the live paper path aligned with current operational reality: BEL is dormant, so the active basket is OP + CD.",
+    "Use this as the primary paper baseline when you want the strongest current portfolio-level holdout result without carrying the dormant BEL leg.",
+    "No unsupported track aliasing is applied. BAQ is not treated as BEL."
+  ],
+  "rules": [
+    {
+      "rule_id": "OP_DURABLE_K7",
+      "track": "OP",
+      "card_names": ["Oaklawn Park"],
+      "k": 7,
+      "field_min": 11,
+      "field_max": 12,
+      "gap_min": 0.05,
+      "fav_prob_min": 0.0,
+      "condition": "all",
+      "card_min": 7,
+      "plain_english": "Oaklawn Park, race 7+, 11-12 runners, favorite-second gap at least 5%, play Key-1-with-7."
+    },
+    {
+      "rule_id": "CD_CORE_K8",
+      "track": "CD",
+      "card_names": ["Churchill Downs"],
+      "k": 8,
+      "field_min": 10,
+      "field_max": 11,
+      "gap_min": 0.15,
+      "fav_prob_min": 0.0,
+      "condition": "all",
+      "card_min": 1,
+      "plain_english": "Churchill Downs, 10-11 runners, favorite-second gap at least 15%, play Key-1-with-8."
+    }
+  ]
+}

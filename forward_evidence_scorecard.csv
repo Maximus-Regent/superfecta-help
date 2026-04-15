@@ -1,0 +1,10 @@
+rank,rule_id,phase,backtest_roi,backtest_races,holdout_roi,holdout_races,holdout_profit,holdout_years,worst_year_roi,wf_selected,wf_selected_count,wf_total_folds,ci_lower,forward_trust,tier,note
+1,OP_DURABLE_K7,P7,35.0,505,22.9,115,3159.6,1/2,-47.41,7/10,7,10,-3.4,71.0,ANCHOR,best current OP anchor; mixed holdout years (1/2); CI crosses zero
+2,CD_CORE_K8,P7,13.1,485,55.96,60,7051.01,2/2,45.65,1/10,1,10,-15.0,65.0,PAPER,positive holdout in both years; low WF selection (1/10); CI crosses zero
+3,OP_REFINED_K7,P8,50.0,267,51.43,49,3023.8,1/2,-25.47,2/10,2,10,11.2,66.7,WATCH,small holdout (49); mixed holdout years (1/2); low WF selection (2/10)
+4,DMR_FALL_K7,P8,14.4,145,103.36,14,1736.4,1/1,103.36,0/10,0,10,-28.8,55.3,WATCH,small holdout (14); low WF selection (0/10); CI crosses zero
+5,KEE_K9,P8,30.8,111,13.33,20,895.6,2/2,0.28,3/10,3,10,-3.0,55.0,WATCH,small holdout (20); CI crosses zero
+6,SA_K9,P8,25.9,64,39.28,11,1451.8,2/2,29.8,0/10,0,10,-6.3,50.6,WATCH,small holdout (11); low WF selection (0/10); CI crosses zero
+7,BEL_BROAD1_K7,P7,134.9,85,0.0,0,0.0,0/0,,3/10,3,10,44.4,27.2,DORMANT,no 2024-2025 forward races
+8,CD_REFINED_K9,P8,57.0,151,-26.18,16,-1407.55,0/2,-61.12,7/10,7,10,-26.4,37.4,SKIP,negative holdout; small holdout (16); mixed holdout years (0/2)
+9,AQU_K9,P8,50.2,64,-4.28,8,-115.0,1/2,-100.0,0/10,0,10,3.1,36.5,SKIP,negative holdout; small holdout (8); mixed holdout years (1/2)

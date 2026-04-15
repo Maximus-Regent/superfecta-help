@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Superfecta Project Report</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --ink: #18212f;
+      --muted: #5c6678;
+      --line: #d9e0ea;
+      --blue: #2f6fed;
+      --blue-soft: #eaf1ff;
+      --green: #0d8a5f;
+      --green-soft: #e9f8f1;
+      --amber: #9a6700;
+      --amber-soft: #fff6df;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #eef3ff 0%, var(--bg) 240px);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 28px 64px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #1f4fc6 0%, #4d8cff 100%);
+      color: white;
+      border-radius: 22px;
+      padding: 34px 34px 28px;
+      box-shadow: 0 18px 40px rgba(28, 63, 148, 0.22);
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 11px;
+      opacity: 0.86;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 34px;
+      line-height: 1.12;
+      margin: 0 0 10px;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      font-size: 15px;
+      opacity: 0.96;
+    }
+
+    .meta {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.22);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      grid-column: span 12;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+      box-shadow: 0 8px 24px rgba(20, 33, 61, 0.06);
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .lead {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .quote {
+      border-left: 4px solid var(--blue);
+      background: var(--blue-soft);
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      margin: 14px 0 0;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .stat .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .stat .value {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat .note {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fbfcfe;
+    }
+
+    .mini h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    ul, ol {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    li { margin: 6px 0; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+    }
+
+    th {
+      background: #f1f5fb;
+      color: #253146;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-align: left;
+      padding: 12px;
+    }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    .good {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .soft-good {
+      background: var(--green-soft);
+      border: 1px solid #c7eadb;
+      color: #0c6848;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-top: 14px;
+    }
+
+    .soft-warn {
+      background: var(--amber-soft);
+      border: 1px solid #f0dfaa;
+      color: #7a5600;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-top: 14px;
+    }
+
+    .footer {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      background: #f1f4f9;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 820px) {
+      .stat-row { grid-template-columns: 1fr 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .page { padding: 24px 16px 40px; }
+      .hero { padding: 24px; border-radius: 18px; }
+      h1 { font-size: 28px; }
+      .stat-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="eyebrow">Project Review</div>
+      <h1>Superfecta Project Report</h1>
+      <p>
+        Final report based on the completed full training reruns. This version reflects the successful end-to-end results on both the major-tracks dataset and the full all-tracks dataset, not the earlier failed run.
+      </p>
+      <div class="meta">
+        <span class="pill">Updated Apr 13, 2026</span>
+        <span class="pill">Harville + XGBoost Residual Model</span>
+        <span class="pill">Full Training Reruns Complete</span>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Executive Summary</h2>
+        <p class="lead">
+          The current Harville + XGBoost residual model is a strong payout-estimation baseline, but it is not yet a complete profitable betting system. The full reruns confirm that the model consistently improves plain Harville when predicting realized superfecta payout distortion.
+        </p>
+        <div class="quote">
+          Main conclusion: the current model is validated as a useful payout-correction baseline, but the best next step is a two-stage expected-value system that combines hit probability, payout prediction, and field-size-specific ticket selection.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>What the Current Project Does</h2>
+        <div class="two-col">
+          <div class="mini">
+            <h3>Current Modeling Logic</h3>
+            <ul>
+              <li>Uses Harville probabilities as the baseline for superfecta combinations</li>
+              <li>Trains XGBoost on <strong>log(actual payout / Harville payout)</strong></li>
+              <li>Applies the model to historical prediction and live NYRA scoring</li>
+              <li>Targets payout distortion, not direct combo-hit probability</li>
+            </ul>
+          </div>
+          <div class="mini">
+            <h3>Assessment</h3>
+            <ul>
+              <li>The idea is legitimate and the data has real signal</li>
+              <li>The payout model works much better than plain Harville</li>
+              <li>Profitability is still not directly modeled</li>
+              <li>A true ROI engine still needs ranking, EV filtering, and ticket selection</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Full Training Rerun Results</h2>
+        <p class="lead">Two full reruns completed successfully after fixing the zero-total-probability preprocessing bug.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Race-Level Examples</th>
+              <th>Features</th>
+              <th>Log-Ratio Test RMSE</th>
+              <th>Harville RMSE</th>
+              <th>ML-Corrected RMSE</th>
+              <th>RMSE Improvement</th>
+              <th>MAE Improvement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>14years_major_tracks.csv</code></td>
+              <td>88,974</td>
+              <td>52</td>
+              <td>0.3757</td>
+              <td>$46,485.05</td>
+              <td>$8,921.57</td>
+              <td class="good">80.8%</td>
+              <td class="good">77.5%</td>
+            </tr>
+            <tr>
+              <td><code>14years.csv</code></td>
+              <td>552,926</td>
+              <td>55</td>
+              <td>0.4534</td>
+              <td>$21,875.34</td>
+              <td>$4,718.26</td>
+              <td class="good">78.4%</td>
+              <td class="good">75.5%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="stat-row">
+          <div class="stat">
+            <div class="label">Best target fit</div>
+            <div class="value">0.3757</div>
+            <div class="note">Major-tracks log-ratio test RMSE</div>
+          </div>
+          <div class="stat">
+            <div class="label">Best payout RMSE</div>
+            <div class="value">$4.7k</div>
+            <div class="note">All-tracks ML-corrected RMSE</div>
+          </div>
+          <div class="stat">
+            <div class="label">Top RMSE gain</div>
+            <div class="value">80.8%</div>
+            <div class="note">Major-tracks vs Harville</div>
+          </div>
+          <div class="stat">
+            <div class="label">Top MAE gain</div>
+            <div class="value">77.5%</div>
+            <div class="note">Major-tracks vs Harville</div>
+          </div>
+        </div>
+
+        <div class="soft-good">
+          Bottom line from the reruns: both datasets confirm that the residual model is capturing meaningful structure in superfecta payout distortion and materially outperforming plain Harville for payout estimation.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>How to Read These Results</h2>
+        <div class="two-col">
+          <div class="mini">
+            <h3>What the results do prove</h3>
+            <ul>
+              <li>The modeling direction is valid</li>
+              <li>XGBoost is learning real payout-distortion signal</li>
+              <li>Harville is a beatable baseline for payout estimation</li>
+              <li>The major-tracks and all-tracks datasets both support this</li>
+            </ul>
+          </div>
+          <div class="mini">
+            <h3>What the results do not prove</h3>
+            <ul>
+              <li>They do not directly prove profitable betting</li>
+              <li>They do not model exact-combo hit probability yet</li>
+              <li>They do not yet include a bankroll or ticket strategy layer</li>
+              <li>They do not replace the need for a walk-forward ROI backtest</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="soft-warn">
+          Important caution: this is a payout-correction win, not final proof of profitable wagering. Profitability still depends on ranking the right tickets, filtering by expected value, and structuring bets correctly by field size.
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Best Path Forward</h2>
+        <p class="lead">The best near-term strategy is a two-stage expected-value framework.</p>
+        <ol>
+          <li><strong>Stage 1:</strong> predict the probability that a specific superfecta combination wins</li>
+          <li><strong>Stage 2:</strong> predict payout distortion or expected payout for that combination</li>
+          <li><strong>Decision layer:</strong> bet only combinations whose expected value exceeds takeout and risk thresholds</li>
+        </ol>
+
+        <h2 style="margin-top:20px;">Recommended Field-Size Bins</h2>
+        <ul>
+          <li>6-7 runners</li>
+          <li>8-9 runners</li>
+          <li>10-11 runners</li>
+          <li>12+ runners</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Recommended Next Steps</h2>
+        <ol>
+          <li>Build a walk-forward backtest harness based on race date, not just random train-test splitting</li>
+          <li>Keep the current residual model as the payout-estimation baseline</li>
+          <li>Build an exact-combination ranking model for hit probability</li>
+          <li>Combine the ranker and payout model into a two-stage EV engine</li>
+          <li>Add field-size-specific no-bet thresholds and ticket budget rules</li>
+          <li>Later, expand to richer live-market features such as odds drift and late probables</li>
+        </ol>
+      </section>
+
+      <section class="card">
+        <h2>Engineering Notes</h2>
+        <ul>
+          <li>Preprocessing was fixed so races with zero total implied probability are skipped instead of crashing</li>
+          <li>Training scripts were patched to support explicit CPU thread usage</li>
+          <li>Prediction scripts were patched to support threads and to load the XGBoost model once instead of inside the inner loop</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Final Answer</h2>
+        <p>
+          The final reruns confirm that the current XGBoost residual model meaningfully improves Harville as a payout estimator on both the major-tracks and all-tracks datasets. The correct next step is not to stop here, but to build a two-stage EV system that combines exact-combination hit probability, payout prediction, and field-size-specific ticket selection.
+        </p>
+      </section>
+    </div>
+
+    <div class="footer">Generated from the completed full training reruns in Superfecta Help.</div>
+  </div>
+</body>
+</html>

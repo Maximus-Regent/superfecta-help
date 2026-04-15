@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Large local datasets and generated training caches
+14years.csv
+14years_major_tracks.csv
+horse_features_major_tracks.csv
+phase5_race_cache.pkl
+
+# Local runs, logs, live caches, and ad-hoc outputs
+.live_scan_cache/
+logs/
+runs/
+out/
+paper_trades/
+
+# Large generated result dumps
+full_data_retrain_results.csv
+full_data_retrain_horse_results.csv
+ab_baseline_results.csv
+ab_enriched_results.csv
+smoke_test_results.csv
+
+# Local notes / scratch
+*.tmp
+*.bak

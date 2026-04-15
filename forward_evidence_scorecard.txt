@@ -1,0 +1,32 @@
+====================================================================================================================================
+FORWARD EVIDENCE SCORECARD
+Generated: 2026-04-14 23:11
+Rules ranked by forward evidence quality, then bucketed conservatively for deployment.
+====================================================================================================================================
+
+Rank  Rule                   Ph     HO ROI   HO N   Yrs+     WF   CI Lo   Score Tier     Note
+---------------------------------------------------------------------------------------------
+1     OP_DURABLE_K7          P7     +22.9%   115    1/2   7/10   -3.4%   71.0 ANCHOR   best current OP anchor; mixed holdout years (1/2); CI crosses zero
+2     CD_CORE_K8             P7     +56.0%    60    2/2   1/10  -15.0%   65.0 PAPER    positive holdout in both years; low WF selection (1/10); CI crosses zero
+3     OP_REFINED_K7          P8     +51.4%    49    1/2   2/10  +11.2%   66.7 WATCH    small holdout (49); mixed holdout years (1/2); low WF selection (2/10)
+4     DMR_FALL_K7            P8    +103.4%    14    1/1   0/10  -28.8%   55.3 WATCH    small holdout (14); low WF selection (0/10); CI crosses zero
+5     KEE_K9                 P8     +13.3%    20    2/2   3/10   -3.0%   55.0 WATCH    small holdout (20); CI crosses zero
+6     SA_K9                  P8     +39.3%    11    2/2   0/10   -6.3%   50.6 WATCH    small holdout (11); low WF selection (0/10); CI crosses zero
+7     BEL_BROAD1_K7          P7      +0.0%     0    0/0   3/10  +44.4%   27.2 DORMANT  no 2024-2025 forward races
+8     CD_REFINED_K9          P8     -26.2%    16    0/2   7/10  -26.4%   37.4 SKIP     negative holdout; small holdout (16); mixed holdout years (0/2)
+9     AQU_K9                 P8      -4.3%     8    1/2   0/10   +3.1%   36.5 SKIP     negative holdout; small holdout (8); mixed holdout years (1/2)
+
+------------------------------------------------------------------------------------------------------------------------------------
+LEGEND:
+  HO ROI / HO N = 2024-2025 holdout ROI and race count
+  Yrs+          = profitable holdout years / observed holdout years (2024, 2025)
+  WF            = walk-forward folds selected / total folds
+  CI Lo         = bootstrap 95% CI lower bound from report text
+  Score         = forward-trust ordering score, not an automatic deployment instruction
+  Tier          = ANCHOR (safest current live-paper anchor), PAPER (paper trade now),
+                  WATCH (shadow only / not enough evidence), DORMANT (no forward races), SKIP (negative holdout)
+
+KEY INSIGHT: OP_DURABLE_K7 is the safest anchor because it has the largest real holdout sample
+plus the strongest walk-forward selection frequency. Small-sample Phase 8 winners stay in WATCH until
+they earn more forward races.
+------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,49 @@
+{
+  "generated_from": "PHASE7_REPORT.md",
+  "notes": [
+    "Conservative live rule mapping from Phase 7 findings.",
+    "No unsupported track aliasing is applied.",
+    "Costs are computed from permutation counts and a configurable base stake."
+  ],
+  "rules": [
+    {
+      "rule_id": "BEL_BROAD1_K7",
+      "track": "BEL",
+      "card_names": ["Belmont Park"],
+      "k": 7,
+      "field_min": 11,
+      "field_max": 13,
+      "gap_min": 0.22,
+      "fav_prob_min": 0.35,
+      "condition": "fast",
+      "card_min": 5,
+      "plain_english": "Belmont Park, race 5+, fast/Firm conditions, 11-13 runners, favorite at least 35% implied win probability, favorite-second gap at least 22%, play Key-1-with-7."
+    },
+    {
+      "rule_id": "OP_DURABLE_K7",
+      "track": "OP",
+      "card_names": ["Oaklawn Park"],
+      "k": 7,
+      "field_min": 11,
+      "field_max": 12,
+      "gap_min": 0.05,
+      "fav_prob_min": 0.0,
+      "condition": "all",
+      "card_min": 7,
+      "plain_english": "Oaklawn Park, race 7+, 11-12 runners, favorite-second gap at least 5%, play Key-1-with-7."
+    },
+    {
+      "rule_id": "CD_CORE_K8",
+      "track": "CD",
+      "card_names": ["Churchill Downs"],
+      "k": 8,
+      "field_min": 10,
+      "field_max": 11,
+      "gap_min": 0.15,
+      "fav_prob_min": 0.0,
+      "condition": "all",
+      "card_min": 1,
+      "plain_english": "Churchill Downs, 10-11 runners, favorite-second gap at least 15%, play Key-1-with-8."
+    }
+  ]
+}

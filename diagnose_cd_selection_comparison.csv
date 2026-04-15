@@ -1,0 +1,11 @@
+test_year,core_qualifies,core_score,core_train_roi,core_train_races,core_pos_year_ratio,core_test_roi,core_test_races,core_test_profit,refined_qualifies,refined_score,refined_train_roi,refined_train_races,refined_pos_year_ratio,refined_test_roi,refined_test_races,refined_test_profit,selected,better_oos
+2015,True,5.5,15.6,141,0.6,-60.65,30,-3821.1,False,0.0,-10.5,57,0.6,90.41,8,2430.3,CD_CORE_K8,CD_REFINED
+2016,True,0.83,2.22,171,0.5,-8.87,27,-503.1,True,0.42,1.92,65,0.67,179.28,9,5421.3,NEITHER,CD_REFINED
+2017,False,0.27,0.71,198,0.43,59.3,45,5603.7,True,7.24,23.49,74,0.71,-88.28,15,-4449.1,CD_REFINED_K9,CD_CORE
+2018,True,5.78,11.56,243,0.5,-37.62,34,-2686.4,True,1.72,4.65,89,0.62,869.41,10,29212.3,NEITHER,CD_REFINED
+2019,False,2.45,5.52,277,0.44,-13.09,52,-1429.0,True,29.22,92.0,99,0.67,11.64,9,352.1,CD_REFINED_K9,CD_REFINED
+2020,False,1.03,2.58,329,0.4,-16.34,34,-1166.6,True,33.16,85.3,108,0.7,-73.78,13,-3222.8,CD_REFINED_K9,CD_CORE
+2022,False,0.29,0.81,363,0.36,32.23,33,2233.8,True,27.56,68.21,121,0.64,80.95,10,2719.9,CD_REFINED_K9,CD_REFINED
+2023,False,1.43,3.43,396,0.42,55.92,29,3405.58,True,34.61,69.19,131,0.67,-8.53,4,-114.6,CD_REFINED_K9,CD_CORE
+2024,False,3.24,7.01,425,0.46,45.65,41,3930.4,True,32.38,66.88,135,0.62,-14.54,12,-586.1,CD_REFINED_K9,CD_CORE
+2025,True,5.21,10.41,466,0.5,78.21,19,3120.61,True,30.4,60.24,147,0.57,-61.12,4,-821.45,CD_REFINED_K9,CD_CORE

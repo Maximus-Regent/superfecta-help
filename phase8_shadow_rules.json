@@ -1,0 +1,90 @@
+{
+  "generated_from": "compare_main_approaches.py",
+  "notes": [
+    "Shadow-only Phase 8 watch-list basket for forward observation.",
+    "This file intentionally excludes BEL_BROAD1_K7 because Belmont has no current forward races and is dormant until the track produces new qualifying data.",
+    "Use this for logging research challengers alongside the primary paper basket, not as the default live-paper portfolio.",
+    "No unsupported track aliasing is applied. BAQ is not treated as BEL."
+  ],
+  "rules": [
+    {
+      "rule_id": "OP_REFINED_K7",
+      "track": "OP",
+      "card_names": ["Oaklawn Park"],
+      "k": 7,
+      "field_min": 11,
+      "field_max": 12,
+      "gap_min": 0.05,
+      "fav_prob_min": 0.25,
+      "condition": "all",
+      "card_min": 9,
+      "plain_english": "Oaklawn Park, race 9+, 11-12 runners, favorite at least 25% implied win probability, favorite-second gap at least 5%, play Key-1-with-7."
+    },
+    {
+      "rule_id": "AQU_K9",
+      "track": "AQU",
+      "card_names": ["Aqueduct"],
+      "k": 9,
+      "field_min": 10,
+      "field_max": 11,
+      "gap_min": 0.22,
+      "fav_prob_min": 0.0,
+      "condition": "all",
+      "card_min": 9,
+      "plain_english": "Aqueduct, race 9+, 10-11 runners, favorite-second gap at least 22%, play Key-1-with-9."
+    },
+    {
+      "rule_id": "SA_K9",
+      "track": "SA",
+      "card_names": ["Santa Anita Park"],
+      "k": 9,
+      "field_min": 11,
+      "field_max": 12,
+      "gap_min": 0.20,
+      "fav_prob_min": 0.0,
+      "condition": "fast",
+      "card_min": 9,
+      "plain_english": "Santa Anita Park, race 9+, fast/Firm conditions, 11-12 runners, favorite-second gap at least 20%, play Key-1-with-9."
+    },
+    {
+      "rule_id": "KEE_K9",
+      "track": "KEE",
+      "card_names": ["Keeneland"],
+      "k": 9,
+      "field_min": 12,
+      "field_max": 14,
+      "gap_min": 0.05,
+      "fav_prob_min": 0.35,
+      "condition": "fast",
+      "card_min": 1,
+      "plain_english": "Keeneland, 12-14 runners, fast/Firm conditions, favorite at least 35% implied win probability, favorite-second gap at least 5%, play Key-1-with-9."
+    },
+    {
+      "rule_id": "CD_REFINED_K9",
+      "track": "CD",
+      "card_names": ["Churchill Downs"],
+      "k": 9,
+      "field_min": 11,
+      "field_max": 12,
+      "gap_min": 0.0,
+      "fav_prob_min": 0.30,
+      "condition": "all",
+      "card_min": 7,
+      "plain_english": "Churchill Downs, race 7+, 11-12 runners, favorite at least 30% implied win probability, play Key-1-with-9."
+    },
+    {
+      "rule_id": "DMR_FALL_K7",
+      "track": "DMR",
+      "card_names": ["Del Mar"],
+      "k": 7,
+      "field_min": 10,
+      "field_max": 11,
+      "gap_min": 0.10,
+      "fav_prob_min": 0.0,
+      "condition": "all",
+      "card_min": 5,
+      "months": [9, 10, 11],
+      "plain_english": "Del Mar, race 5+, September-November only, 10-11 runners, favorite-second gap at least 10%, play Key-1-with-7."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+variant,total_wagered,total_profit,total_roi,positive_years,total_years,cd_core_folds,cd_refined_folds,cd_none_folds,op_durable_folds,op_refined_folds
+raw_r150,78108,17541.35,22.46,8,10,1,7,2,7,2
+sqrt_r150,78228,23798.15,30.42,8,10,1,6,3,8,2
+sqrt_r250,88224,17906.75,20.3,8,10,2,6,2,9,1
+sqrt_r300,91944,20902.35,22.73,8,10,2,6,2,10,0
+sqrt_r400,94590,24844.41,26.27,8,10,3,5,2,10,0
+sqrt_softbonus,86148,23933.95,27.78,8,10,1,6,3,10,0
+sqrt_lograces,76644,16208.8,21.15,6,10,1,2,7,8,0
