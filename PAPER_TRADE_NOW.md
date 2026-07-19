@@ -1,0 +1,58 @@
+# Paper-Trade Right Now
+
+Latest run: `out/daily_portfolio_runs/2026-07-19`
+
+## Best operator action now
+
+- Run freshness: Latest run date matches the as-of date (`2026-07-19`), so this top card is current for today.
+- Freshness state: `current_run_date`
+- Focus: **Stand down, no OP / CD target action tonight**
+- Timing: **next OP / CD race day**
+- Command: `python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json`
+- Why: Latest ops bucket is NO TARGETS, so the quiet primary lane is explained by the race calendar, not by a rules miss. This is 5 straight no-target days at the top of the ops log.
+- `valid_evidence_scope=operator_action_routing_only`
+- Evidence frame: **Operational priority surface** — This card is an operational priority read, not a profit-proof or CI-backed forward-validation surface.
+- Evidence detail: The action is driven by current run artifacts (preflight note, pipeline/scanner status, ledger coverage, and ops streaks), while the lane hierarchy is inherited from the frozen evidence standard: OP_DURABLE_K7 as anchor, CD_CORE_K8 as the primary OP/CD paper-basket companion (not a Phase 8 shadow-lane promotion), and OP_REFINED_K7 as the closest shadow-lane challenger, while KEE_K9 / SA_K9 / DMR_FALL_K7 remain observation-only pockets rather than promotion candidates. The broader selective-family secondary lines stay replay context on walk-forward test years, not extra train-only validation.
+- Limitation: Treat this as an operator runbook for what to do next; forward performance still needs settled paper trades before the lane says anything new about live edge.
+- Action contract: Single best-action routing only: read `best_action` with `run_freshness` / `stale_snapshot_note` before treating lane context as current; the card routes settlement, refresh, stand-down, or forward-check next steps but does not advance decision gates by itself.
+- Operator read gate: Use this as a single-action operator routing card only; performance movement still requires ROI-complete settlements and the dedicated forward-check/settlement-audit reads.
+- Operator read-gate issue flags: has_api_access_failure_context=`false`; has_scanner_failure_boundary=`false`; has_stale_cache_fallback_context=`false`
+- Preflight note: Preflight context: no primary paper-basket target tracks (OP / CD) are racing today across 55 NYRA card(s). Shadow-only tracks present: DMR.
+- Preflight note artifact: `out/daily_portfolio_runs/2026-07-19/preflight_note.txt`
+- Settlement audit: `out/paper_trade_settlement_audit.md`
+
+## Decision-Gate Source
+
+- Source: `forward_evidence_scorecard.json`; loaded=True; fallback_used=False.
+- Scorecard `decision_gate_minimums`: anchor_displacement=30 ROI-complete same-candidate settled observations; phase8_promotion_review=20 ROI-complete shadow observations; real_money_discussion=100 total settled observations with usable ROI.
+- Active right-now gates: primary_min_settled=`30`; shadow_min_settled=`20`; portfolio_review_settled=`100`. right-now action gates are source-matched to forward_evidence_scorecard.json decision_gate_minimums.
+
+## Live lane hierarchy
+
+- Primary lane anchor: **OP_DURABLE_K7**; primary OP/CD paper-basket companion: **CD_CORE_K8** (not a Phase 8 shadow-lane promotion).
+- Shadow lane lead: **OP_REFINED_K7**; closest challenger only, while **KEE_K9 / SA_K9 / DMR_FALL_K7** stay observation-only pockets rather than promotion candidates.
+- Primary lane context: Latest run context: the latest live scan completed cleanly and found no qualifying races across 55 card(s) and 488 race(s).
+- Primary lane why now: There are 6 ROI-complete settled races (6 outcome-settled), which is still below the first statistical-read threshold of 30 (24 more needed). The broader portfolio review gate is still 6/100, so keep refreshing the lane read but do not treat it as promotion-grade evidence yet.
+- Primary lane status sidecars: pipeline=`out/daily_portfolio_runs/2026-07-19/phase7_current_paper/pipeline_status.json`, scanner=`out/daily_portfolio_runs/2026-07-19/phase7_current_paper/live_scan.status.json`
+- Shadow lane context: Latest run context: the latest live scan completed cleanly and found no qualifying races across 55 card(s) and 488 race(s).
+- Shadow lane why now: There are 1 ROI-complete settled races (1 outcome-settled), which is still below the first statistical-read threshold of 20 (19 more needed). The broader portfolio review gate is still 1/100, so keep refreshing the lane read but do not treat it as promotion-grade evidence yet. Phase 8 shadow first-read status is a review floor, not a promotion entitlement; lane totals alone do not promote any Phase 8 pocket, scorecard tiers remain binding, and negative-holdout/SKIP rules still need cleaner split-aware evidence before any promotion discussion.
+- Shadow lane status sidecars: pipeline=`out/daily_portfolio_runs/2026-07-19/phase8_shadow/pipeline_status.json`, scanner=`out/daily_portfolio_runs/2026-07-19/phase8_shadow/live_scan.status.json`
+- Shadow settlement-audit promotion gate: Shadow/watch phase8_promotion_review gate is per-rule: every expected shadow rule needs 20 ROI-complete settled row(s) before review; the 20-row count is a review floor, not a promotion entitlement; lane totals alone do not promote OP_REFINED_K7 or any other Phase 8 pocket; scorecard tiers remain binding (forward_evidence_scorecard.json); negative-holdout/SKIP rules still need cleaner split-aware evidence before any promotion discussion; weakest current rule coverage is 0/20.
+- Shadow per-rule promotion coverage: OP_REFINED_K7 (WATCH) 0/20 (0.0%); AQU_K9 (SKIP) 0/20 (0.0%); SA_K9 (WATCH) 0/20 (0.0%); KEE_K9 (WATCH) 0/20 (0.0%); CD_REFINED_K9 (SKIP) 1/20 (5.0%); DMR_FALL_K7 (WATCH) 0/20 (0.0%)
+
+## Current context
+
+- Latest ops bucket: **NO TARGETS**
+- Ops takeaway: No active OP/CD cards. Empty primary lane is expected, not evidence of a miss.
+- Current streaks: no-target=`5`, active-zero-hit=`0`, active-limited-coverage=`0`, active-limited-coverage-with-activity=`0`, active-hit-found=`0`, issue=`0`
+- Primary lane: **COLLECTING SAMPLE** (`assessment=TOO EARLY`, settled=`6`, open-settlements=`0`, incomplete-settlements=`0`, roi-coverage=`6/6` (`0` missing))
+- Shadow lane: **COLLECTING SAMPLE** (`assessment=TOO EARLY`, settled=`1`, open-settlements=`0`, incomplete-settlements=`0`, roi-coverage=`1/1` (`0` missing))
+
+## Quick reads behind this recommendation
+
+1. `out/daily_portfolio_runs/2026-07-19/phase7_current_paper/summary.txt`
+2. `out/daily_portfolio_runs/2026-07-19/phase7_current_paper/next_steps.md`
+3. `out/daily_portfolio_runs/2026-07-19/phase7_current_paper/lane_monitor.md`
+4. `out/daily_portfolio_runs/2026-07-19/daily_summary.txt`
+5. `OPS_HISTORY.md`
+

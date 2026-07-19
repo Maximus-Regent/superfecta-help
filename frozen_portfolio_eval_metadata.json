@@ -1,0 +1,206 @@
+{
+  "artifact": "frozen_portfolio_eval",
+  "current_boundary_date": "2026-07-17",
+  "current_boundary_date_source": "source_freshness.generated_reference_date",
+  "current_boundary_reference_timezone": "America/New_York",
+  "current_evidence_rebuild_validation_contract": {
+    "direct_validation_command": "python3 validate_current_evidence_summary.py",
+    "green_checks_are_reproducibility_metadata_only": true,
+    "not_settled_roi_or_real_money_evidence": true,
+    "prerequisite_rebuild_command": "python3 paper_trade_settlement_audit.py",
+    "rebuild_command": "python3 current_evidence_summary.py",
+    "requires_settlement_audit_refresh_before_bridge_when_source_bytes_change": true,
+    "requires_source_consistency_before_quoting_current_totals": true,
+    "requires_source_freshness_before_right_now_instruction_use": true,
+    "source_path": "rebuild_validation_contract",
+    "upstream_refresh_commands": [
+      "python3 paper_trade_settlement_audit.py",
+      "python3 current_evidence_summary.py",
+      "python3 validate_current_evidence_summary.py"
+    ],
+    "upstream_refresh_order_is_provenance_metadata_only": true,
+    "upstream_refresh_order_valid_use": "reproducible rebuild order for current bridge provenance after scorecard/rules/ledger byte changes"
+  },
+  "current_evidence_source": {
+    "generated_at": "2026-07-17T06:12:00+02:00",
+    "path": "current_evidence_summary.json"
+  },
+  "current_operator_read_gate": {
+    "current_top_card_counts_as_bet_readiness_evidence": false,
+    "current_top_card_counts_as_clean_empty_evidence": false,
+    "current_top_card_counts_as_no_target_evidence": false,
+    "current_top_card_counts_as_settled_roi_evidence": false,
+    "gate_status": "current_operator_routing_context_only",
+    "has_api_access_failure_context": false,
+    "has_issue_bucket": false,
+    "has_missing_scan_output_artifact_issue": false,
+    "has_scanner_failure_boundary": false,
+    "has_stale_cache_fallback_context": false,
+    "has_wrapper_refresh_action": false,
+    "not_forward_performance_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_real_money_evidence": true,
+    "read": "Saved top card can be read as current operator routing context with `python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json`, but it is still not settled ROI, promotion readiness, live-profitability, bankroll, or real-money evidence.",
+    "reason_text": "no refresh-first operator issue surfaced",
+    "recommended_command": "python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json",
+    "requires_refresh_before_evidence_read": false,
+    "requires_source_freshness_refresh": false,
+    "valid_use": "operator instruction/evidence-read gating only"
+  },
+  "current_paper_context": {
+    "first_read_current": 6,
+    "first_read_threshold": 30,
+    "hit_count": 1,
+    "latest_context_has_no_bet_recommendations": false,
+    "miss_count": 5,
+    "open_settlement_context": "no open primary settlement rows",
+    "open_settlement_queue_read": "Open settlement queue by rule: OP_DURABLE_K7 has 0 open row(s); CD_CORE_K8 has 0; other primary rules have 0; 0 open row(s) lack published rule IDs. Open rows are settlement workflow only and do not count as ROI-complete rows or OP-anchor evidence.",
+    "open_settlement_queue_state": "closed",
+    "open_settlement_summary": "none",
+    "open_settlements": 0,
+    "recommendation_context_read": "Latest run context: the latest live scan completed cleanly and found no qualifying races across 52 card(s) and 446 race(s). Treat this as operator context only; use recommendation and settlement ledgers before interpreting bet readiness or forward performance.",
+    "roi_complete_settled": 6,
+    "rule_mix_read": "Primary rule mix: OP_DURABLE_K7 has 0 ROI-complete settled row(s); CD_CORE_K8 has 6. Current settled paper context is CD-only, so it should not be counted as OP-anchor forward evidence."
+  },
+  "current_refresh_action_boundary": {
+    "clean_empty_refresh_counts_as_forward_performance": false,
+    "command": "./run_daily_portfolio_observation.sh",
+    "missing_or_invalid_artifact_counts_as_clean_quiet_day": false,
+    "not_forward_performance_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_real_money_evidence": true,
+    "read": "run `./run_daily_portfolio_observation.sh` before using stale right-now instructions; a wrapper refresh can update operator surfaces, but by itself it does not settle open rows, create ROI-complete evidence, promote OP_DURABLE_K7, or support real-money discussion.",
+    "required_before_right_now_instruction_use": false,
+    "source_action_counts_as_current_instruction_before_refresh": true,
+    "valid_use": "operator-card freshness and rerun routing boundary",
+    "wrapper_refresh_can_settle_open_rows_by_itself": false,
+    "wrapper_refresh_can_update_operator_surfaces": true,
+    "wrapper_refresh_counts_as_roi_complete_evidence_by_itself": false
+  },
+  "current_source_freshness": {
+    "generated_reference_date": "2026-07-17",
+    "generated_reference_timezone": "America/New_York",
+    "read": "Right-now source as-of date 2026-07-17 is not older than bridge reference date 2026-07-17 (America/New_York); still treat the bridge as report/navigation context rather than performance evidence.",
+    "requires_refresh_before_right_now_use": false,
+    "right_now_freshness_state": "current_run_date",
+    "staleness_comparison_date": "2026-07-17",
+    "staleness_comparison_source": "generated_reference_date"
+  },
+  "evidence_boundary": "historical frozen replay only; not a live paper-trade ledger, live-profitability proof, promotion-ready evidence, or real-money evidence",
+  "evidence_boundary_metadata": {
+    "artifact_role": "frozen chronological holdout replay metadata",
+    "baq_as_bel_substitution_allowed": false,
+    "current_bridge_rebuild_order": [
+      "python3 paper_trade_settlement_audit.py",
+      "python3 current_evidence_summary.py",
+      "python3 validate_current_evidence_summary.py"
+    ],
+    "current_bridge_rebuild_route_source": "current_evidence_summary.json.rebuild_validation_contract",
+    "current_bridge_rebuild_route_valid_use": "provenance/rebuild metadata only before quoting CURRENT_EVIDENCE_SUMMARY after source-byte changes",
+    "current_operator_route": [
+      "operator_status_context",
+      "source_freshness",
+      "operator_read_gate"
+    ],
+    "current_operator_route_source": "current_evidence_summary.json",
+    "current_operator_routing_requires_combined_route": true,
+    "holdout_years": [
+      2024,
+      2025
+    ],
+    "non_goals": [
+      "do not treat historical frozen replay P&L as live paper-trade ledger evidence",
+      "do not treat source fingerprints as performance evidence",
+      "do not promote Phase 8 or OP_REFINED_K7 from this artifact",
+      "do not change the OP_DURABLE_K7 anchor from this artifact",
+      "do not substitute BAQ for BEL",
+      "do not discuss real-money profitability from this artifact"
+    ],
+    "not_anchor_change_evidence": true,
+    "not_baq_as_bel_evidence": true,
+    "not_companion_change_evidence": true,
+    "not_current_day_scanner_result": true,
+    "not_live_paper_trade_ledger": true,
+    "not_live_profitability_evidence": true,
+    "not_phase8_promotion_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_real_money_evidence": true,
+    "phase7_holdout_races": 175,
+    "phase7_holdout_roi": 38.68,
+    "phase7_over_phase8_holdout_read": "Phase 7 current-paper rules remain ahead of Phase 8 frozen rules on the 2024-2025 frozen holdout",
+    "phase8_holdout_races": 118,
+    "phase8_holdout_roi": 21.45,
+    "source_scope": "cached major-track race-level dataset + phase7_live_rules.json + embedded Phase 8 frozen rule definitions",
+    "train_end_year": 2023,
+    "valid_evidence_scope": "frozen_portfolio_replay_chronological_holdout_only",
+    "valid_use": "historical frozen replay reproducibility and posture metadata"
+  },
+  "holdout_summary": {
+    "phase7_live": {
+      "hit_rate": 27.43,
+      "hits": 48,
+      "profit": 10210.61,
+      "races": 175,
+      "returned": 36610.61,
+      "roi": 38.68,
+      "wagered": 26400.0
+    },
+    "phase8_frozen": {
+      "hit_rate": 34.75,
+      "hits": 41,
+      "profit": 5585.05,
+      "races": 118,
+      "returned": 31625.05,
+      "roi": 21.45,
+      "wagered": 26040.0
+    }
+  },
+  "holdout_years": [
+    2024,
+    2025
+  ],
+  "non_goals": [
+    "not a live paper-trade ledger",
+    "not live-profitability proof",
+    "not promotion-ready evidence",
+    "not real-money evidence"
+  ],
+  "outputs": {
+    "metadata_json": "frozen_portfolio_eval_metadata.json",
+    "report_md": "FROZEN_PORTFOLIO_EVAL.md",
+    "summary_csv": "frozen_portfolio_eval_summary.csv",
+    "yearly_csv": "frozen_portfolio_eval_yearly.csv"
+  },
+  "row_counts": {
+    "summary_csv": 60,
+    "yearly_csv": 30
+  },
+  "schema_version": 1,
+  "source_files": {
+    "current_evidence_summary": {
+      "bytes": 50352,
+      "path": "current_evidence_summary.json",
+      "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9"
+    },
+    "generator": {
+      "bytes": 59302,
+      "path": "evaluate_frozen_portfolios.py",
+      "sha256": "8be48505c90008b5efa7339b75b619dd4e7ebf76d493ad585aece7888e91f42a"
+    },
+    "phase7_rules": {
+      "bytes": 1470,
+      "path": "phase7_live_rules.json",
+      "sha256": "24f9f071ba7d47937f9b71e9b735cf7cf330ff3debb3d350459310316d9c1b7d"
+    },
+    "race_cache": {
+      "bytes": 6876552,
+      "path": "phase5_race_cache.pkl",
+      "sha256": "9f38ab5d34cac72175c7ae2126a33bd798a683fdf15f862afffc17632a6084e6"
+    }
+  },
+  "source_scope": "cached major-track race-level dataset + phase7_live_rules.json + embedded Phase 8 frozen rule definitions",
+  "train_end_year": 2023,
+  "valid_evidence_scope": "frozen_portfolio_replay_chronological_holdout_only"
+}

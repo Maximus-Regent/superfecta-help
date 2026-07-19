@@ -34,6 +34,28 @@ BASE = Path(__file__).resolve().parent
 DEFAULT_SCAN_INPUT = BASE / "out" / "live_scan_latest.json"
 DEFAULT_OUTPUT_DIR = BASE / "out" / "paper_trade_recommendations_latest"
 DEFAULT_MODEL = BASE / "Model" / "log_residual_model_normalized.json"
+RECOMMENDER_VALID_EVIDENCE_SCOPE = "scanner_hit_recommendation_sizing_metadata_only"
+RECOMMENDER_EVIDENCE_BOUNDARY_TEXT = (
+    "paper-trade recommender output is scanner-hit recommendation and paper-plan sizing metadata only; "
+    "it is not a current-day scanner result by itself, not a ledger append, not settled ROI evidence, "
+    "not promotion readiness, not live-profitability evidence, and not real-money support. BET rows remain "
+    "paper plan candidates only until logger append, settlement sync, actual result, return, cost, settled_ts, "
+    "and later audit or forward-check review are complete."
+)
+RECOMMENDER_EVIDENCE_BOUNDARY = {
+    "artifact_role": "paper-trade recommender output",
+    "valid_use": "scanner-hit recommendation and paper-plan sizing metadata before ledger/settlement review",
+    "not_current_day_scanner_result_by_itself": True,
+    "not_live_paper_trade_ledger": True,
+    "not_settled_roi_evidence": True,
+    "not_promotion_readiness_evidence": True,
+    "not_live_profitability_evidence": True,
+    "not_real_money_evidence": True,
+    "requires_logger_append_before_ledger_row": True,
+    "requires_settlement_sync_before_open_settlement_row": True,
+    "requires_actual_result_return_cost_and_settled_ts_before_roi_complete": True,
+    "requires_later_audit_or_forward_check_review_before_sample_gate_use": True,
+}
 
 
 def display_path(path: Path) -> str:
@@ -245,6 +267,8 @@ def write_text_summary(summary_path: Path, recommendations: list[dict[str, Any]]
         "Paper-trade recommendation summary",
         "",
         "Flow: scanner hit -> model_main scoring -> Phase 7 combo filter -> EV sizing",
+        f"valid_evidence_scope={RECOMMENDER_VALID_EVIDENCE_SCOPE}",
+        f"Evidence boundary: {RECOMMENDER_EVIDENCE_BOUNDARY_TEXT}",
         "",
         f"Races processed: {len(recommendations)}",
         f"BET decisions: {sum(1 for rec in recommendations if rec['decision'] == 'BET')}",
@@ -269,6 +293,73 @@ def write_text_summary(summary_path: Path, recommendations: list[dict[str, Any]]
     summary_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
+def clear_stale_plan_artifacts(plans_dir: Path) -> list[str]:
+    """Remove stale per-race plan files before writing this run's plans."""
+    cleared: list[str] = []
+    if not plans_dir.exists():
+        return cleared
+    for path in sorted(plans_dir.iterdir()):
+        if path.is_file() and path.suffix in {".csv", ".json"}:
+            path.unlink()
+            cleared.append(display_path(path))
+    return cleared
+
+
+def clear_stale_prediction_artifacts(predictions_dir: Path) -> list[str]:
+    """Remove stale prediction CSVs when this run is not explicitly reusing predictions."""
+    cleared: list[str] = []
+    if not predictions_dir.exists():
+        return cleared
+    for path in sorted(predictions_dir.iterdir()):
+        if path.is_file() and path.suffix == ".csv":
+            path.unlink()
+            cleared.append(display_path(path))
+    return cleared
+
+
+def build_error_recommendation(
+    hit: dict[str, Any],
+    run_ts: str,
+    args: argparse.Namespace,
+    *,
+    reason: str,
+    race_label: str,
+    prediction_csv: Path | None = None,
+) -> dict[str, Any]:
+    return {
+        "run_ts": run_ts,
+        "signal_key": signal_key(hit),
+        "rule_id": hit.get("rule_id", ""),
+        "track": hit.get("track", ""),
+        "card_name": hit.get("card_name", ""),
+        "race_number": hit.get("race_number", ""),
+        "race_id": hit.get("race_id", ""),
+        "race_label": race_label,
+        "decision": "ERROR",
+        "reason": reason,
+        "favorite_program": hit.get("favorite_program", ""),
+        "underneath_programs": hit.get("underneath_programs", []),
+        "scanner_estimated_cost": hit.get("estimated_cost", ""),
+        "scored_combo_count": 0,
+        "filtered_combo_count": 0,
+        "prediction_csv": display_path(prediction_csv) if prediction_csv else "",
+        "plan_json": "",
+        "plan_csv": "",
+        "bankroll": args.bankroll,
+        "race_risk_budget": round(args.bankroll * args.max_race_risk, 2),
+        "total_stake": 0.0,
+        "total_expected_return": 0.0,
+        "total_expected_profit": 0.0,
+        "portfolio_expected_roi_pct": 0.0,
+        "tickets_selected": 0,
+        "tickets": [],
+        "source_hit": normalize_for_json(hit),
+        "valid_evidence_scope": RECOMMENDER_VALID_EVIDENCE_SCOPE,
+        "evidence_boundary": RECOMMENDER_EVIDENCE_BOUNDARY,
+        "evidence_boundary_text": RECOMMENDER_EVIDENCE_BOUNDARY_TEXT,
+    }
+
+
 def main() -> int:
     args = parse_args()
     scan_input = Path(args.scan_input).resolve()
@@ -278,6 +369,10 @@ def main() -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     predictions_dir.mkdir(parents=True, exist_ok=True)
     plans_dir.mkdir(parents=True, exist_ok=True)
+    cleared_prediction_artifacts = []
+    if not args.reuse_predictions:
+        cleared_prediction_artifacts = clear_stale_prediction_artifacts(predictions_dir)
+    cleared_plan_artifacts = clear_stale_plan_artifacts(plans_dir)
 
     hits = load_hits(scan_input)
     run_ts = datetime.now().isoformat(timespec="seconds")
@@ -287,6 +382,17 @@ def main() -> int:
     for hit in hits:
         race_id = hit.get("race_id")
         if race_id in (None, ""):
+            race_label = (
+                f"{hit.get('card_name', 'Unknown')} Race {hit.get('race_number', '?')} "
+                "(missing race_id)"
+            )
+            recommendations.append(build_error_recommendation(
+                hit,
+                run_ts,
+                args,
+                reason="Scanner hit is missing race_id; cannot score recommendations.",
+                race_label=race_label,
+            ))
             continue
 
         race_label = f"{hit.get('card_name', 'Unknown')} Race {hit.get('race_number', '?')} (raceId={race_id})"
@@ -339,37 +445,19 @@ def main() -> int:
                 "tickets_selected": plan.tickets_selected,
                 "tickets": plan.tickets,
                 "source_hit": hit,
+                "valid_evidence_scope": RECOMMENDER_VALID_EVIDENCE_SCOPE,
+                "evidence_boundary": RECOMMENDER_EVIDENCE_BOUNDARY,
+                "evidence_boundary_text": RECOMMENDER_EVIDENCE_BOUNDARY_TEXT,
             }))
         except Exception as exc:
-            recommendations.append({
-                "run_ts": run_ts,
-                "signal_key": signal_key(hit),
-                "rule_id": hit.get("rule_id", ""),
-                "track": hit.get("track", ""),
-                "card_name": hit.get("card_name", ""),
-                "race_number": hit.get("race_number", ""),
-                "race_id": race_id,
-                "race_label": race_label,
-                "decision": "ERROR",
-                "reason": str(exc),
-                "favorite_program": hit.get("favorite_program", ""),
-                "underneath_programs": hit.get("underneath_programs", []),
-                "scanner_estimated_cost": hit.get("estimated_cost", ""),
-                "scored_combo_count": 0,
-                "filtered_combo_count": 0,
-                "prediction_csv": display_path(prediction_csv),
-                "plan_json": "",
-                "plan_csv": "",
-                "bankroll": args.bankroll,
-                "race_risk_budget": round(args.bankroll * args.max_race_risk, 2),
-                "total_stake": 0.0,
-                "total_expected_return": 0.0,
-                "total_expected_profit": 0.0,
-                "portfolio_expected_roi_pct": 0.0,
-                "tickets_selected": 0,
-                "tickets": [],
-                "source_hit": normalize_for_json(hit),
-            })
+            recommendations.append(build_error_recommendation(
+                hit,
+                run_ts,
+                args,
+                reason=str(exc),
+                race_label=race_label,
+                prediction_csv=prediction_csv,
+            ))
 
     summary_json = output_dir / "recommendations_summary.json"
     summary_csv = output_dir / "recommendations_summary.csv"
@@ -395,6 +483,8 @@ def main() -> int:
                     "prediction_csv": rec["prediction_csv"],
                     "plan_json": rec["plan_json"],
                     **ticket,
+                    "valid_evidence_scope": rec.get("valid_evidence_scope", ""),
+                    "evidence_boundary_text": rec.get("evidence_boundary_text", ""),
                 })
         else:
             flat_rows.append({
@@ -410,6 +500,8 @@ def main() -> int:
                 "favorite_program": rec["favorite_program"],
                 "prediction_csv": rec["prediction_csv"],
                 "plan_json": rec["plan_json"],
+                "valid_evidence_scope": rec.get("valid_evidence_scope", ""),
+                "evidence_boundary_text": rec.get("evidence_boundary_text", ""),
             })
 
     pd.DataFrame(flat_rows).to_csv(summary_csv, index=False)
@@ -421,6 +513,12 @@ def main() -> int:
         f"{bet_count} BET / {len(recommendations) - bet_count} non-BET. "
         f"Summary: {summary_json}"
     )
+    if cleared_plan_artifacts:
+        print(f"Cleared {len(cleared_plan_artifacts)} stale plan artifact(s).")
+    if cleared_prediction_artifacts:
+        print(f"Cleared {len(cleared_prediction_artifacts)} stale prediction artifact(s).")
+    print(f"valid_evidence_scope={RECOMMENDER_VALID_EVIDENCE_SCOPE}")
+    print(f"Evidence boundary: {RECOMMENDER_EVIDENCE_BOUNDARY_TEXT}")
     return 0
 
 

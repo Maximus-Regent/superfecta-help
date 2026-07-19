@@ -35,6 +35,7 @@ BASE = Path("/Users/maximusregent_ai/Shared/Superfecta Help")
 CACHE_PATH = BASE / "phase5_race_cache.pkl"
 OUT_CSV = BASE / "backtest_phase7_summary.csv"
 OUT_REPORT = BASE / "PHASE7_REPORT.md"
+VALID_EVIDENCE_SCOPE = "legacy_phase7_discovery_context_only"
 
 TRACKS = ["CD", "KEE", "SA", "GP", "SAR", "AQU", "BEL", "DMR", "MTH", "OP"]
 N_BOOTSTRAP = 5000
@@ -842,6 +843,17 @@ def build_report(stability: dict, bel_results: dict, alltrack_df: pd.DataFrame,
     lines = []
     lines.append("# Phase 7 Report — Ultimate Superfecta Strategy Refinement")
     lines.append("")
+    lines.append("## Current Evidence Boundary")
+    lines.append("")
+    lines.append(f"- Valid evidence scope: `valid_evidence_scope={VALID_EVIDENCE_SCOPE}`.")
+    lines.append("- This is a historical Phase 7 discovery report and strongest-candidate-family context, not the current deployment guide by itself.")
+    lines.append("- Current posture still comes from `forward_evidence_scorecard.txt`, `compare_main_approaches.md`, and the paper-observation lane: `OP_DURABLE_K7` remains the safest anchor, `CD_CORE_K8` remains the primary OP/CD paper companion, and `OP_REFINED_K7` plus other Phase 8 rules remain shadow/watch unless forward paper evidence clears the documented gates.")
+    lines.append("- The full three-track Phase 7 result includes dormant `BEL` history. `BEL` is not currently forward-testable from this report, and `BAQ` must not be substituted for `BEL`.")
+    lines.append("- Treat `Wagered`, `Cost`, `Expected`, Kelly, and historical profit lines below as frozen backtest / paper-accounting metadata only, not as bankroll guidance, live-profitability evidence, promotion readiness, stop-loss guidance, scale-up guidance, or real-money authorization.")
+    lines.append("- Validate this boundary with `python3 validate_phase7_report_caution.py`.")
+    lines.append("")
+    lines.append("---")
+    lines.append("")
     lines.append("## Executive Summary")
     lines.append("")
 
@@ -1011,7 +1023,7 @@ def build_report(stability: dict, bel_results: dict, alltrack_df: pd.DataFrame,
     lines.append("")
 
     # Portfolio
-    lines.append("## 6. Portfolio Strategy")
+    lines.append("## 6. Portfolio Strategy (historical frozen replay)")
     lines.append("")
     if portfolio.get("portfolio_years"):
         lines.append(f"**Combined {len(portfolio.get('candidates',[]))} rules:**")
@@ -1031,7 +1043,7 @@ def build_report(stability: dict, bel_results: dict, alltrack_df: pd.DataFrame,
     lines.append("")
 
     # Monte Carlo
-    lines.append("## 7. Monte Carlo Forward Simulation")
+    lines.append("## 7. Monte Carlo Forward Simulation (historical risk context only)")
     lines.append("")
     for name, mc_data in mc.items():
         lines.append(f"### {name}")
@@ -1041,7 +1053,7 @@ def build_report(stability: dict, bel_results: dict, alltrack_df: pd.DataFrame,
         lines.append(f"- Median season ROI: {mc_data['median_roi']:+.1f}%")
         lines.append(f"- 5th / 95th percentile: {mc_data['p5_roi']:+.1f}% / {mc_data['p95_roi']:+.1f}%")
         lines.append(f"- Worst simulated season: {mc_data['worst_roi']:+.1f}%")
-        lines.append(f"- Kelly fraction: {mc_data['kelly']:.3f} ({mc_data['kelly']*100:.1f}% of bankroll)")
+        lines.append(f"- Kelly fraction: {mc_data['kelly']:.3f} ({mc_data['kelly']*100:.1f}% of bankroll; historical diagnostic only)")
         lines.append("")
 
     # Honest assessment
@@ -1093,7 +1105,7 @@ def build_report(stability: dict, bel_results: dict, alltrack_df: pd.DataFrame,
     lines.append("")
 
     # Final recommendations
-    lines.append("## 9. Final Recommendations")
+    lines.append("## 9. Original Final Recommendations (superseded by current paper-observation posture)")
     lines.append("")
     lines.append("### Best Strict Rule (highest confidence)")
     lines.append("```")
@@ -1123,13 +1135,20 @@ def build_report(stability: dict, bel_results: dict, alltrack_df: pd.DataFrame,
         lines.append("```")
         lines.append("")
 
-    lines.append("### Automation Guidance")
-    lines.append("1. Monitor NYRA race cards for BEL meets (spring/fall)")
+    lines.append("### Automation Guidance — paper observation only")
+    lines.append("1. Monitor BEL, OP, and CD cards only when the current daily preflight says the target track is active; keep `BAQ` separate from `BEL`.")
     lines.append("2. For each race, check: field size, morning line odds, track condition")
     lines.append("3. Compute: favorite prob = 100/(odds+100), normalized; gap = p1 - p2")
-    lines.append("4. If all filters pass, place the $2 Key-1-with-7 superfecta")
-    lines.append("5. Expected volume: ~5 bets per meet, ~10-15 per year")
-    lines.append("6. Track results vs. this backtest; halt if 0 hits in 20+ consecutive races")
+    lines.append("4. If all filters pass, log the race through the paper-trade lane and keep settlement open until actual result, payout, and cost are known.")
+    lines.append("5. Use the $2-base combo cost only as the historical/paper accounting unit; do not place, size, bankroll, stop-loss, or scale real-money bets from this report.")
+    lines.append("6. Forward interpretation requires ROI-complete paper settlements and the documented 30 / 20 / 100 observation gates; clean validation or historical replay profit is not live-profitability evidence.")
+    lines.append("7. Track results vs. this backtest, but do not change rules without a settled paper-evidence review.")
+    lines.append("")
+    lines.append("### Risk Boundary")
+    lines.append("- Kelly / bankroll calculations from the historical replay are intentionally not used as operating instructions here.")
+    lines.append("- Do **not** size, bankroll, stop-loss, or scale real-money bets from `PHASE7_REPORT.md`.")
+    lines.append("- Real-money discussion requires a separate human-approved risk memo after 100+ total ROI-complete paper observations, payout/concentration sanity checks, settlement-quality checks, and the no-BAQ-as-BEL guardrail.")
+    lines.append("- Until then, treat Phase 7 as the strongest paper-observation candidate family, not a live betting instruction.")
     lines.append("")
 
     lines.append("## File Paths")

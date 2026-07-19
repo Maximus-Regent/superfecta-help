@@ -6,7 +6,7 @@ One command to answer: what should I do right now?
 
 Modes:
   (default)   Auto — runs preflight + status together
-  preflight   Are there live races today for the active basket?
+  preflight   Are there live races today for the primary paper-basket tracks?
   status      Pipeline state, open settlements, forward-check summary
   post-race   What needs settling after today's races?
   next        Print only the exact next command to run
@@ -51,7 +51,51 @@ RECOMMENDATION_LEDGERS = {
 }
 
 ACTIVE_TRACKS = {"OP": "Oaklawn Park", "CD": "Churchill Downs"}
+SHADOW_TRACKS = {
+    "KEE": "Keeneland",
+    "SA": "Santa Anita",
+    "AQU": "Aqueduct",
+    "BEL": "Belmont Park",
+    "DMR": "Del Mar",
+}
 OPEN_TOKENS = {"", "open", "pending", "unsettled", "todo"}
+BELMONT_BAQ_ALIAS_MARKERS = ("big a", "@ the big a", "aqueduct", "baq")
+
+
+def _normalized_card_name(card_name: object) -> str:
+    return " ".join(str(card_name or "").strip().lower().split())
+
+
+def _is_belmont_at_big_a(card_name: object) -> bool:
+    name = _normalized_card_name(card_name)
+    if not name:
+        return False
+    if name == "baq" or name.startswith("baq "):
+        return True
+    return "belmont" in name and any(marker in name for marker in BELMONT_BAQ_ALIAS_MARKERS)
+
+
+def _card_matches_track(card_name: object, track_code: str, track_name: str) -> bool:
+    """Return True only for supported track-name matches.
+
+    The BEL branch is intentionally stricter than a plain substring check:
+    `Belmont at the Big A` is BAQ/Big A, not Belmont Park, and must not
+    wake the dormant BEL rule or shadow lane.
+    """
+    name = _normalized_card_name(card_name)
+    if not name:
+        return False
+    if track_code == "BEL":
+        if _is_belmont_at_big_a(name):
+            return False
+        return name == "belmont" or "belmont park" in name
+    return track_name.lower() in name
+
+
+def _excluded_track_for_card(card_name: object) -> tuple[str, str] | None:
+    if _is_belmont_at_big_a(card_name):
+        return ("BAQ", "Belmont/BAQ Big A or Aqueduct card; do not alias it to BEL")
+    return None
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -115,7 +159,7 @@ def _last_scan_status() -> dict[str, Any] | None:
 # ---------------------------------------------------------------------------
 
 def check_todays_cards() -> dict[str, Any]:
-    """Hit the NYRA ListCards API and see if any active-basket tracks are racing."""
+    """Hit the NYRA ListCards API and see if any primary paper-basket tracks are racing."""
     result: dict[str, Any] = {
         "date": _today(),
         "checked_at": _now_et(),
@@ -139,9 +183,9 @@ def check_todays_cards() -> dict[str, Any]:
         for card in cards:
             card_name = card.get("cardName", "")
             card_date = card.get("cardDate", "")
-            # Match against active basket tracks
+            # Match against primary paper-basket target tracks.
             for track_code, track_name in ACTIVE_TRACKS.items():
-                if track_name.lower() in card_name.lower():
+                if _card_matches_track(card_name, track_code, track_name):
                     result["relevant_cards"].append({
                         "track": track_code,
                         "card_name": card_name,
@@ -162,24 +206,34 @@ def check_todays_cards() -> dict[str, Any]:
 
 def check_todays_cards_extended() -> dict[str, Any]:
     """Also check shadow-basket tracks (KEE, SA, AQU, etc.)."""
-    shadow_tracks = {
-        "KEE": "Keeneland", "SA": "Santa Anita", "AQU": "Aqueduct",
-        "BEL": "Belmont", "DMR": "Del Mar",
-    }
     result = check_todays_cards()
     if not result["api_ok"] or result.get("error"):
         return result
 
     result["shadow_cards"] = []
     result["shadow_tracks"] = []
+    result["excluded_cards"] = []
+    result["excluded_tracks"] = []
 
     try:
         from list_cards import list_cards
         cards = list_cards()
         for card in (cards or []):
             card_name = card.get("cardName", "")
-            for track_code, track_name in shadow_tracks.items():
-                if track_name.lower() in card_name.lower():
+            excluded = _excluded_track_for_card(card_name)
+            if excluded:
+                track_code, reason = excluded
+                result["excluded_cards"].append({
+                    "track": track_code,
+                    "card_name": card_name,
+                    "card_id": card.get("cardId", ""),
+                    "reason": reason,
+                })
+                if track_code not in result["excluded_tracks"]:
+                    result["excluded_tracks"].append(track_code)
+
+            for track_code, track_name in SHADOW_TRACKS.items():
+                if _card_matches_track(card_name, track_code, track_name):
                     result["shadow_cards"].append({
                         "track": track_code,
                         "card_name": card_name,
@@ -277,7 +331,7 @@ def decide_next_action(preflight: dict[str, Any], status: dict[str, Any]) -> dic
         tracks = ", ".join(preflight.get("relevant_tracks", []))
         return {
             "priority": "RUN LIVE",
-            "reason": f"Active basket tracks racing today: {tracks}",
+            "reason": f"Primary paper-basket target tracks racing today: {tracks}",
             "command": f'{cd_cmd} && bash run_daily_portfolio_observation.sh',
             "detail": "Run close to post time for best odds. Do NOT pass --cache-only.",
         }
@@ -285,7 +339,7 @@ def decide_next_action(preflight: dict[str, Any], status: dict[str, Any]) -> dic
     if total_settled < 30:
         return {
             "priority": "WAIT",
-            "reason": f"No active-basket tracks today. {total_settled}/30 settled for decision-grade forward check.",
+            "reason": f"No primary paper-basket target tracks today. {total_settled}/30 settled for decision-grade forward check.",
             "command": None,
             "detail": "Check again on the next OP or CD race day. Churchill Downs spring meet opens late April.",
         }
@@ -322,17 +376,23 @@ def print_preflight(pf: dict[str, Any]) -> None:
     print(f"  Cards on NYRA today: {pf['total_cards']}")
 
     if pf["has_targets"]:
-        print(f"  ACTIVE BASKET TRACKS RACING: {', '.join(pf['relevant_tracks'])}")
+        print(f"  PRIMARY PAPER-BASKET TARGET TRACKS RACING: {', '.join(pf['relevant_tracks'])}")
         for card in pf["relevant_cards"]:
             print(f"    {card['track']} — {card['card_name']} ({card.get('num_runners', '?')} runners)")
     else:
-        print("  No active-basket tracks (OP / CD) racing today.")
+        print("  No primary paper-basket target tracks (OP / CD) racing today.")
 
     shadow_tracks = pf.get("shadow_tracks", [])
     if shadow_tracks:
         print(f"  Shadow-basket tracks present: {', '.join(shadow_tracks)}")
         for card in pf.get("shadow_cards", []):
             print(f"    {card['track']} — {card['card_name']}")
+
+    excluded_tracks = pf.get("excluded_tracks", [])
+    if excluded_tracks:
+        print(f"  Excluded track aliases present: {', '.join(excluded_tracks)} (not treated as BEL)")
+        for card in pf.get("excluded_cards", []):
+            print(f"    {card['track']} — {card['card_name']} | {card.get('reason', '')}")
 
 
 def print_status(st: dict[str, Any]) -> None:
@@ -444,7 +504,7 @@ def parse_args() -> argparse.Namespace:
         epilog="""
 Modes:
   (none)      Auto — preflight + status + next action
-  preflight   Check if today has active-basket races
+  preflight   Check if today has primary paper-basket target races
   status      Show pipeline state and settlement counts
   post-race   List all open settlements needing outcomes
   next        Print only the recommended next command

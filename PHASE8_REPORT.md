@@ -1,8 +1,12 @@
 # Phase 8 Report — Advanced Superfecta Portfolio Optimization
 
-## Executive Summary
+> **Current evidence update (2026-05-20): read this as a legacy discovery report, not the deployment guide.**
+> The frozen 2024-2025 holdout and train-only walk-forward standard now outrank the full-sample Phase 8 headline. On that stricter deployment read, the simpler Phase 7 portfolio beat Phase 8 on 2024-2025 holdout (**+38.68% ROI on 175 races** versus **+21.45% ROI on 118 races**), and `OP_DURABLE_K7` remains the safest current paper anchor. Phase 8 rules belong in shadow/watch observation unless settled paper evidence clears the documented gates. Do not treat the 7-track full-sample result below as live profitability proof or promotion readiness.
+> Treat every `$2`, `Cost`, and `Expected` line below as historical/paper accounting metadata, not a deployment size. Do not place, size, bankroll, stop-loss, or scale real-money bets from this report; any future real-money discussion needs a separate human-approved risk memo after the 30 / 20 / 100 ROI-complete paper-evidence gates, payout/concentration checks, settlement-quality checks, and no-BAQ-as-BEL guardrail are satisfied. Do not substitute `BAQ` for dormant `BEL`.
 
-Phase 8 built a **7-track optimized portfolio** that materially beats Phase 7:
+## Original Full-Sample Executive Summary (superseded for deployment decisions)
+
+Phase 8 built a **7-track optimized portfolio** that materially beats Phase 7 on the original full-sample research read:
 
 | Metric | Phase 7 | Phase 8 | Delta |
 |--------|---------|---------|-------|
@@ -15,7 +19,7 @@ Phase 8 built a **7-track optimized portfolio** that materially beats Phase 7:
 | P(loss) | 0.0% | **0.0%** | |
 | Walk-forward OOS | — | **12/12 positive** | |
 
-**Verdict: MATERIAL IMPROVEMENT (+18.8 ROI points)**
+**Original full-sample verdict: MATERIAL IMPROVEMENT (+18.8 ROI points). Current deployment verdict: keep Phase 8 in shadow/watch until forward-settled evidence beats the frozen Phase 7 / OP anchor standard.**
 
 Key improvements:
 1. **Refined OP** — tighter card position (race 9+) and favorite minimum (>=25%) cut 238 low-quality races, boosting OP from +35% to +50% ROI
@@ -249,17 +253,17 @@ Monthly breakdown of base OP:
 - Dec: -60.2% (25 races) — weak
 
 ### 3. K=9 Unlocks New Tracks
-Phase 7 only searched K=7 and K=8. Phase 8's K=9 search ($336/race, 336 combos) discovered profitable pockets at AQU, SA, KEE, and an improved CD rule. K=9 works at tracks with 11-14 runner fields where the wider net captures more of the finish-order distribution.
+Phase 7 only searched K=7 and K=8. On the original full-sample search, Phase 8's K=9 sweep ($336/race, 336 combos) discovered profitable-looking pockets at AQU, SA, KEE, and an improved CD rule. Current frozen evidence keeps those pockets in SKIP/WATCH unless forward observations improve the evidence class.
 
 ### 4. CD top2_mass Feature Gate
-The `top2_mass >= 0.55` gate (top-2 favorites hold >= 55% of win probability) is the only Phase 8 feature gate that produced a material improvement. It identifies races where the field is highly concentrated, making superfecta outcomes more predictable.
+In the original search, the `top2_mass >= 0.55` gate (top-2 favorites hold >= 55% of win probability) was the only Phase 8 feature gate that produced a material improvement. It remains a research finding, not a reason to prefer `CD_REFINED_K9` over the simpler `CD_CORE_K8`, because `CD_REFINED_K9` lost on the frozen 2024-2025 holdout.
 
 ### 5. gap_ratio Feature
 `gap_ratio = prob_gap / fav_prob` (relative dominance) showed small improvements at OP (+36.9% vs +35.0%) and BEL but was largely redundant with the absolute gap filter, confirming Phase 7's conclusion.
 
 ---
 
-## Validation
+## Original Validation (legacy full-sample-selected portfolio)
 
 ### Expanding Walk-Forward (Portfolio Level)
 
@@ -278,7 +282,7 @@ The `top2_mass >= 0.55` gate (top-2 favorites hold >= 55% of win probability) is
 | 2010-2023 | 2024 | 85 | +9.5% |
 | 2010-2024 | 2025 | 33 | +50.3% |
 
-**OOS positive: 12/12** — every single out-of-sample year is profitable.
+**Original OOS positive: 12/12** — every single listed out-of-sample year was profitable in this legacy portfolio sequence, but this does not outrank the frozen 2024-2025 Phase 7-vs-Phase 8 holdout comparison or settled paper results.
 
 ### Payoff Concentration
 
@@ -291,11 +295,11 @@ The `top2_mass >= 0.55` gate (top-2 favorites hold >= 55% of win probability) is
 | ROI without top-3 | +23.1% |
 | ROI without top-5 | +18.8% |
 
-**The portfolio remains profitable (+18.8%) even after removing the 5 largest payouts.** This is a strong durability signal — the edge isn't driven by a handful of lucky longshots.
+**On the original full-sample read, the portfolio remains profitable (+18.8%) even after removing the 5 largest payouts.** This is a useful historical durability signal, not a current deployment proof.
 
 ---
 
-## Alternative Portfolio Comparison
+## Original Full-Sample Alternative Portfolio Comparison (legacy, not deployment ranking)
 
 | Portfolio | Races | ROI% | Pos Years | CI Lower | P(loss) |
 |-----------|-------|------|-----------|----------|---------|
@@ -307,40 +311,42 @@ The `top2_mass >= 0.55` gate (top-2 favorites hold >= 55% of win probability) is
 | **P7 baseline** | **1,075** | **+28.0** | **12/15** | **+12.3%** | **0.0%** |
 | BEL+OP+CD (tight gaps) | 901 | +26.6 | 11/15 | +11.5% | 0.0% |
 
-The Phase 8 optimized portfolio dominates on every composite metric: highest CI lower bound (+24.7%), most positive years (14/15), and zero loss probability, while maintaining +46.7% ROI.
+On the original full-sample composite read, the Phase 8 optimized portfolio ranked best: highest CI lower bound (+24.7%), most positive years (14/15), and zero loss probability, while maintaining +46.7% ROI. **This is not the current deployment ranking.** The frozen 2024-2025 holdout still favors the simpler Phase 7 portfolio, and the current paper anchor remains `OP_DURABLE_K7` while Phase 8 variants stay shadow/watch.
 
 ---
 
-## Honest Assessment — Overfit Risks
+## Original Honest Assessment — Overfit Risks (legacy read)
 
 ### What's robust:
 - **BEL broad1**: Unchanged from Phase 7. Independently validated across 6 phases.
 - **OP refined**: Same base rule as Phase 7, just tighter filters. Monthly patterns are structurally explainable (weak months removed).
-- **Walk-forward 12/12**: Extremely difficult to achieve through overfit on 15 years of data.
-- **ROI survives top-5 removal**: +18.8% without 5 biggest hits.
+- **Original 12/12 OOS sequence**: historically interesting, but it does not outrank the frozen 2024-2025 holdout or settled forward paper evidence.
+- **Original full-sample ROI survives top-5 removal**: +18.8% without 5 biggest hits.
 
 ### What needs caution:
 - **AQU, SA, KEE, DMR**: All discovered in this Phase 8 search. While each passes LOOCV and walk-forward individually, they haven't been validated across multiple independent analyses. Bootstrap CIs for SA and KEE cross zero individually.
 - **CD K=9 with top2_mass gate**: The feature gate was selected from multiple options — higher overfit risk than ungated rules.
 - **7-track portfolio is complex**: More rules = more degrees of freedom. The Phase 7 3-track portfolio is simpler and may be more robust forward.
 
-### Conservative fallback:
-If concerned about overfit, the **BEL + OP refined** two-track portfolio achieves:
+### Legacy fallback (not current operator fallback):
+On the original full-sample read, the **BEL + OP refined** two-track portfolio achieved:
 - 352 races, ~+65% ROI, 11/14 positive years
 - No new track discoveries needed
 - Pure refinement of Phase 7 rules
 
+Current operator fallback is stricter: keep `OP_DURABLE_K7` as anchor with `CD_CORE_K8` as the paper companion, leave `OP_REFINED_K7` in shadow/watch, and treat BEL as dormant until reopened Belmont produces qualifying forward observations. Do not use this legacy fallback as a live deployment instruction.
+
 ---
 
-## Data Ceiling Analysis
+## Data Ceiling Analysis (original full-sample interpretation)
 
-Phase 8 achieved a material improvement (+18.8 ROI points) through:
+On the original full-sample research read, Phase 8 appeared to achieve a material improvement (+18.8 ROI points) through:
 1. **K=9 search space** (previously unexplored) — yielded 4 new track pockets
 2. **OP tightening** — removing weak months/card positions improved ROI by 15 points
 3. **Feature gating** (top2_mass) — moderate improvement at CD
 4. **Seasonal filters** — small gains at BEL and DMR
 
-The dataset is **approaching but not yet at its ceiling** for odds-derived strategies. The main remaining gains likely require:
+At the time, the dataset appeared to be **approaching but not yet at its ceiling** for odds-derived strategies. Current evidence is more conservative: do not continue Phase escalation or odds-only ML tuning unless new horse-specific features or settled forward-paper evidence materially change the evidence class. The main remaining gains likely require:
 1. **Horse-specific features** (speed figures, form cycle, class level)
 2. **Forward data** from reopened Belmont Park (expected 2025-2026)
 3. **Real-time pool analysis** for overlay detection
@@ -350,32 +356,36 @@ The dataset is **approaching but not yet at its ceiling** for odds-derived strat
 
 ---
 
-## New Track Discoveries
+## New Track Discoveries (legacy discoveries; current status from frozen evidence)
 
-### AQU (K=9) — Strong
+### AQU (K=9) — Legacy discovery; current SKIP
+- Current evidence read: frozen holdout is negative/small (`-4.28%` on 8 races), so this is not in the active paper basket.
 - Rule: FS 10-11, gap >= 22%, race 9+, any condition
 - 64 races, +50.2% ROI, LOOCV 10/14
 - Bootstrap CI: [+3.1%, +106.6%]
 - Structural: late-card races at AQU with dominant favorites in medium fields
 
-### KEE (K=9) — Solid
+### KEE (K=9) — Legacy discovery; current WATCH
+- Current evidence read: only 20 holdout races and bootstrap CI crosses zero; observe only.
 - Rule: FS 12-14, gap >= 5%, fav >= 35%, fast track
 - 111 races, +30.8% ROI, LOOCV 11/15
 - Bootstrap CI: [-3.0%, +67.2%]
 - Structural: Keeneland's short premium meets with large competitive fields
 
-### SA (K=9) — Moderate
+### SA (K=9) — Legacy discovery; current WATCH
+- Current evidence read: only 11 holdout races and bootstrap CI crosses zero; observe only.
 - Rule: FS 11-12, gap >= 22%, fast, race 9+
 - 54 races, +28.0% ROI, LOOCV 11/14
 - Bootstrap CI: [-6.3%, +57.8%]
 
-### DMR (K=7) — Weakest
+### DMR (K=7) — Legacy discovery; current WATCH / weakest
+- Current evidence read: only 14 holdout races, no train-only walk-forward support, and weak full-sample loss-risk profile; first cut candidate.
 - Rule: FS 10-11, gap >= 10%, fall meet, race 5+
 - 145 races, +14.4% ROI, LOOCV 9/14
 - Bootstrap CI: [-28.8%, +64.9%]
 - First candidate for removal if pruning portfolio
 
-### MTH, GP (Not in portfolio — sample too small)
+### MTH, GP (Not in portfolio — sample too small; legacy only)
 - MTH: 47 races, +101.9% ROI but wide CI
 - GP: 45 races, +55.2% ROI, bootstrap CI [+5.0%, +107.1%]
 - Both promising but below 60-race minimum for portfolio inclusion

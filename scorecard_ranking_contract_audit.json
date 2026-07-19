@@ -1,0 +1,891 @@
+{
+  "generated_at": "2026-07-17 06:12 CEST",
+  "suite_status": "pass",
+  "valid_evidence_scope": "scorecard_gate_ranking_ci_only_sync_metadata_only",
+  "evidence_boundary": {
+    "artifact_role": "scorecard ranking-contract and CI-only diagnostic usage audit",
+    "valid_evidence_scope": "scorecard_gate_ranking_ci_only_sync_metadata_only",
+    "valid_use": "report-surface synchronization and reproducibility guardrail only",
+    "not_new_forward_evidence": true,
+    "not_live_paper_trade_ledger": true,
+    "not_settled_roi_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_real_money_evidence": true,
+    "non_goals": [
+      "do not use this audit as settled ROI",
+      "do not promote OP_REFINED_K7 or Phase 8 from this audit",
+      "do not treat CI-only diagnostic coverage as a cleared paper-observation gate",
+      "do not reopen current odds-only XGBoost from this audit",
+      "do not substitute BAQ for BEL",
+      "do not discuss real-money sizing from this audit"
+    ]
+  },
+  "evidence_boundary_metadata": {
+    "artifact_role": "scorecard ranking-contract and CI-only diagnostic usage audit",
+    "valid_evidence_scope": "scorecard_gate_ranking_ci_only_sync_metadata_only",
+    "valid_use": "report-surface synchronization and reproducibility guardrail only",
+    "decision_gate_minimums_source": "forward_evidence_scorecard.json:decision_gate_minimums",
+    "decision_gate_minimums": {
+      "anchor_displacement": {
+        "min_roi_complete_settled_observations": 30,
+        "observation_scope": "same candidate paper observations",
+        "also_requires": [
+          "cleaner split-aware forward read than OP_DURABLE_K7",
+          "equal-or-better walk-forward support"
+        ],
+        "does_not_count": [
+          "historical replay rows",
+          "clean empty scans",
+          "open paper signals",
+          "source fingerprints",
+          "green validators"
+        ]
+      },
+      "phase8_promotion_review": {
+        "min_roi_complete_settled_observations": 20,
+        "observation_scope": "candidate shadow observations",
+        "also_requires": [
+          "complete ROI coverage",
+          "cleaner split-aware/walk-forward support than the current anchor/companion pair"
+        ],
+        "does_not_count": [
+          "small-sample aggregate holdout ROI",
+          "WATCH label",
+          "clean rebuild",
+          "empty live run"
+        ]
+      },
+      "real_money_discussion": {
+        "min_total_settled_observations_with_usable_roi": 100,
+        "also_requires": [
+          "positive paper ROI",
+          "concentration checks",
+          "payout-distribution sanity checks",
+          "no BAQ-as-BEL substitution"
+        ],
+        "does_not_count": [
+          "frozen holdout P&L",
+          "daily top-card readiness",
+          "clean validators",
+          "empty/no-target wrapper runs"
+        ]
+      }
+    },
+    "decision_gate_minimums_are_future_paper_observation_floors": true,
+    "ci_only_coverage_does_not_clear_promotion_or_anchor_gates": true,
+    "validator_cleanliness_does_not_clear_gates": true,
+    "no_baq_as_bel_prerequisite_preserved": true,
+    "not_new_forward_evidence": true,
+    "not_live_paper_trade_ledger": true,
+    "not_settled_roi_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_real_money_evidence": true
+  },
+  "scorecard_contract_source": "forward_evidence_scorecard.json",
+  "scorecard_ranking_contract": {
+    "rank_sort_order": [
+      "tier_priority",
+      "forward_trust",
+      "holdout_races",
+      "holdout_roi"
+    ],
+    "rank_is_tier_first_decision_order": true,
+    "forward_trust_is_secondary_within_tier": true,
+    "raw_score_is_not_an_automatic_deployment_instruction": true,
+    "known_rank_override": "CD_CORE_K8 ranks ahead of OP_REFINED_K7 because PAPER tier outranks WATCH tier even though OP_REFINED_K7 has the higher raw forward_trust score.",
+    "why": "The scorecard rank is a conservative decision/posture order; tier gates protect against small-sample and mixed-year spikes outrunning the safer OP anchor or primary OP/CD paper-basket companion."
+  },
+  "scorecard_ci_only_diagnostic_source": "forward_evidence_scorecard.json:ci_only_promotion_diagnostics.OP_REFINED_K7",
+  "scorecard_ci_only_diagnostic": {
+    "candidate_rule_id": "OP_REFINED_K7",
+    "current_anchor_rule_id": "OP_DURABLE_K7",
+    "positive_ci_lower_bound_is_support_context": true,
+    "ci_only_promotion_allowed": false,
+    "current_decision": "Keep OP_REFINED_K7 shadow/watch only.",
+    "why_not": [
+      "smaller holdout sample than OP_DURABLE_K7",
+      "losing 2024 holdout split",
+      "lower walk-forward recurrence than OP_DURABLE_K7",
+      "uncleared phase8_promotion_review paper-observation gate",
+      "uncleared anchor_displacement paper-observation gate"
+    ],
+    "required_before_review": {
+      "phase8_promotion_review": "20+ ROI-complete candidate shadow observations plus cleaner split-aware/walk-forward support",
+      "anchor_displacement": "30+ ROI-complete same-candidate paper observations plus a cleaner split-aware forward read and equal-or-better walk-forward support"
+    },
+    "does_not_count": [
+      "positive bootstrap CI lower bound by itself",
+      "hotter aggregate small-sample holdout ROI",
+      "historical replay rows",
+      "clean rebuilds",
+      "green validators"
+    ]
+  },
+  "decision_gate_minimums_source": "forward_evidence_scorecard.json:decision_gate_minimums",
+  "decision_gate_minimums": {
+    "anchor_displacement": {
+      "min_roi_complete_settled_observations": 30,
+      "observation_scope": "same candidate paper observations",
+      "also_requires": [
+        "cleaner split-aware forward read than OP_DURABLE_K7",
+        "equal-or-better walk-forward support"
+      ],
+      "does_not_count": [
+        "historical replay rows",
+        "clean empty scans",
+        "open paper signals",
+        "source fingerprints",
+        "green validators"
+      ]
+    },
+    "phase8_promotion_review": {
+      "min_roi_complete_settled_observations": 20,
+      "observation_scope": "candidate shadow observations",
+      "also_requires": [
+        "complete ROI coverage",
+        "cleaner split-aware/walk-forward support than the current anchor/companion pair"
+      ],
+      "does_not_count": [
+        "small-sample aggregate holdout ROI",
+        "WATCH label",
+        "clean rebuild",
+        "empty live run"
+      ]
+    },
+    "real_money_discussion": {
+      "min_total_settled_observations_with_usable_roi": 100,
+      "also_requires": [
+        "positive paper ROI",
+        "concentration checks",
+        "payout-distribution sanity checks",
+        "no BAQ-as-BEL substitution"
+      ],
+      "does_not_count": [
+        "frozen holdout P&L",
+        "daily top-card readiness",
+        "clean validators",
+        "empty/no-target wrapper runs"
+      ]
+    }
+  },
+  "known_rank_override": "CD_CORE_K8 ranks ahead of OP_REFINED_K7 because PAPER tier outranks WATCH tier even though OP_REFINED_K7 has the higher raw forward_trust score.",
+  "row_count": 41,
+  "pass_count": 41,
+  "fail_count": 0,
+  "rows": [
+    {
+      "name": "forward_evidence_scorecard_text",
+      "kind": "text",
+      "role": "source scorecard human table",
+      "path": "forward_evidence_scorecard.txt",
+      "status": "pass",
+      "required_phrase_count": 3,
+      "missing_phrases": [],
+      "bytes": 11596,
+      "sha256": "5b70ad9fc0057d238b81af1272250d0af69f145c66dba7f0b432efabece3b94e",
+      "source_fingerprint": {
+        "path": "forward_evidence_scorecard.txt",
+        "bytes": 11596,
+        "sha256": "5b70ad9fc0057d238b81af1272250d0af69f145c66dba7f0b432efabece3b94e"
+      }
+    },
+    {
+      "name": "compare_main_approaches_markdown",
+      "kind": "text",
+      "role": "main cross-method report bundle",
+      "path": "COMPARE_MAIN_APPROACHES.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 36303,
+      "sha256": "61d27803ce85edff20f06b51792282bb23c592b30f960e43cab66ef322c2340a",
+      "source_fingerprint": {
+        "path": "COMPARE_MAIN_APPROACHES.md",
+        "bytes": 36303,
+        "sha256": "61d27803ce85edff20f06b51792282bb23c592b30f960e43cab66ef322c2340a"
+      }
+    },
+    {
+      "name": "op_anchor_method_comparison_markdown",
+      "kind": "text",
+      "role": "OP anchor vs Harville/XGBoost comparison",
+      "path": "OP_ANCHOR_METHOD_COMPARISON.md",
+      "status": "pass",
+      "required_phrase_count": 5,
+      "missing_phrases": [],
+      "bytes": 25287,
+      "sha256": "5c97c144bd16d92d6f2331b2fb81d78fe6416f9a7c67c396f037df45d617c071",
+      "source_fingerprint": {
+        "path": "OP_ANCHOR_METHOD_COMPARISON.md",
+        "bytes": 25287,
+        "sha256": "5c97c144bd16d92d6f2331b2fb81d78fe6416f9a7c67c396f037df45d617c071"
+      }
+    },
+    {
+      "name": "op_family_decision_markdown",
+      "kind": "text",
+      "role": "direct OP-family anchor/challenger card",
+      "path": "OP_FAMILY_DECISION.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 19199,
+      "sha256": "97efcb66199b58428153040e3407ccac6923213d420558ce8ef5d864fc05c8f2",
+      "source_fingerprint": {
+        "path": "OP_FAMILY_DECISION.md",
+        "bytes": 19199,
+        "sha256": "97efcb66199b58428153040e3407ccac6923213d420558ce8ef5d864fc05c8f2"
+      }
+    },
+    {
+      "name": "cross_family_decision_markdown",
+      "kind": "text",
+      "role": "direct OP/CD/Phase-8 cross-family card",
+      "path": "CROSS_FAMILY_DECISION.md",
+      "status": "pass",
+      "required_phrase_count": 3,
+      "missing_phrases": [],
+      "bytes": 19330,
+      "sha256": "630b49f71773127595c65b66afadee17c22b5789eddc3c838f487bc09c35fad4",
+      "source_fingerprint": {
+        "path": "CROSS_FAMILY_DECISION.md",
+        "bytes": 19330,
+        "sha256": "630b49f71773127595c65b66afadee17c22b5789eddc3c838f487bc09c35fad4"
+      }
+    },
+    {
+      "name": "portfolio_decision_markdown",
+      "kind": "text",
+      "role": "direct Phase 7 / Phase 8 / selector portfolio card",
+      "path": "PORTFOLIO_DECISION_CARD.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 20825,
+      "sha256": "a19542a3523581ab46091175eb95db27a1c22b82a961128a6aa53fc9b2cf92c7",
+      "source_fingerprint": {
+        "path": "PORTFOLIO_DECISION_CARD.md",
+        "bytes": 20825,
+        "sha256": "a19542a3523581ab46091175eb95db27a1c22b82a961128a6aa53fc9b2cf92c7"
+      }
+    },
+    {
+      "name": "method_family_decision_markdown",
+      "kind": "text",
+      "role": "direct selective/Harville/XGBoost method-family card",
+      "path": "METHOD_FAMILY_DECISION.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 21159,
+      "sha256": "2f7fd61ced5a35a949941461ab44bfe98b0eb503d408936fe66fa7d155b5db85",
+      "source_fingerprint": {
+        "path": "METHOD_FAMILY_DECISION.md",
+        "bytes": 21159,
+        "sha256": "2f7fd61ced5a35a949941461ab44bfe98b0eb503d408936fe66fa7d155b5db85"
+      }
+    },
+    {
+      "name": "forward_evidence_scorecard_text_ci_only",
+      "kind": "text",
+      "role": "source scorecard human CI-only diagnostic",
+      "path": "forward_evidence_scorecard.txt",
+      "status": "pass",
+      "required_phrase_count": 3,
+      "missing_phrases": [],
+      "bytes": 11596,
+      "sha256": "5b70ad9fc0057d238b81af1272250d0af69f145c66dba7f0b432efabece3b94e",
+      "source_fingerprint": {
+        "path": "forward_evidence_scorecard.txt",
+        "bytes": 11596,
+        "sha256": "5b70ad9fc0057d238b81af1272250d0af69f145c66dba7f0b432efabece3b94e"
+      }
+    },
+    {
+      "name": "compare_main_approaches_markdown_ci_only",
+      "kind": "text",
+      "role": "main comparison CI-only diagnostic",
+      "path": "COMPARE_MAIN_APPROACHES.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 36303,
+      "sha256": "61d27803ce85edff20f06b51792282bb23c592b30f960e43cab66ef322c2340a",
+      "source_fingerprint": {
+        "path": "COMPARE_MAIN_APPROACHES.md",
+        "bytes": 36303,
+        "sha256": "61d27803ce85edff20f06b51792282bb23c592b30f960e43cab66ef322c2340a"
+      }
+    },
+    {
+      "name": "op_anchor_method_comparison_markdown_ci_only",
+      "kind": "text",
+      "role": "OP anchor comparison CI-only diagnostic",
+      "path": "OP_ANCHOR_METHOD_COMPARISON.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 25287,
+      "sha256": "5c97c144bd16d92d6f2331b2fb81d78fe6416f9a7c67c396f037df45d617c071",
+      "source_fingerprint": {
+        "path": "OP_ANCHOR_METHOD_COMPARISON.md",
+        "bytes": 25287,
+        "sha256": "5c97c144bd16d92d6f2331b2fb81d78fe6416f9a7c67c396f037df45d617c071"
+      }
+    },
+    {
+      "name": "op_family_decision_markdown_ci_only",
+      "kind": "text",
+      "role": "direct OP-family card CI-only diagnostic",
+      "path": "OP_FAMILY_DECISION.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 19199,
+      "sha256": "97efcb66199b58428153040e3407ccac6923213d420558ce8ef5d864fc05c8f2",
+      "source_fingerprint": {
+        "path": "OP_FAMILY_DECISION.md",
+        "bytes": 19199,
+        "sha256": "97efcb66199b58428153040e3407ccac6923213d420558ce8ef5d864fc05c8f2"
+      }
+    },
+    {
+      "name": "cross_family_decision_markdown_ci_only",
+      "kind": "text",
+      "role": "direct cross-family card CI-only diagnostic",
+      "path": "CROSS_FAMILY_DECISION.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 19330,
+      "sha256": "630b49f71773127595c65b66afadee17c22b5789eddc3c838f487bc09c35fad4",
+      "source_fingerprint": {
+        "path": "CROSS_FAMILY_DECISION.md",
+        "bytes": 19330,
+        "sha256": "630b49f71773127595c65b66afadee17c22b5789eddc3c838f487bc09c35fad4"
+      }
+    },
+    {
+      "name": "portfolio_decision_markdown_ci_only",
+      "kind": "text",
+      "role": "direct portfolio card CI-only diagnostic",
+      "path": "PORTFOLIO_DECISION_CARD.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 20825,
+      "sha256": "a19542a3523581ab46091175eb95db27a1c22b82a961128a6aa53fc9b2cf92c7",
+      "source_fingerprint": {
+        "path": "PORTFOLIO_DECISION_CARD.md",
+        "bytes": 20825,
+        "sha256": "a19542a3523581ab46091175eb95db27a1c22b82a961128a6aa53fc9b2cf92c7"
+      }
+    },
+    {
+      "name": "method_family_decision_markdown_ci_only",
+      "kind": "text",
+      "role": "direct method-family card CI-only diagnostic",
+      "path": "METHOD_FAMILY_DECISION.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 21159,
+      "sha256": "2f7fd61ced5a35a949941461ab44bfe98b0eb503d408936fe66fa7d155b5db85",
+      "source_fingerprint": {
+        "path": "METHOD_FAMILY_DECISION.md",
+        "bytes": 21159,
+        "sha256": "2f7fd61ced5a35a949941461ab44bfe98b0eb503d408936fe66fa7d155b5db85"
+      }
+    },
+    {
+      "name": "current_evidence_summary_markdown_ci_only",
+      "kind": "text",
+      "role": "current-evidence bridge CI-only diagnostic",
+      "path": "CURRENT_EVIDENCE_SUMMARY.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 16208,
+      "sha256": "8a221c30affb7870801e43d948c23abeaf425cf0e40f633b8e941b0c676502ff",
+      "source_fingerprint": {
+        "path": "CURRENT_EVIDENCE_SUMMARY.md",
+        "bytes": 16208,
+        "sha256": "8a221c30affb7870801e43d948c23abeaf425cf0e40f633b8e941b0c676502ff"
+      }
+    },
+    {
+      "name": "paper_trade_usage_markdown_ci_only",
+      "kind": "text",
+      "role": "operator runbook CI-only route",
+      "path": "PAPER_TRADE_USAGE.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 97363,
+      "sha256": "2fe140a86fbec55a0185ba5fdbe8196825bec321e0d68ce3b89cf5d21b1de2a1",
+      "source_fingerprint": {
+        "path": "PAPER_TRADE_USAGE.md",
+        "bytes": 97363,
+        "sha256": "2fe140a86fbec55a0185ba5fdbe8196825bec321e0d68ce3b89cf5d21b1de2a1"
+      }
+    },
+    {
+      "name": "validation_quickstart_markdown_ci_only",
+      "kind": "text",
+      "role": "validation quickstart CI-only route",
+      "path": "VALIDATION_QUICKSTART.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 94808,
+      "sha256": "c277c3ae3b2e4b2861d60aabd72c6118d463437a3f1e773affbbb92124e57a88",
+      "source_fingerprint": {
+        "path": "VALIDATION_QUICKSTART.md",
+        "bytes": 94808,
+        "sha256": "c277c3ae3b2e4b2861d60aabd72c6118d463437a3f1e773affbbb92124e57a88"
+      }
+    },
+    {
+      "name": "daily_artifact_guide_markdown_ci_only",
+      "kind": "text",
+      "role": "daily artifact guide CI-only route",
+      "path": "DAILY_ARTIFACT_GUIDE.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 66153,
+      "sha256": "b5de7f5451302fc01c5c0e08d6b6d530f8de2b27df4278e59b4dc2ceb9181675",
+      "source_fingerprint": {
+        "path": "DAILY_ARTIFACT_GUIDE.md",
+        "bytes": 66153,
+        "sha256": "b5de7f5451302fc01c5c0e08d6b6d530f8de2b27df4278e59b4dc2ceb9181675"
+      }
+    },
+    {
+      "name": "cole_full_report_markdown_ci_only",
+      "kind": "text",
+      "role": "long-form narrative report CI-only boundary",
+      "path": "COLE_FULL_REPORT_2026-04-15.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 23057,
+      "sha256": "a9e0719827000d05a2921f0d087f614f7d39e8d5f19ff9655204bacf6f95b15b",
+      "source_fingerprint": {
+        "path": "COLE_FULL_REPORT_2026-04-15.md",
+        "bytes": 23057,
+        "sha256": "a9e0719827000d05a2921f0d087f614f7d39e8d5f19ff9655204bacf6f95b15b"
+      }
+    },
+    {
+      "name": "cole_presentation_outline_markdown_ci_only",
+      "kind": "text",
+      "role": "presentation outline CI-only boundary",
+      "path": "COLE_PRESENTATION_OUTLINE.md",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 20365,
+      "sha256": "56afa117540cfe76798f461b25a502614b91ab223edd2138bc5cd8369d558a6d",
+      "source_fingerprint": {
+        "path": "COLE_PRESENTATION_OUTLINE.md",
+        "bytes": 20365,
+        "sha256": "56afa117540cfe76798f461b25a502614b91ab223edd2138bc5cd8369d558a6d"
+      }
+    },
+    {
+      "name": "superfecta_html_report_ci_only",
+      "kind": "text",
+      "role": "shareable HTML report CI-only boundary",
+      "path": "Superfecta_Project_Report_2026-04-15.html",
+      "status": "pass",
+      "required_phrase_count": 4,
+      "missing_phrases": [],
+      "bytes": 60000,
+      "sha256": "ccb4aca433fc1850730a987576e95a5ca169c949f32decb0448193d7e1e60800",
+      "source_fingerprint": {
+        "path": "Superfecta_Project_Report_2026-04-15.html",
+        "bytes": 60000,
+        "sha256": "ccb4aca433fc1850730a987576e95a5ca169c949f32decb0448193d7e1e60800"
+      }
+    },
+    {
+      "name": "forward_evidence_scorecard_json",
+      "kind": "json_contract",
+      "role": "source machine-readable ranking contract",
+      "path": "forward_evidence_scorecard.json",
+      "contract_path": "ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 25686,
+      "sha256": "f9862ab5df38e02b45dc508ddffad6735bd388be5c088f1ebde3cc7dc5e08c49",
+      "source_fingerprint": {
+        "path": "forward_evidence_scorecard.json",
+        "bytes": 25686,
+        "sha256": "f9862ab5df38e02b45dc508ddffad6735bd388be5c088f1ebde3cc7dc5e08c49"
+      }
+    },
+    {
+      "name": "compare_main_approaches_json",
+      "kind": "json_contract",
+      "role": "main comparison JSON sidecar",
+      "path": "compare_main_approaches.json",
+      "contract_path": "scorecard_ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 35843,
+      "sha256": "fa683c296bf127845610a4c06a57e1da6adf9fa821486e6f728c8feba2ac667f",
+      "source_fingerprint": {
+        "path": "compare_main_approaches.json",
+        "bytes": 35843,
+        "sha256": "fa683c296bf127845610a4c06a57e1da6adf9fa821486e6f728c8feba2ac667f"
+      }
+    },
+    {
+      "name": "op_anchor_method_comparison_json",
+      "kind": "json_contract",
+      "role": "OP-anchor comparison JSON sidecar",
+      "path": "op_anchor_method_comparison.json",
+      "contract_path": "scorecard_ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 39625,
+      "sha256": "9ed4256dc748787efcdbdc4969c7da74a550f871a284c82160749f947f36622d",
+      "source_fingerprint": {
+        "path": "op_anchor_method_comparison.json",
+        "bytes": 39625,
+        "sha256": "9ed4256dc748787efcdbdc4969c7da74a550f871a284c82160749f947f36622d"
+      }
+    },
+    {
+      "name": "op_family_decision_validation_json",
+      "kind": "json_contract",
+      "role": "direct OP-family validator JSON",
+      "path": "out/status_validation/op_family_decision/op_family_decision_validation.json",
+      "contract_path": "scorecard_ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 28822,
+      "sha256": "3adc6d36de181754da1632c27d493c3dff30f3eaff77ac880e9fe2076705b1c6",
+      "source_fingerprint": {
+        "path": "out/status_validation/op_family_decision/op_family_decision_validation.json",
+        "bytes": 28822,
+        "sha256": "3adc6d36de181754da1632c27d493c3dff30f3eaff77ac880e9fe2076705b1c6"
+      }
+    },
+    {
+      "name": "cross_family_decision_validation_json",
+      "kind": "json_contract",
+      "role": "direct cross-family validator JSON",
+      "path": "out/status_validation/cross_family_decision/cross_family_decision_validation.json",
+      "contract_path": "scorecard_ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 36102,
+      "sha256": "28e4481dc839c68c9b66381fb47f21097865d809880653215ccac636fa89c973",
+      "source_fingerprint": {
+        "path": "out/status_validation/cross_family_decision/cross_family_decision_validation.json",
+        "bytes": 36102,
+        "sha256": "28e4481dc839c68c9b66381fb47f21097865d809880653215ccac636fa89c973"
+      }
+    },
+    {
+      "name": "portfolio_decision_card_validation_json",
+      "kind": "json_contract",
+      "role": "direct portfolio-card validator JSON",
+      "path": "out/status_validation/portfolio_decision_card/portfolio_decision_card_validation.json",
+      "contract_path": "scorecard_ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 37731,
+      "sha256": "6d30403cfd65ea685c97ad6a147fbfd1732b5896d56c065fc678b19726186926",
+      "source_fingerprint": {
+        "path": "out/status_validation/portfolio_decision_card/portfolio_decision_card_validation.json",
+        "bytes": 37731,
+        "sha256": "6d30403cfd65ea685c97ad6a147fbfd1732b5896d56c065fc678b19726186926"
+      }
+    },
+    {
+      "name": "method_family_decision_card_validation_json",
+      "kind": "json_contract",
+      "role": "direct method-family-card validator JSON",
+      "path": "out/status_validation/method_family_decision_card/method_family_decision_card_validation.json",
+      "contract_path": "scorecard_ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 47607,
+      "sha256": "4e63dfea3b45fce8c9accf8f195bbd096ace2f4f2034991bb7f4c26b44897fe7",
+      "source_fingerprint": {
+        "path": "out/status_validation/method_family_decision_card/method_family_decision_card_validation.json",
+        "bytes": 47607,
+        "sha256": "4e63dfea3b45fce8c9accf8f195bbd096ace2f4f2034991bb7f4c26b44897fe7"
+      }
+    },
+    {
+      "name": "decision_cards_suite_validation_json",
+      "kind": "json_contract",
+      "role": "decision-card suite rollup validation",
+      "path": "out/status_validation/decision_cards_suite/decision_cards_suite_validation.json",
+      "contract_path": "scorecard_ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 105311,
+      "sha256": "a96ac3fcf82da51ca5971bb71101cabdf1738b2243a0649b057cb67e2d9d1862",
+      "source_fingerprint": {
+        "path": "out/status_validation/decision_cards_suite/decision_cards_suite_validation.json",
+        "bytes": 105311,
+        "sha256": "a96ac3fcf82da51ca5971bb71101cabdf1738b2243a0649b057cb67e2d9d1862"
+      }
+    },
+    {
+      "name": "frozen_decision_stack_validation_json",
+      "kind": "json_contract",
+      "role": "frozen decision-stack validation",
+      "path": "out/status_validation/frozen_decision_stack/frozen_decision_stack_validation.json",
+      "contract_path": "scorecard_ranking_contract",
+      "status": "pass",
+      "issues": [],
+      "contract_matches_source": true,
+      "bytes": 18946,
+      "sha256": "4356c46b68f3b41a60be9758344d5008d6a6acd5b6b2275f9e3c7c503b695b19",
+      "source_fingerprint": {
+        "path": "out/status_validation/frozen_decision_stack/frozen_decision_stack_validation.json",
+        "bytes": 18946,
+        "sha256": "4356c46b68f3b41a60be9758344d5008d6a6acd5b6b2275f9e3c7c503b695b19"
+      }
+    },
+    {
+      "name": "forward_evidence_scorecard_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "source machine-readable CI-only diagnostic",
+      "path": "forward_evidence_scorecard.json",
+      "diagnostic_path": "ci_only_promotion_diagnostics.OP_REFINED_K7",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 25686,
+      "sha256": "f9862ab5df38e02b45dc508ddffad6735bd388be5c088f1ebde3cc7dc5e08c49",
+      "source_fingerprint": {
+        "path": "forward_evidence_scorecard.json",
+        "bytes": 25686,
+        "sha256": "f9862ab5df38e02b45dc508ddffad6735bd388be5c088f1ebde3cc7dc5e08c49"
+      }
+    },
+    {
+      "name": "compare_main_approaches_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "main comparison JSON CI-only diagnostic",
+      "path": "compare_main_approaches.json",
+      "diagnostic_path": "op_challenger_diagnostic.scorecard_ci_only_promotion_diagnostic",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 35843,
+      "sha256": "fa683c296bf127845610a4c06a57e1da6adf9fa821486e6f728c8feba2ac667f",
+      "source_fingerprint": {
+        "path": "compare_main_approaches.json",
+        "bytes": 35843,
+        "sha256": "fa683c296bf127845610a4c06a57e1da6adf9fa821486e6f728c8feba2ac667f"
+      }
+    },
+    {
+      "name": "op_anchor_method_comparison_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "OP-anchor comparison JSON CI-only diagnostic",
+      "path": "op_anchor_method_comparison.json",
+      "diagnostic_path": "op_challenger_diagnostic.scorecard_ci_only_promotion_diagnostic",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 39625,
+      "sha256": "9ed4256dc748787efcdbdc4969c7da74a550f871a284c82160749f947f36622d",
+      "source_fingerprint": {
+        "path": "op_anchor_method_comparison.json",
+        "bytes": 39625,
+        "sha256": "9ed4256dc748787efcdbdc4969c7da74a550f871a284c82160749f947f36622d"
+      }
+    },
+    {
+      "name": "current_evidence_summary_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "current-evidence bridge JSON CI-only diagnostic",
+      "path": "current_evidence_summary.json",
+      "diagnostic_path": "scorecard_ci_only_promotion_check.scorecard_ci_only_promotion_diagnostic",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 50352,
+      "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9",
+      "source_fingerprint": {
+        "path": "current_evidence_summary.json",
+        "bytes": 50352,
+        "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9"
+      }
+    },
+    {
+      "name": "op_family_decision_validation_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "direct OP-family validator JSON CI-only diagnostic",
+      "path": "out/status_validation/op_family_decision/op_family_decision_validation.json",
+      "diagnostic_path": "scorecard_ci_only_diagnostic",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 28822,
+      "sha256": "3adc6d36de181754da1632c27d493c3dff30f3eaff77ac880e9fe2076705b1c6",
+      "source_fingerprint": {
+        "path": "out/status_validation/op_family_decision/op_family_decision_validation.json",
+        "bytes": 28822,
+        "sha256": "3adc6d36de181754da1632c27d493c3dff30f3eaff77ac880e9fe2076705b1c6"
+      }
+    },
+    {
+      "name": "cross_family_decision_validation_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "direct cross-family validator JSON CI-only diagnostic",
+      "path": "out/status_validation/cross_family_decision/cross_family_decision_validation.json",
+      "diagnostic_path": "scorecard_ci_only_diagnostic",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 36102,
+      "sha256": "28e4481dc839c68c9b66381fb47f21097865d809880653215ccac636fa89c973",
+      "source_fingerprint": {
+        "path": "out/status_validation/cross_family_decision/cross_family_decision_validation.json",
+        "bytes": 36102,
+        "sha256": "28e4481dc839c68c9b66381fb47f21097865d809880653215ccac636fa89c973"
+      }
+    },
+    {
+      "name": "portfolio_decision_card_validation_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "direct portfolio-card validator JSON CI-only diagnostic",
+      "path": "out/status_validation/portfolio_decision_card/portfolio_decision_card_validation.json",
+      "diagnostic_path": "scorecard_ci_only_diagnostic",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 37731,
+      "sha256": "6d30403cfd65ea685c97ad6a147fbfd1732b5896d56c065fc678b19726186926",
+      "source_fingerprint": {
+        "path": "out/status_validation/portfolio_decision_card/portfolio_decision_card_validation.json",
+        "bytes": 37731,
+        "sha256": "6d30403cfd65ea685c97ad6a147fbfd1732b5896d56c065fc678b19726186926"
+      }
+    },
+    {
+      "name": "method_family_decision_card_validation_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "direct method-family-card validator JSON CI-only diagnostic",
+      "path": "out/status_validation/method_family_decision_card/method_family_decision_card_validation.json",
+      "diagnostic_path": "scorecard_ci_only_diagnostic",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 47607,
+      "sha256": "4e63dfea3b45fce8c9accf8f195bbd096ace2f4f2034991bb7f4c26b44897fe7",
+      "source_fingerprint": {
+        "path": "out/status_validation/method_family_decision_card/method_family_decision_card_validation.json",
+        "bytes": 47607,
+        "sha256": "4e63dfea3b45fce8c9accf8f195bbd096ace2f4f2034991bb7f4c26b44897fe7"
+      }
+    },
+    {
+      "name": "superfecta_html_report_validation_json_ci_only",
+      "kind": "json_ci_only_diagnostic",
+      "role": "shareable HTML report validator JSON CI-only diagnostic",
+      "path": "out/status_validation/superfecta_html_report/superfecta_html_report_validation.json",
+      "diagnostic_path": "scorecard_ci_only_diagnostic",
+      "status": "pass",
+      "issues": [],
+      "diagnostic_matches_source": true,
+      "bytes": 24517,
+      "sha256": "c0c5dd7dfb2038198a11a39be88fb85a1820a8eadfc2cf8495002492d9edb30c",
+      "source_fingerprint": {
+        "path": "out/status_validation/superfecta_html_report/superfecta_html_report_validation.json",
+        "bytes": 24517,
+        "sha256": "c0c5dd7dfb2038198a11a39be88fb85a1820a8eadfc2cf8495002492d9edb30c"
+      }
+    },
+    {
+      "name": "current_evidence_summary_json_scorecard_audit_route",
+      "kind": "json_scorecard_audit_route",
+      "role": "current-evidence bridge JSON route to this scorecard audit",
+      "path": "current_evidence_summary.json",
+      "route_path": "scorecard_audit_route",
+      "status": "pass",
+      "issues": [],
+      "route_matches_scorecard_gate_minimums": true,
+      "route_matches_expected_contract": true,
+      "route_field_contract_matches_expected": true,
+      "route_field_contract_mismatches": [],
+      "route_gate_floor_snapshot_matches_source": true,
+      "route_validator_command_matches_contract": true,
+      "route_valid_use_matches_contract": true,
+      "route_non_evidence_flags_match_contract": true,
+      "route_read_required_phrases_present": true,
+      "route_read_missing_phrases": [],
+      "referenced_markdown_path": "SCORECARD_RANKING_CONTRACT_AUDIT.md",
+      "referenced_json_path": "scorecard_ranking_contract_audit.json",
+      "referenced_markdown_path_is_audit_output": true,
+      "referenced_json_path_is_audit_output": true,
+      "referenced_markdown_exists": true,
+      "referenced_json_exists_or_is_current_output": true,
+      "referenced_route_artifacts_verified_on_disk": true,
+      "bytes": 50352,
+      "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9",
+      "source_fingerprint": {
+        "path": "current_evidence_summary.json",
+        "bytes": 50352,
+        "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9"
+      }
+    },
+    {
+      "name": "current_evidence_summary_json_rebuild_validation_contract",
+      "kind": "json_rebuild_validation_contract",
+      "role": "current-evidence bridge JSON rebuild order before quoting current totals",
+      "path": "current_evidence_summary.json",
+      "contract_path": "rebuild_validation_contract",
+      "status": "pass",
+      "issues": [],
+      "expected_upstream_refresh_order_commands": [
+        "python3 paper_trade_settlement_audit.py",
+        "python3 current_evidence_summary.py",
+        "python3 validate_current_evidence_summary.py"
+      ],
+      "observed_upstream_refresh_order_commands": [
+        "python3 paper_trade_settlement_audit.py",
+        "python3 current_evidence_summary.py",
+        "python3 validate_current_evidence_summary.py"
+      ],
+      "upstream_refresh_order_commands_match_expected": true,
+      "contract_matches_expected": true,
+      "contract_field_mismatches": [],
+      "requires_settlement_audit_refresh_before_bridge_when_source_bytes_change": true,
+      "required_non_evidence_flags_match_contract": true,
+      "upstream_refresh_order_valid_use_matches_contract": true,
+      "direct_validation_command_matches_contract": true,
+      "bytes": 50352,
+      "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9",
+      "source_fingerprint": {
+        "path": "current_evidence_summary.json",
+        "bytes": 50352,
+        "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9"
+      }
+    }
+  ],
+  "summary": {
+    "suite_read": "41/41 checked surfaces carry the tier-first scorecard ranking contract or OP_REFINED CI-only diagnostic; the current-evidence bridge also carries the source-matched scorecard-audit route and settlement-audit -> current-bridge -> bridge-validator rebuild order; this is wording/provenance synchronization only, not settled ROI, promotion readiness, live profitability, or real-money evidence.",
+    "report_safe_read": "Raw Score / forward_trust and positive OP_REFINED CI support remain support context; neither is an automatic promotion queue."
+  }
+}

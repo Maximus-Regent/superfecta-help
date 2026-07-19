@@ -1,5 +1,16 @@
 # Phase 7 Report — Ultimate Superfecta Strategy Refinement
 
+## Current Evidence Boundary
+
+- Valid evidence scope: `valid_evidence_scope=legacy_phase7_discovery_context_only`.
+- This is a historical Phase 7 discovery report and strongest-candidate-family context, not the current deployment guide by itself.
+- Current posture still comes from `forward_evidence_scorecard.txt`, `compare_main_approaches.md`, and the paper-observation lane: `OP_DURABLE_K7` remains the safest anchor, `CD_CORE_K8` remains the primary OP/CD paper companion, and `OP_REFINED_K7` plus other Phase 8 rules remain shadow/watch unless forward paper evidence clears the documented gates.
+- The full three-track Phase 7 result includes dormant `BEL` history. `BEL` is not currently forward-testable from this report, and `BAQ` must not be substituted for `BEL`.
+- Treat `Wagered`, `Cost`, `Expected`, Kelly, and historical profit lines below as frozen backtest / paper-accounting metadata only, not as bankroll guidance, live-profitability evidence, promotion readiness, stop-loss guidance, scale-up guidance, or real-money authorization.
+- Validate this boundary with `python3 validate_phase7_report_caution.py`.
+
+---
+
 ## Executive Summary
 
 Phase 7 discovered a **three-track portfolio** that is significantly stronger than any single rule. By combining independent profitable pockets at Belmont Park, Oaklawn Park, and Churchill Downs, the portfolio achieves:
@@ -428,23 +439,23 @@ Expected:   ~32 races/year during CD meets
 ROI:        +13.1% (485 races, 2010-2025)
 ```
 
-### Automation Guidance
-1. **Subscribe to race cards** for BEL (May-Oct), OP (Jan-May), and CD (Apr-Nov)
+### Automation Guidance — paper observation only
+1. **Subscribe to race cards** for BEL (May-Oct, when available), OP (Jan-May), and CD (Apr-Nov), but keep `BAQ` separate from `BEL`.
 2. For each race, compute:
    - `fav_prob = (100 / (fav_odds + 100))`, normalized across field
    - `gap = fav_prob - second_fav_prob`
-3. Apply the appropriate track's filters
-4. Place the $2 Key-1-with-7 (or K8 at CD) superfecta
-5. Expected portfolio volume: ~70-75 bets/year across three tracks
-6. Expected annual wagered: ~$11,500 ($2 base)
-7. Expected annual profit: ~$3,200 at historical rates
-8. **Stop-loss rule**: If 0 hits in 25+ consecutive races at any single track, pause and re-evaluate
+3. Apply the appropriate track's filters and log the race through the paper-trade lane, including no-bet / no-action states and keeping settlement open until actual result, payout, and cost are known.
+4. Use the $2-base combo cost only as the historical/paper accounting unit; **do not place, size, bankroll, stop-loss, or scale real-money bets from this report**.
+5. Expected historical portfolio volume was ~70-75 qualifying races/year across the three tracks, but current forward evidence must come from ROI-complete paper settlements.
+6. Expected historical paper handle was roughly ~$11,500/year at the $2 accounting base; this is not a bankroll recommendation.
+7. Historical replay profit was roughly ~$3,200/year at historical rates; this is not live-profitability or real-money evidence.
+8. If a track goes 0-for-25+ in ROI-complete forward paper settlements, pause and re-evaluate the rule before changing any live posture.
 
-### Bankroll Management
-- Kelly fraction suggests 20-24% of bankroll per bet, but Kelly is aggressive for small samples
-- Conservative recommendation: **5-10% Kelly** (~2-5% of bankroll per race)
-- Minimum bankroll for one year at $2/combo: **$1,500** (covers ~12 losing races in sequence)
-- Recommended bankroll: **$5,000** for comfortable drawdown tolerance
+### Risk Boundary
+- Kelly / bankroll calculations from the historical replay are intentionally not used as operating instructions here.
+- Do **not** size, bankroll, stop-loss, or scale real-money bets from `PHASE7_REPORT.md`.
+- Real-money discussion requires a separate human-approved risk memo after 100+ total ROI-complete paper observations, payout/concentration sanity checks, settlement-quality checks, and the no-BAQ-as-BEL guardrail.
+- Until then, treat Phase 7 as the strongest paper-observation candidate family, not a live betting instruction.
 
 ---
 

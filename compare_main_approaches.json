@@ -1,0 +1,754 @@
+{
+  "generated_by": "compare_main_approaches.py",
+  "source_scope": "frozen 2024-2025 holdout replay, train-only walk-forward artifacts, forward-evidence scorecard CSV/JSON, current-evidence operator-boundary context, and method-family comparison context",
+  "evidence_boundary": {
+    "artifact_role": "main approach comparison bundle",
+    "valid_evidence_scope": "frozen_main_approach_comparison_only",
+    "source_scope": [
+      "phase5_race_cache.pkl",
+      "phase7_live_rules.json",
+      "walk_forward_validation_folds.csv",
+      "walk_forward_validation_rules.csv",
+      "forward_evidence_scorecard.csv",
+      "forward_evidence_scorecard.json",
+      "current_evidence_summary.json",
+      "cross_family_decision_card.csv",
+      "backtest_summary.csv",
+      "ab_downstream_comparison_results.json"
+    ],
+    "valid_use": "frozen 2024-2025 holdout, train-only walk-forward, method-family, and paper-lane posture comparison",
+    "not_new_forward_evidence": true,
+    "not_live_paper_trade_ledger": true,
+    "not_current_day_scanner_result": true,
+    "not_settled_roi_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_real_money_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "current_operator_routing_source": "CURRENT_EVIDENCE_SUMMARY.md / current_evidence_summary.json",
+    "current_operator_routing_fields": [
+      "operator_status_context",
+      "source_freshness",
+      "source_consistency",
+      "operator_read_gate"
+    ],
+    "current_operator_routing_requires_combined_route": true,
+    "current_operator_routing_is_source_readiness_not_performance": true,
+    "current_operator_boundary_snapshot_is_context_only": true,
+    "source_fingerprints_are_reproducibility_metadata_only": true,
+    "row_identical_source_byte_drift_is_provenance_only": true,
+    "decision_gates_are_forward_observation_requirements_not_current_evidence": true,
+    "stronger_forward_confidence_requires": [
+      "qualifying live paper signals",
+      "ROI-complete settled paper rows",
+      "settlement-quality checks",
+      "other real forward observations"
+    ],
+    "non_goals": [
+      "do not use the main comparison rebuild as settled ROI",
+      "do not promote OP_REFINED_K7 or Phase 8 from this artifact",
+      "do not reopen current odds-only XGBoost from this artifact",
+      "do not treat Harville benchmark-only output as a live approach",
+      "do not substitute BAQ for BEL",
+      "do not discuss real-money scaling from this artifact",
+      "do not quote current PAPER_TRADE_NOW instructions from this artifact; use the combined operator_status_context/source_freshness/operator_read_gate route from CURRENT_EVIDENCE_SUMMARY instead",
+      "do not treat the copied current-evidence operator snapshot as settled ROI or bet readiness"
+    ]
+  },
+  "evidence_boundary_text": "main-comparison render/sidecar only; source fingerprints, clean rebuilds, and validator passes are reproducibility metadata, not live paper-trade evidence, settled ROI, live profitability, promotion readiness, or real-money evidence; current top-card/operator routing belongs in CURRENT_EVIDENCE_SUMMARY.md / current_evidence_summary.json via the combined operator_status_context/source_freshness/operator_read_gate route",
+  "holdout_years": [
+    2024,
+    2025
+  ],
+  "walk_forward_years": [
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "runtime_sec": 0.05,
+  "source_files": {
+    "phase5_race_cache": {
+      "path": "phase5_race_cache.pkl",
+      "bytes": 6876552,
+      "sha256": "9f38ab5d34cac72175c7ae2126a33bd798a683fdf15f862afffc17632a6084e6"
+    },
+    "phase7_live_rules": {
+      "path": "phase7_live_rules.json",
+      "bytes": 1470,
+      "sha256": "24f9f071ba7d47937f9b71e9b735cf7cf330ff3debb3d350459310316d9c1b7d"
+    },
+    "walk_forward_folds": {
+      "path": "walk_forward_validation_folds.csv",
+      "bytes": 1424,
+      "sha256": "89f1be7dc878f25b52dfe2f4e892ccc4e8c57ea84c6e98c1cbd8442f37a690b8"
+    },
+    "walk_forward_rules": {
+      "path": "walk_forward_validation_rules.csv",
+      "bytes": 21202,
+      "sha256": "5a1d4edaa27b106b81cd0b355e495c6ff89bf5c2f8891363435eac15e121753e"
+    },
+    "forward_evidence_scorecard": {
+      "path": "forward_evidence_scorecard.csv",
+      "bytes": 6955,
+      "sha256": "39d2dc6fd0f929060ce6678d58f409c5bdd090563cbc6af41941674159811174"
+    },
+    "forward_evidence_scorecard_json": {
+      "path": "forward_evidence_scorecard.json",
+      "bytes": 25686,
+      "sha256": "f9862ab5df38e02b45dc508ddffad6735bd388be5c088f1ebde3cc7dc5e08c49"
+    },
+    "current_evidence_summary_json": {
+      "path": "current_evidence_summary.json",
+      "bytes": 50352,
+      "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9"
+    },
+    "cross_family_decision_card": {
+      "path": "cross_family_decision_card.csv",
+      "bytes": 2266,
+      "sha256": "4be838c8552f2c0909387928a879452ce6b0a5584c2e6f30da5b4985f76059ba"
+    },
+    "backtest_summary": {
+      "path": "backtest_summary.csv",
+      "bytes": 3582,
+      "sha256": "8e7acddb70efb5554490bc99d2ad2f65abfec467790fcecc3f827c92c42e1d91"
+    },
+    "ab_downstream_comparison_results": {
+      "path": "ab_downstream_comparison_results.json",
+      "bytes": 21070,
+      "sha256": "d019a7819329818cc271443837f2e5be057266458770a93671a04dcfd3343d31"
+    }
+  },
+  "output_files": {
+    "csv": "compare_main_approaches.csv",
+    "markdown": "compare_main_approaches.md",
+    "json": "compare_main_approaches.json"
+  },
+  "row_count": 6,
+  "ranked_rows": [
+    {
+      "rank": 1,
+      "method_id": "phase7_live_portfolio",
+      "label": "Phase 7 OP/CD rule-component basket",
+      "method_type": "fixed portfolio",
+      "deployment_posture": "PAPER NOW",
+      "op_focus": false,
+      "note": "Frozen 3-rule baseline. BEL contributes zero 2024-2025 races, so the current holdout is effectively the OP+CD legs.",
+      "secondary_basis": "frozen replay on walk-forward test years",
+      "wf_races": 806,
+      "wf_hits": 200,
+      "wf_wagered": 127680.0,
+      "wf_profit": 40013.49,
+      "wf_roi": 31.34,
+      "wf_hit_rate": 24.81,
+      "wf_positive_years": 9,
+      "wf_observed_years": 10,
+      "holdout_races": 175,
+      "holdout_hits": 48,
+      "holdout_wagered": 26400.0,
+      "holdout_profit": 10210.61,
+      "holdout_roi": 38.68,
+      "holdout_hit_rate": 27.43,
+      "holdout_positive_years": 2,
+      "holdout_observed_years": 2,
+      "holdout_2024_roi": 0.37,
+      "holdout_2024_races": 109,
+      "holdout_2024_profit": 62.1,
+      "holdout_2025_roi": 105.38,
+      "holdout_2025_races": 66,
+      "holdout_2025_profit": 10148.51,
+      "score": 89.7
+    },
+    {
+      "rank": 2,
+      "method_id": "phase8_frozen_portfolio",
+      "label": "Phase 8 frozen portfolio",
+      "method_type": "fixed portfolio",
+      "deployment_posture": "SHADOW ONLY",
+      "op_focus": false,
+      "note": "Frozen 7-rule Phase 8 basket. Useful as the headline multi-track challenger, but still full-history-mined before this replay.",
+      "secondary_basis": "frozen replay on walk-forward test years",
+      "wf_races": 625,
+      "wf_hits": 183,
+      "wf_wagered": 129000.0,
+      "wf_profit": 71006.6,
+      "wf_roi": 55.04,
+      "wf_hit_rate": 29.28,
+      "wf_positive_years": 10,
+      "wf_observed_years": 10,
+      "holdout_races": 118,
+      "holdout_hits": 41,
+      "holdout_wagered": 26040.0,
+      "holdout_profit": 5585.05,
+      "holdout_roi": 21.45,
+      "holdout_hit_rate": 34.75,
+      "holdout_positive_years": 2,
+      "holdout_observed_years": 2,
+      "holdout_2024_roi": 9.5,
+      "holdout_2024_races": 85,
+      "holdout_2024_profit": 1749.0,
+      "holdout_2025_roi": 50.26,
+      "holdout_2025_races": 33,
+      "holdout_2025_profit": 3836.05,
+      "score": 87.9
+    },
+    {
+      "rank": 3,
+      "method_id": "op_refined_only",
+      "label": "OP refined only",
+      "method_type": "fixed OP rule",
+      "deployment_posture": "WATCH",
+      "op_focus": true,
+      "note": "Higher-ROI OP variant with a much smaller forward sample. Treat as selective, not as the new default.",
+      "secondary_basis": "frozen replay on walk-forward test years",
+      "wf_races": 207,
+      "wf_hits": 41,
+      "wf_wagered": 24840.0,
+      "wf_profit": 16418.6,
+      "wf_roi": 66.1,
+      "wf_hit_rate": 19.81,
+      "wf_positive_years": 8,
+      "wf_observed_years": 10,
+      "holdout_races": 49,
+      "holdout_hits": 10,
+      "holdout_wagered": 5880.0,
+      "holdout_profit": 3023.8,
+      "holdout_roi": 51.43,
+      "holdout_hit_rate": 20.41,
+      "holdout_positive_years": 1,
+      "holdout_observed_years": 2,
+      "holdout_2024_roi": -25.47,
+      "holdout_2024_races": 33,
+      "holdout_2024_profit": -1008.5,
+      "holdout_2025_roi": 210.02,
+      "holdout_2025_races": 16,
+      "holdout_2025_profit": 4032.3,
+      "score": 69.9
+    },
+    {
+      "rank": 4,
+      "method_id": "op_train_switch",
+      "label": "OP train-score switch",
+      "method_type": "dynamic OP selector",
+      "deployment_posture": "BENCHMARK ONLY",
+      "op_focus": true,
+      "note": "Each year, pick the better-qualifying OP rule by train-only selection score. Recent picks: 2022=OP_DURABLE_K7, 2023=OP_DURABLE_K7, 2024=OP_REFINED_K7, 2025=OP_REFINED_K7.",
+      "secondary_basis": "actual train-only walk-forward",
+      "wf_races": 350,
+      "wf_hits": 64,
+      "wf_wagered": 42000.0,
+      "wf_profit": 19934.6,
+      "wf_roi": 47.46,
+      "wf_hit_rate": 18.29,
+      "wf_positive_years": 8,
+      "wf_observed_years": 10,
+      "holdout_races": 49,
+      "holdout_hits": 10,
+      "holdout_wagered": 5880.0,
+      "holdout_profit": 3023.8,
+      "holdout_roi": 51.43,
+      "holdout_hit_rate": 20.41,
+      "holdout_positive_years": 1,
+      "holdout_observed_years": 2,
+      "holdout_2024_roi": -25.47,
+      "holdout_2024_races": 33,
+      "holdout_2024_profit": -1008.5,
+      "holdout_2025_roi": 210.02,
+      "holdout_2025_races": 16,
+      "holdout_2025_profit": 4032.3,
+      "score": 68.4
+    },
+    {
+      "rank": 5,
+      "method_id": "op_durable_only",
+      "label": "OP durable only",
+      "method_type": "fixed OP rule",
+      "deployment_posture": "ANCHOR",
+      "op_focus": true,
+      "note": "Largest-sample OP anchor. Lower upside than the refined OP variant, but materially more forward races.",
+      "secondary_basis": "frozen replay on walk-forward test years",
+      "wf_races": 416,
+      "wf_hits": 75,
+      "wf_wagered": 49920.0,
+      "wf_profit": 20070.4,
+      "wf_roi": 40.21,
+      "wf_hit_rate": 18.03,
+      "wf_positive_years": 8,
+      "wf_observed_years": 10,
+      "holdout_races": 115,
+      "holdout_hits": 21,
+      "holdout_wagered": 13800.0,
+      "holdout_profit": 3159.6,
+      "holdout_roi": 22.9,
+      "holdout_hit_rate": 18.26,
+      "holdout_positive_years": 1,
+      "holdout_observed_years": 2,
+      "holdout_2024_roi": -47.41,
+      "holdout_2024_races": 68,
+      "holdout_2024_profit": -3868.3,
+      "holdout_2025_roi": 124.61,
+      "holdout_2025_races": 47,
+      "holdout_2025_profit": 7027.9,
+      "score": 67.4
+    },
+    {
+      "rank": 6,
+      "method_id": "train_only_selector",
+      "label": "Train-only yearly selector",
+      "method_type": "dynamic selector",
+      "deployment_posture": "BENCHMARK ONLY",
+      "op_focus": false,
+      "note": "The current honest selector baseline from walk_forward_validation.py. Historical context includes the pre-existing BEL bridge candidate in some earlier folds, but no new aliasing is added here.",
+      "secondary_basis": "actual train-only walk-forward",
+      "wf_races": 470,
+      "wf_hits": 108,
+      "wf_wagered": 78108.0,
+      "wf_profit": 17541.35,
+      "wf_roi": 22.46,
+      "wf_hit_rate": 22.98,
+      "wf_positive_years": 8,
+      "wf_observed_years": 10,
+      "holdout_races": 65,
+      "holdout_hits": 18,
+      "holdout_wagered": 11256.0,
+      "holdout_profit": 1616.25,
+      "holdout_roi": 14.36,
+      "holdout_hit_rate": 27.69,
+      "holdout_positive_years": 1,
+      "holdout_observed_years": 2,
+      "holdout_2024_roi": -19.95,
+      "holdout_2024_races": 45,
+      "holdout_2024_profit": -1594.6,
+      "holdout_2025_roi": 98.37,
+      "holdout_2025_races": 20,
+      "holdout_2025_profit": 3210.85,
+      "score": 61.9
+    }
+  ],
+  "method_family_roles": {
+    "selective_rule_path": {
+      "label": "Selective rule path",
+      "role": "PAPER NOW",
+      "current_anchor": "OP_DURABLE_K7",
+      "primary_shadow": "CD_CORE_K8",
+      "primary_companion": "CD_CORE_K8",
+      "secondary_shadow": "OP_REFINED_K7"
+    },
+    "harville_ranked": {
+      "label": "Harville-ranked probabilities",
+      "role": "BENCHMARK ONLY",
+      "current_anchor": null,
+      "primary_shadow": null,
+      "primary_companion": null,
+      "secondary_shadow": null
+    },
+    "xgboost_residual": {
+      "label": "XGBoost residual correction",
+      "role": "RESEARCH ONLY",
+      "current_anchor": null,
+      "primary_shadow": null,
+      "primary_companion": null,
+      "secondary_shadow": null
+    }
+  },
+  "method_family_evidence_debt": [
+    {
+      "family": "Selective OP/CD rule path",
+      "still_missing": "Future settled OP/CD paper rows with usable ROI coverage; `OP_REFINED_K7` also needs 20+ complete shadow rows before promotion review; 30+ same-candidate rows before anchor displacement; 100+ total ROI-complete observations before any real-money discussion",
+      "invalid_shortcut": "Treating old holdout/replay rows, clean scans, open signals, or a settlement-audit pass as posture-changing proof",
+      "next_honest_action": "Keep collecting and settling `OP_DURABLE_K7` + `CD_CORE_K8` observations; log `OP_REFINED_K7` as shadow-only until the explicit gates are met",
+      "source_gate_minimums": {
+        "phase8_promotion_review": {
+          "minimum": 20,
+          "threshold_source": "forward_evidence_scorecard.json:decision_gate_minimums.phase8_promotion_review.min_roi_complete_settled_observations"
+        },
+        "anchor_displacement": {
+          "minimum": 30,
+          "threshold_source": "forward_evidence_scorecard.json:decision_gate_minimums.anchor_displacement.min_roi_complete_settled_observations"
+        },
+        "real_money_discussion": {
+          "minimum": 100,
+          "threshold_source": "forward_evidence_scorecard.json:decision_gate_minimums.real_money_discussion.min_total_settled_observations_with_usable_roi"
+        }
+      }
+    },
+    {
+      "family": "Harville-ranked probabilities",
+      "still_missing": "Positive betting evidence on frozen holdout or train-only walk-forward terms, not just broad hit-rate/calibration context",
+      "invalid_shortcut": "Promoting from a 41.99% hit rate while the broad betting replay is -24.05% ROI",
+      "next_honest_action": "Keep Harville as a benchmark/calibration sanity check unless a future betting-evidence surface turns positive"
+    },
+    {
+      "family": "Current odds-only XGBoost correction path",
+      "still_missing": "A materially richer non-odds feature/data class, downstream betting pass-through improvement, and then settled paper observations",
+      "invalid_shortcut": "Reopening from another odds-only rerun, payout-RMSE gain, or model-fit-only downstream A/B result while betting ROI remains -24.16%",
+      "next_honest_action": "Keep the current odds-only XGBoost path parked; reopen only if the feature class changes and the betting pass-through improves before paper observation"
+    }
+  ],
+  "op_challenger_diagnostic": {
+    "anchor_rule": "OP_DURABLE_K7",
+    "challenger_rule": "OP_REFINED_K7",
+    "anchor_holdout_races": 115,
+    "challenger_holdout_races": 49,
+    "challenger_sample_ratio_pct": 42.61,
+    "challenger_sample_deficit_races": 66,
+    "anchor_wf_selected_count": 7,
+    "challenger_wf_selected_count": 2,
+    "wf_selection_deficit_folds": 5,
+    "anchor_ci_lower": -3.4,
+    "challenger_ci_lower": 11.2,
+    "challenger_has_higher_aggregate_holdout_roi": true,
+    "challenger_has_positive_ci_lower": true,
+    "challenger_losing_holdout_years": [
+      2024
+    ],
+    "ci_only_promotion_allowed": false,
+    "ci_only_promotion_blockers": [
+      "smaller holdout sample",
+      "losing holdout-year split",
+      "lower walk-forward selection frequency",
+      "separate 20-row promotion-review and 30-row anchor-displacement paper-observation gates not cleared"
+    ],
+    "ci_only_promotion_read": "A positive bootstrap CI lower bound is useful support context, but it is not enough by itself to promote OP_REFINED_K7 or displace OP_DURABLE_K7; the challenger still has a smaller holdout sample, a losing holdout-year split, lower walk-forward recurrence, and no ROI-complete paper observations clearing the separate promotion or anchor-review gates.",
+    "scorecard_ci_only_diagnostic_source": "forward_evidence_scorecard.json:ci_only_promotion_diagnostics.OP_REFINED_K7",
+    "scorecard_ci_only_promotion_diagnostic": {
+      "candidate_rule_id": "OP_REFINED_K7",
+      "current_anchor_rule_id": "OP_DURABLE_K7",
+      "positive_ci_lower_bound_is_support_context": true,
+      "ci_only_promotion_allowed": false,
+      "current_decision": "Keep OP_REFINED_K7 shadow/watch only.",
+      "why_not": [
+        "smaller holdout sample than OP_DURABLE_K7",
+        "losing 2024 holdout split",
+        "lower walk-forward recurrence than OP_DURABLE_K7",
+        "uncleared phase8_promotion_review paper-observation gate",
+        "uncleared anchor_displacement paper-observation gate"
+      ],
+      "required_before_review": {
+        "phase8_promotion_review": "20+ ROI-complete candidate shadow observations plus cleaner split-aware/walk-forward support",
+        "anchor_displacement": "30+ ROI-complete same-candidate paper observations plus a cleaner split-aware forward read and equal-or-better walk-forward support"
+      },
+      "does_not_count": [
+        "positive bootstrap CI lower bound by itself",
+        "hotter aggregate small-sample holdout ROI",
+        "historical replay rows",
+        "clean rebuilds",
+        "green validators"
+      ]
+    }
+  },
+  "decision_change_gate_minimums": {
+    "phase8_promotion_review": {
+      "minimum_roi_complete_settled_observations": 20,
+      "threshold_source": "forward_evidence_scorecard.json:decision_gate_minimums.phase8_promotion_review.min_roi_complete_settled_observations",
+      "observation_scope": "future settled shadow ledger rows for the same candidate with complete ROI coverage",
+      "gate_role": "opens promotion-review discussion only; does not displace OP_DURABLE_K7 as anchor by itself",
+      "also_requires": [
+        "cleaner split-aware forward read than the current anchor/companion pair",
+        "cleaner walk-forward/frozen-standard support than the current anchor/companion pair"
+      ]
+    },
+    "anchor_displacement": {
+      "minimum_roi_complete_same_candidate_observations": 30,
+      "threshold_source": "forward_evidence_scorecard.json:decision_gate_minimums.anchor_displacement.min_roi_complete_settled_observations",
+      "observation_scope": "future settled same-candidate paper ledger rows with complete ROI coverage",
+      "gate_role": "minimum before any discussion of replacing OP_DURABLE_K7 as safest anchor",
+      "also_requires": [
+        "cleaner split-aware forward read than OP_DURABLE_K7",
+        "walk-forward/frozen-standard support that clearly beats OP_DURABLE_K7's larger sample"
+      ]
+    },
+    "real_money_discussion": {
+      "minimum_total_settled_roi_complete_observations": 100,
+      "threshold_source": "forward_evidence_scorecard.json:decision_gate_minimums.real_money_discussion.min_total_settled_observations_with_usable_roi",
+      "observation_scope": "settled paper-trade ledger observations with usable return/cost coverage",
+      "gate_role": "minimum before any real-money confidence or bankroll discussion",
+      "also_requires": [
+        "hit-rate and ROI inside the expected range",
+        "concentration checks",
+        "payout sanity checks",
+        "no BAQ-as-BEL substitution"
+      ]
+    }
+  },
+  "scorecard_ranking_contract": {
+    "rank_sort_order": [
+      "tier_priority",
+      "forward_trust",
+      "holdout_races",
+      "holdout_roi"
+    ],
+    "rank_is_tier_first_decision_order": true,
+    "forward_trust_is_secondary_within_tier": true,
+    "raw_score_is_not_an_automatic_deployment_instruction": true,
+    "known_rank_override": "CD_CORE_K8 ranks ahead of OP_REFINED_K7 because PAPER tier outranks WATCH tier even though OP_REFINED_K7 has the higher raw forward_trust score.",
+    "why": "The scorecard rank is a conservative decision/posture order; tier gates protect against small-sample and mixed-year spikes outrunning the safer OP anchor or primary OP/CD paper-basket companion."
+  },
+  "scorecard_ranking_contract_read": "rank is tier-first conservative decision order; raw forward_trust/Score is evidence support inside posture, not an automatic promotion queue",
+  "current_operator_boundary": {
+    "source_path": "current_evidence_summary.json",
+    "generated_at": "2026-07-17T06:12:00+02:00",
+    "source_consistency_overall_match": true,
+    "decision_gate_progress": {
+      "source_path": "forward_evidence_scorecard.json",
+      "source_json_path": "decision_gate_minimums",
+      "valid_use": "machine-readable current gate progress for report routing and no-overclaim checks",
+      "not_forward_performance_evidence": true,
+      "not_promotion_readiness_evidence": true,
+      "not_live_profitability_evidence": true,
+      "not_real_money_evidence": true,
+      "gate_status": "all_uncleared",
+      "primary_first_read": {
+        "gate_source": "anchor_displacement",
+        "current_rows": 6,
+        "threshold": 30,
+        "remaining": 24,
+        "ready": false,
+        "rows_counted": "primary ROI-complete settled rows",
+        "read": "Primary first-read gate: 6/30 ROI-complete primary rows; 24 more needed."
+      },
+      "op_anchor_same_candidate_review": {
+        "gate_source": "anchor_displacement",
+        "candidate_rule_id": "OP_DURABLE_K7",
+        "current_rows": 0,
+        "threshold": 30,
+        "remaining": 30,
+        "ready": false,
+        "companion_rule_id": "CD_CORE_K8",
+        "companion_rows": 6,
+        "companion_rows_count_as_anchor_evidence": false,
+        "read": "OP-anchor settlement gap: OP_DURABLE_K7 has 0 ROI-complete settled row(s); CD_CORE_K8 has 6. Need 30 more OP_DURABLE_K7 ROI-complete row(s) before the 30-row same-candidate anchor-review floor is even count-complete. CD companion rows do not reduce that OP-anchor gap."
+      },
+      "phase8_promotion_review": {
+        "gate_source": "phase8_promotion_review",
+        "threshold_per_candidate": 20,
+        "weakest_current_rows": 0,
+        "weakest_rule_ids": [
+          "OP_REFINED_K7",
+          "AQU_K9",
+          "SA_K9",
+          "KEE_K9",
+          "DMR_FALL_K7"
+        ],
+        "ready": false,
+        "per_rule": [
+          {
+            "rule_id": "OP_REFINED_K7",
+            "scorecard_tier": "WATCH",
+            "current_rows": 0,
+            "threshold": 20,
+            "remaining": 20,
+            "ready": false,
+            "promotion_progress": "0/20 (0.0%)"
+          },
+          {
+            "rule_id": "AQU_K9",
+            "scorecard_tier": "SKIP",
+            "current_rows": 0,
+            "threshold": 20,
+            "remaining": 20,
+            "ready": false,
+            "promotion_progress": "0/20 (0.0%)"
+          },
+          {
+            "rule_id": "SA_K9",
+            "scorecard_tier": "WATCH",
+            "current_rows": 0,
+            "threshold": 20,
+            "remaining": 20,
+            "ready": false,
+            "promotion_progress": "0/20 (0.0%)"
+          },
+          {
+            "rule_id": "KEE_K9",
+            "scorecard_tier": "WATCH",
+            "current_rows": 0,
+            "threshold": 20,
+            "remaining": 20,
+            "ready": false,
+            "promotion_progress": "0/20 (0.0%)"
+          },
+          {
+            "rule_id": "CD_REFINED_K9",
+            "scorecard_tier": "SKIP",
+            "current_rows": 1,
+            "threshold": 20,
+            "remaining": 19,
+            "ready": false,
+            "promotion_progress": "1/20 (5.0%)"
+          },
+          {
+            "rule_id": "DMR_FALL_K7",
+            "scorecard_tier": "WATCH",
+            "current_rows": 0,
+            "threshold": 20,
+            "remaining": 20,
+            "ready": false,
+            "promotion_progress": "0/20 (0.0%)"
+          }
+        ],
+        "read": "Phase 8 promotion-review gate: weakest current shadow coverage is 0/20 for OP_REFINED_K7, AQU_K9, SA_K9, KEE_K9, DMR_FALL_K7; the floor is per candidate and is not a promotion entitlement."
+      },
+      "real_money_discussion": {
+        "gate_source": "real_money_discussion",
+        "current_primary_roi_complete_rows": 6,
+        "threshold": 100,
+        "remaining_against_primary_review": 94,
+        "ready": false,
+        "also_requires": [
+          "positive paper ROI",
+          "concentration checks",
+          "payout-distribution sanity checks",
+          "no BAQ-as-BEL substitution"
+        ],
+        "no_baq_as_bel_required": true,
+        "read": "Real-money discussion floor: primary bridge currently has 6/100 ROI-complete rows, before concentration, payout-distribution, positive-ROI, and no-BAQ-as-BEL prerequisites."
+      },
+      "all_gates_ready": false,
+      "read": "Gate progress: primary first-read 6/30; OP anchor same-candidate 0/30; Phase 8 weakest shadow 0/20; real-money discussion floor 6/100. All remain uncleared and are routing context only."
+    },
+    "operator_read_gate": {
+      "gate_status": "current_operator_routing_context_only",
+      "requires_refresh_before_evidence_read": false,
+      "requires_source_freshness_refresh": false,
+      "has_api_access_failure_context": false,
+      "has_scanner_failure_boundary": false,
+      "has_stale_cache_fallback_context": false,
+      "has_missing_scan_output_artifact_issue": false,
+      "has_wrapper_refresh_action": false,
+      "has_issue_bucket": false,
+      "reason_text": "no refresh-first operator issue surfaced",
+      "recommended_command": "python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json",
+      "current_top_card_counts_as_no_target_evidence": false,
+      "current_top_card_counts_as_clean_empty_evidence": false,
+      "current_top_card_counts_as_bet_readiness_evidence": false,
+      "current_top_card_counts_as_settled_roi_evidence": false,
+      "not_forward_performance_evidence": true,
+      "not_promotion_readiness_evidence": true,
+      "not_live_profitability_evidence": true,
+      "not_real_money_evidence": true,
+      "valid_use": "operator instruction/evidence-read gating only",
+      "read": "Saved top card can be read as current operator routing context with `python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json`, but it is still not settled ROI, promotion readiness, live-profitability, bankroll, or real-money evidence."
+    },
+    "scorecard_audit_route": {
+      "markdown_path": "SCORECARD_RANKING_CONTRACT_AUDIT.md",
+      "json_path": "scorecard_ranking_contract_audit.json",
+      "validator_command": "python3 validate_scorecard_ranking_contract_audit.py",
+      "gate_floor_source": "forward_evidence_scorecard.json:decision_gate_minimums",
+      "gate_floor_snapshot": {
+        "anchor_displacement_min_roi_complete_settled_observations": 30,
+        "phase8_promotion_review_min_roi_complete_settled_observations": 20,
+        "real_money_discussion_min_total_settled_observations_with_usable_roi": 100,
+        "real_money_no_baq_as_bel_required": true
+      },
+      "route_read": "Use `SCORECARD_RANKING_CONTRACT_AUDIT.md` / `scorecard_ranking_contract_audit.json` plus `python3 validate_scorecard_ranking_contract_audit.py` to check copied 30/20/100 gate floors, tier-first ranking, OP_REFINED CI-only support context, generated-at timezone provenance, and no-BAQ-as-BEL prerequisite drift across report-facing surfaces.",
+      "valid_use": "navigation route for scorecard gate/ranking/CI-only/timezone/no-BAQ synchronization checks",
+      "artifacts_present": true,
+      "not_forward_performance_evidence": true,
+      "not_settled_roi_evidence": true,
+      "not_promotion_readiness_evidence": true,
+      "not_live_profitability_evidence": true,
+      "not_bankroll_guidance": true,
+      "not_real_money_evidence": true
+    },
+    "rebuild_validation_contract": {
+      "rebuild_command": "python3 current_evidence_summary.py",
+      "prerequisite_rebuild_command": "python3 paper_trade_settlement_audit.py",
+      "upstream_refresh_order": [
+        {
+          "order": 1,
+          "command": "python3 paper_trade_settlement_audit.py",
+          "reason": "refresh settlement-audit source fingerprints after scorecard, rules, signals, or settlement-ledger byte changes"
+        },
+        {
+          "order": 2,
+          "command": "python3 current_evidence_summary.py",
+          "reason": "rebuild the bridge from the refreshed scorecard, right-now card, settlement audit, and CSV recompute"
+        },
+        {
+          "order": 3,
+          "command": "python3 validate_current_evidence_summary.py",
+          "reason": "confirm source fingerprint parity, gate-source alignment, and non-evidence boundaries before quoting the bridge"
+        }
+      ],
+      "requires_settlement_audit_refresh_before_bridge_when_source_bytes_change": true,
+      "upstream_refresh_order_valid_use": "reproducible rebuild order for current bridge provenance after scorecard/rules/ledger byte changes",
+      "direct_validation_command": "python3 validate_current_evidence_summary.py",
+      "broader_rollup_commands_after_report_surface_edits": [
+        "python3 validate_report_surfaces.py --reuse-existing-child-json",
+        "python3 validate_project_surfaces.py --reuse-existing-child-json"
+      ],
+      "direct_output_paths": [
+        "CURRENT_EVIDENCE_SUMMARY.md",
+        "current_evidence_summary.json"
+      ],
+      "validation_output_paths": [
+        "out/status_validation/current_evidence_summary/current_evidence_summary_validation.md",
+        "out/status_validation/current_evidence_summary/current_evidence_summary_validation.json"
+      ],
+      "green_checks_are_reproducibility_metadata_only": true,
+      "requires_source_consistency_before_quoting_current_totals": true,
+      "requires_source_freshness_before_right_now_instruction_use": true,
+      "upstream_refresh_order_is_provenance_metadata_only": true,
+      "not_settled_roi_or_real_money_evidence": true
+    },
+    "source_freshness_generated_reference_date": "2026-07-17",
+    "source_freshness_generated_reference_timezone": "America/New_York",
+    "source_freshness_staleness_comparison_source": "generated_reference_date",
+    "source_freshness_staleness_comparison_date": "2026-07-17",
+    "right_now_as_of_date": "2026-07-17",
+    "right_now_run_date": "2026-07-17",
+    "right_now_freshness_state": "current_run_date",
+    "requires_refresh_before_right_now_use": false,
+    "source_freshness_read": "Right-now source as-of date 2026-07-17 is not older than bridge reference date 2026-07-17 (America/New_York); still treat the bridge as report/navigation context rather than performance evidence.",
+    "refresh_action_command": "./run_daily_portfolio_observation.sh",
+    "refresh_required_before_right_now_instruction_use": false,
+    "refresh_source_action_counts_as_current_instruction_before_refresh": true,
+    "refresh_can_update_operator_surfaces": true,
+    "refresh_can_settle_open_rows_by_itself": false,
+    "refresh_counts_as_roi_complete_evidence_by_itself": false,
+    "clean_empty_refresh_counts_as_forward_performance": false,
+    "missing_or_invalid_artifact_counts_as_clean_quiet_day": false,
+    "refresh_action_boundary_read": "run `./run_daily_portfolio_observation.sh` before using stale right-now instructions; a wrapper refresh can update operator surfaces, but by itself it does not settle open rows, create ROI-complete evidence, promote OP_DURABLE_K7, or support real-money discussion.",
+    "refresh_boundary_not_forward_performance_evidence": true,
+    "refresh_boundary_not_promotion_readiness_evidence": true,
+    "refresh_boundary_not_live_profitability_evidence": true,
+    "refresh_boundary_not_real_money_evidence": true,
+    "best_action_headline": "Stand down, no OP / CD target action tonight",
+    "best_action_command": "python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json",
+    "best_action_why": "Latest ops bucket is NO TARGETS, so the quiet primary lane is explained by the race calendar, not by a rules miss. This is 4 straight no-target days at the top of the ops log.",
+    "open_settlement_summary": "none",
+    "open_settlement_context": "no open primary settlement rows",
+    "open_settlement_queue_state": "closed",
+    "open_settlement_queue_read": "Open settlement queue by rule: OP_DURABLE_K7 has 0 open row(s); CD_CORE_K8 has 0; other primary rules have 0; 0 open row(s) lack published rule IDs. Open rows are settlement workflow only and do not count as ROI-complete rows or OP-anchor evidence.",
+    "open_settlement_rows": 0,
+    "roi_complete_primary_rows": 6,
+    "first_read_threshold": 30,
+    "first_read_remaining": 24,
+    "op_anchor_roi_complete_rows": 0,
+    "cd_companion_roi_complete_rows": 6,
+    "primary_rule_mix_read": "Primary rule mix: OP_DURABLE_K7 has 0 ROI-complete settled row(s); CD_CORE_K8 has 6. Current settled paper context is CD-only, so it should not be counted as OP-anchor forward evidence.",
+    "current_settled_context_is_cd_only": true,
+    "latest_context_has_no_bet_recommendations": false,
+    "latest_context_has_bet_ready_language": false,
+    "latest_context_has_no_qualifying_races": true,
+    "latest_run_context": "Latest run context: the latest live scan completed cleanly and found no qualifying races across 52 card(s) and 446 race(s).",
+    "recommendation_context_read": "Latest run context: the latest live scan completed cleanly and found no qualifying races across 52 card(s) and 446 race(s). Treat this as operator context only; use recommendation and settlement ledgers before interpreting bet readiness or forward performance.",
+    "not_forward_performance_evidence": true,
+    "not_bet_readiness_evidence_by_itself": true
+  },
+  "decision_read": {
+    "active_anchor": "OP_DURABLE_K7",
+    "paper_companion": "CD_CORE_K8",
+    "closest_shadow": "OP_REFINED_K7",
+    "harville_role": "BENCHMARK ONLY",
+    "xgboost_role": "RESEARCH ONLY",
+    "baq_boundary": "BAQ is not BEL; dormant BEL history is not transferable to BAQ",
+    "posture_change_gate": "requires ROI-complete settled paper rows; anchor_displacement needs 30 same-candidate rows, phase8_promotion_review needs 20 shadow rows, and real_money_discussion needs 100 total settled rows; hashes and clean rerenders are provenance only"
+  }
+}

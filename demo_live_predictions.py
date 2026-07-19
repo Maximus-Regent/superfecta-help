@@ -16,12 +16,24 @@ Examples:
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import os
 import sys
+import warnings
+from contextlib import nullcontext, redirect_stdout
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+
+warnings.filterwarnings("ignore", message=r"urllib3 v2 only supports OpenSSL 1\.1\.1\+.*")
+try:
+    from urllib3.exceptions import NotOpenSSLWarning
+except Exception:  # pragma: no cover - optional import hygiene for older environments
+    NotOpenSSLWarning = None
+
+if NotOpenSSLWarning is not None:
+    warnings.filterwarnings("ignore", category=NotOpenSSLWarning)
 
 BASE = Path(__file__).resolve().parent
 NYRA_DIR = BASE / "NYRA"
@@ -44,6 +56,21 @@ DEFAULT_OUT_DIR = BASE / "out" / "live_demo"
 CACHE_DIR = BASE / ".live_scan_cache"
 FINISHED_RACE_STATUSES = {5}
 PROMO_CARD_TOKENS = ("P3", "P4", "P5", "DOUBLE", "PICK", "TURF")
+BENIGN_PASS_PREFIXES = (
+    "No candidate live races found",
+    "No scoreable live races found.",
+    "No usable win pool percentages yet.",
+    "No active runners found.",
+    "No WIN pool found for selected race.",
+    "No probables returned for poolId=",
+    "No cards available today.",
+    "No NYRA API cards available today.",
+    "No unfinished races found on selected card.",
+)
+
+
+def is_benign_pass_exit(message: str) -> bool:
+    return any(message.startswith(prefix) for prefix in BENIGN_PASS_PREFIXES)
 
 
 def parse_args() -> argparse.Namespace:
@@ -237,6 +264,10 @@ def safe_list_cards() -> list[dict[str, Any]]:
         raise
 
 
+def noisy_stdout_context() -> Any:
+    return nullcontext() if sys.stdout.isatty() else redirect_stdout(io.StringIO())
+
+
 def run_prediction(race_id: str, model_path: str, top_n: int, sort_by: str) -> tuple[dict[str, Any], Any]:
     details = get_race_detail(race_id)
     if not details:
@@ -261,16 +292,17 @@ def run_prediction(race_id: str, model_path: str, top_n: int, sort_by: str) -> t
     if not win_pct:
         raise SystemExit("No usable win pool percentages yet. Retry closer to post.")
 
-    results_df = analyze_race_nyra(
-        race_detail,
-        active_runners,
-        win_pct,
-        odds_map,
-        model_path,
-        top_n,
-        sort_by=sort_by,
-        threads=max(1, os.cpu_count() or 1),
-    )
+    with noisy_stdout_context():
+        results_df = analyze_race_nyra(
+            race_detail,
+            active_runners,
+            win_pct,
+            odds_map,
+            model_path,
+            top_n,
+            sort_by=sort_by,
+            threads=max(1, os.cpu_count() or 1),
+        )
     return race_detail, results_df
 
 
@@ -536,6 +568,10 @@ def print_candidate_rows(candidate_rows: list[dict[str, Any]] | None) -> None:
         )
 
 
+def should_emit_console_summary(decision: str) -> bool:
+    return sys.stdout.isatty() or decision == "PLAY"
+
+
 def main() -> int:
     args = parse_args()
     out_dir = Path(args.out_dir)
@@ -551,34 +587,63 @@ def main() -> int:
     candidate_rows: list[dict[str, Any]] | None = None
     rejected_rows: list[dict[str, Any]] = []
 
-    if args.race_id:
-        selected_card: dict[str, Any] = {"cardName": "Direct race-id override", "cardDate": None}
-        selected_race: dict[str, Any] = {"raceId": args.race_id, "raceNumber": args.race_number}
-        race_id = str(args.race_id)
-        race_detail, results_df = run_prediction(
-            race_id=race_id,
-            model_path=str(args.model),
-            top_n=args.top_combinations,
-            sort_by=args.sort_by,
-        )
-    elif args.selection_mode == "best-live":
-        best, candidate_rows, rejected_rows = collect_best_live_candidate(filtered_cards, args)
-        selected_card = best["card"]
-        selected_race = best["race"]
-        race_detail = best["race_detail"]
-        results_df = best["results_df"]
-        race_id = str(selected_race["raceId"])
-    else:
-        selected_card = filtered_cards[0]
-        races = list_races([selected_card["cardId"]])
-        selected_race = choose_race(races, args.race_number)
-        race_id = str(selected_race["raceId"])
-        race_detail, results_df = run_prediction(
-            race_id=race_id,
-            model_path=str(args.model),
-            top_n=args.top_combinations,
-            sort_by=args.sort_by,
-        )
+    try:
+        if args.race_id:
+            selected_card: dict[str, Any] = {"cardName": "Direct race-id override", "cardDate": None}
+            selected_race: dict[str, Any] = {"raceId": args.race_id, "raceNumber": args.race_number}
+            race_id = str(args.race_id)
+            race_detail, results_df = run_prediction(
+                race_id=race_id,
+                model_path=str(args.model),
+                top_n=args.top_combinations,
+                sort_by=args.sort_by,
+            )
+        elif args.selection_mode == "best-live":
+            best, candidate_rows, rejected_rows = collect_best_live_candidate(filtered_cards, args)
+            selected_card = best["card"]
+            selected_race = best["race"]
+            race_detail = best["race_detail"]
+            results_df = best["results_df"]
+            race_id = str(selected_race["raceId"])
+        else:
+            selected_card = filtered_cards[0]
+            races = list_races([selected_card["cardId"]])
+            selected_race = choose_race(races, args.race_number)
+            race_id = str(selected_race["raceId"])
+            race_detail, results_df = run_prediction(
+                race_id=race_id,
+                model_path=str(args.model),
+                top_n=args.top_combinations,
+                sort_by=args.sort_by,
+            )
+    except SystemExit as exc:
+        message = str(exc)
+        if args.save_latest_json:
+            latest = {
+                "generated_at": datetime.now().astimezone().isoformat(),
+                "selection_mode": args.selection_mode,
+                "decision": "PASS",
+                "decision_reason": message,
+                "pass_reason": message,
+                "selected_card": None,
+                "selected_race": None,
+                "race_detail": None,
+                "csv_path": None,
+                "report_path": None,
+                "candidate_summary": candidate_rows,
+                "rejected_candidates": rejected_rows,
+                "top_combo": None,
+            }
+            (out_dir / "latest_demo_run.json").write_text(json.dumps(latest, indent=2, default=str), encoding="utf-8")
+        if is_benign_pass_exit(message):
+            if should_emit_console_summary("PASS"):
+                print("\n=== LIVE DEMO SUMMARY ===")
+                print("Decision: PASS")
+                print(f"Reason: {message}")
+                print_candidate_rows(candidate_rows)
+                print("\nNote: production OP/CD basket is unchanged; this is the demo lane for today’s available cards.")
+            return 0
+        raise
 
     decision = "PLAY"
     decision_reason = None
@@ -596,7 +661,8 @@ def main() -> int:
         )
 
     csv_path, report_path = build_paths(out_dir, race_detail)
-    save_results(results_df, str(csv_path), race_detail)
+    with noisy_stdout_context():
+        save_results(results_df, str(csv_path), race_detail)
     write_report(
         report_path,
         args,
@@ -633,6 +699,9 @@ def main() -> int:
     }
     if args.save_latest_json:
         (out_dir / "latest_demo_run.json").write_text(json.dumps(latest, indent=2, default=str), encoding="utf-8")
+
+    if not should_emit_console_summary(decision):
+        return 0
 
     print("\n=== LIVE DEMO SUMMARY ===")
     print(f"Decision: {decision}")

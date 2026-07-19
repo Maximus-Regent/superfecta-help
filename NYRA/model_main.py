@@ -425,6 +425,8 @@ def analyze_race_nyra(race_detail, runners, win_pct, odds_map, model_path, top_n
     
     # Convert to DataFrame and add EV columns
     results_df = pd.DataFrame(results)
+    if results_df.empty:
+        raise SystemExit("No modeled combinations survived feature generation for the current race.")
     results_df = add_ev_metrics(results_df)
 
     if sort_by == "ev":

@@ -1,0 +1,361 @@
+{
+  "valid_evidence_scope": "selective_vs_allow_all_recommender_scope_counterfactual_only",
+  "summary": {
+    "current_read": "on the same OP-anchor stub races, the default selective recommender path stays inside the scanner's intended ticket universe, while the explicit allow-all override can materially widen tickets, raise stake and off-scope share, turn a selective NO BET into a widened BET, and therefore belongs in research-only counterfactual comparison rather than paper-default logic",
+    "modeled_ev_read": "allow-all modeled expected-profit lift is stub-race EV, not observed settlement P&L; the artifact reports how much of that modeled lift comes from tickets outside the selective scanner universe"
+  },
+  "scenarios": [
+    {
+      "name": "mixed_universe_op_anchor",
+      "label": "Mixed-universe OP anchor race",
+      "rule_id": "OP_DURABLE_K7",
+      "track": "OP",
+      "race_id": "OP-2026-04-20-R7",
+      "scored_combo_count": 3,
+      "default_filtered_combo_count": 1,
+      "allow_all_combo_count": 3,
+      "default_path": {
+        "decision": "BET",
+        "reason": "At least one ticket cleared the EV filters and fit inside bankroll caps.",
+        "tickets_considered": 1,
+        "tickets_selected": 1,
+        "total_stake": 1.1,
+        "total_expected_return": 1.98,
+        "total_expected_profit": 0.88,
+        "portfolio_expected_roi_pct": 80.0,
+        "ticket_combos": [
+          "1-2-3-5"
+        ],
+        "tickets": [
+          {
+            "combo": "1-2-3-5",
+            "joint_prob": 0.02,
+            "predicted_payout": 120.0,
+            "adj_predicted_payout": 90.0,
+            "expected_return_1": 1.8,
+            "ev_profit_1": 0.8,
+            "ev_roi_pct": 80.0,
+            "full_kelly_frac": 0.008989,
+            "recommended_stake": 1.1,
+            "expected_return_dollars": 1.98,
+            "expected_profit_dollars": 0.88,
+            "value_rank": 1.0,
+            "rank": 1.0,
+            "valid_evidence_scope": "ev_ticket_stake_sizing_metadata_only",
+            "evidence_boundary_text": "EV ticket-engine output is source-layer paper stake-sizing metadata only; it is not a current-day scanner result, not a live paper-trade ledger, not settled ROI evidence, not promotion readiness, not live-profitability evidence, and not real-money support. BET plans remain hypothetical paper sizing candidates until the recommender, logger, settlement sync, actual result, return, cost, settled_ts, and later audit or forward-check review are complete."
+          }
+        ]
+      },
+      "allow_all_path": {
+        "decision": "BET",
+        "reason": "At least one ticket cleared the EV filters and fit inside bankroll caps.",
+        "tickets_considered": 3,
+        "tickets_selected": 3,
+        "total_stake": 6.7,
+        "total_expected_return": 16.93,
+        "total_expected_profit": 10.23,
+        "portfolio_expected_roi_pct": 152.69,
+        "ticket_combos": [
+          "9-2-3-5",
+          "1-2-3-4",
+          "1-2-3-5"
+        ],
+        "tickets": [
+          {
+            "combo": "9-2-3-5",
+            "joint_prob": 0.05,
+            "predicted_payout": 80.0,
+            "adj_predicted_payout": 60.0,
+            "expected_return_1": 3.0,
+            "ev_profit_1": 2.0,
+            "ev_roi_pct": 200.0,
+            "full_kelly_frac": 0.033898,
+            "recommended_stake": 3.7,
+            "expected_return_dollars": 11.1,
+            "expected_profit_dollars": 7.4,
+            "value_rank": 1.0,
+            "rank": 2.0,
+            "valid_evidence_scope": "ev_ticket_stake_sizing_metadata_only",
+            "evidence_boundary_text": "EV ticket-engine output is source-layer paper stake-sizing metadata only; it is not a current-day scanner result, not a live paper-trade ledger, not settled ROI evidence, not promotion readiness, not live-profitability evidence, and not real-money support. BET plans remain hypothetical paper sizing candidates until the recommender, logger, settlement sync, actual result, return, cost, settled_ts, and later audit or forward-check review are complete."
+          },
+          {
+            "combo": "1-2-3-4",
+            "joint_prob": 0.03,
+            "predicted_payout": 90.0,
+            "adj_predicted_payout": 67.5,
+            "expected_return_1": 2.025,
+            "ev_profit_1": 1.025,
+            "ev_roi_pct": 102.5,
+            "full_kelly_frac": 0.015414,
+            "recommended_stake": 1.9,
+            "expected_return_dollars": 3.8475,
+            "expected_profit_dollars": 1.9475,
+            "value_rank": 2.0,
+            "rank": 3.0,
+            "valid_evidence_scope": "ev_ticket_stake_sizing_metadata_only",
+            "evidence_boundary_text": "EV ticket-engine output is source-layer paper stake-sizing metadata only; it is not a current-day scanner result, not a live paper-trade ledger, not settled ROI evidence, not promotion readiness, not live-profitability evidence, and not real-money support. BET plans remain hypothetical paper sizing candidates until the recommender, logger, settlement sync, actual result, return, cost, settled_ts, and later audit or forward-check review are complete."
+          },
+          {
+            "combo": "1-2-3-5",
+            "joint_prob": 0.02,
+            "predicted_payout": 120.0,
+            "adj_predicted_payout": 90.0,
+            "expected_return_1": 1.8,
+            "ev_profit_1": 0.8,
+            "ev_roi_pct": 80.0,
+            "full_kelly_frac": 0.008989,
+            "recommended_stake": 1.1,
+            "expected_return_dollars": 1.98,
+            "expected_profit_dollars": 0.88,
+            "value_rank": 3.0,
+            "rank": 1.0,
+            "valid_evidence_scope": "ev_ticket_stake_sizing_metadata_only",
+            "evidence_boundary_text": "EV ticket-engine output is source-layer paper stake-sizing metadata only; it is not a current-day scanner result, not a live paper-trade ledger, not settled ROI evidence, not promotion readiness, not live-profitability evidence, and not real-money support. BET plans remain hypothetical paper sizing candidates until the recommender, logger, settlement sync, actual result, return, cost, settled_ts, and later audit or forward-check review are complete."
+          }
+        ]
+      },
+      "allow_all_out_of_scope_ticket_count": 2,
+      "allow_all_out_of_scope_tickets": [
+        "9-2-3-5",
+        "1-2-3-4"
+      ],
+      "allow_all_out_of_scope_share_pct": 66.7,
+      "allow_all_off_scope_stake": 5.6,
+      "allow_all_off_scope_expected_profit": 9.35,
+      "allow_all_off_scope_expected_profit_share_pct": 91.4,
+      "modeled_expected_profit_delta_vs_default": 9.35,
+      "stake_multiple_vs_default": 6.1,
+      "stake_delta_vs_default": 5.6,
+      "scope_inflation_read": "widened path uses 6.1x the selective stake ($6.70 vs $1.10) and keeps 66.7% of widened tickets off-scope",
+      "modeled_ev_boundary_read": "$+9.35 widened modeled expected-profit lift is stub EV, not observed P&L; $9.35 (91.4%) of widened modeled expected profit comes from off-scope tickets",
+      "note": "The selective path already has one allowed BET ticket, but the widened path pulls in two higher-EV off-scope combos that violate the scanner's Phase 7 ticket universe."
+    },
+    {
+      "name": "off_universe_only_op_anchor",
+      "label": "Off-universe-only OP anchor race",
+      "rule_id": "OP_DURABLE_K7",
+      "track": "OP",
+      "race_id": "OP-2026-04-20-R8",
+      "scored_combo_count": 1,
+      "default_filtered_combo_count": 0,
+      "allow_all_combo_count": 1,
+      "default_path": {
+        "decision": "NO BET",
+        "reason": "No rows were available in the prediction file.",
+        "tickets_considered": 0,
+        "tickets_selected": 0,
+        "total_stake": 0.0,
+        "total_expected_return": 0.0,
+        "total_expected_profit": 0.0,
+        "portfolio_expected_roi_pct": 0.0,
+        "ticket_combos": [],
+        "tickets": []
+      },
+      "allow_all_path": {
+        "decision": "BET",
+        "reason": "At least one ticket cleared the EV filters and fit inside bankroll caps.",
+        "tickets_considered": 1,
+        "tickets_selected": 1,
+        "total_stake": 3.7,
+        "total_expected_return": 33.3,
+        "total_expected_profit": 29.6,
+        "portfolio_expected_roi_pct": 800.0,
+        "ticket_combos": [
+          "9-8-7-6"
+        ],
+        "tickets": [
+          {
+            "combo": "9-8-7-6",
+            "joint_prob": 0.08,
+            "predicted_payout": 150.0,
+            "adj_predicted_payout": 112.5,
+            "expected_return_1": 9.0,
+            "ev_profit_1": 8.0,
+            "ev_roi_pct": 800.0,
+            "full_kelly_frac": 0.071749,
+            "recommended_stake": 3.7,
+            "expected_return_dollars": 33.3,
+            "expected_profit_dollars": 29.6,
+            "value_rank": 1.0,
+            "rank": 1.0,
+            "valid_evidence_scope": "ev_ticket_stake_sizing_metadata_only",
+            "evidence_boundary_text": "EV ticket-engine output is source-layer paper stake-sizing metadata only; it is not a current-day scanner result, not a live paper-trade ledger, not settled ROI evidence, not promotion readiness, not live-profitability evidence, and not real-money support. BET plans remain hypothetical paper sizing candidates until the recommender, logger, settlement sync, actual result, return, cost, settled_ts, and later audit or forward-check review are complete."
+          }
+        ]
+      },
+      "allow_all_out_of_scope_ticket_count": 1,
+      "allow_all_out_of_scope_tickets": [
+        "9-8-7-6"
+      ],
+      "allow_all_out_of_scope_share_pct": 100.0,
+      "allow_all_off_scope_stake": 3.7,
+      "allow_all_off_scope_expected_profit": 29.6,
+      "allow_all_off_scope_expected_profit_share_pct": 100.0,
+      "modeled_expected_profit_delta_vs_default": 29.6,
+      "stake_multiple_vs_default": null,
+      "stake_delta_vs_default": 3.7,
+      "scope_inflation_read": "widened path creates $3.70 of new exposure from a selective zero-stake base, with 100.0% of widened tickets off-scope",
+      "modeled_ev_boundary_read": "$+29.60 widened modeled expected-profit lift is stub EV, not observed P&L; $29.60 (100.0%) of widened modeled expected profit comes from off-scope tickets",
+      "note": "The selective path correctly says NO BET because nothing matches the scanner's allowed scope, while the widened path creates a model-ranked BET only because the scope guardrail was removed."
+    }
+  ],
+  "evidence_boundary": {
+    "artifact_role": "selective-vs-allow-all recommender scope guardrail",
+    "valid_evidence_scope": "selective_vs_allow_all_recommender_scope_counterfactual_only",
+    "valid_use": "controlled counterfactual for how the explicit allow-all-combos override widens ticket scope on fixed stub races",
+    "not_new_forward_evidence": true,
+    "not_live_paper_trade_ledger": true,
+    "not_current_day_scanner_result": true,
+    "not_observed_settlement_pnl": true,
+    "not_settled_roi_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_real_money_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_anchor_change_evidence": true,
+    "not_current_paper_scope_change_evidence": true,
+    "allow_all_override_role": "research_only_counterfactual",
+    "default_scope_role": "current_paper_default",
+    "scope_change_requires": [
+      "ROI-complete settled paper observations",
+      "scorecard-sourced 30/20/100 gate review",
+      "settlement-quality checks",
+      "no BAQ-as-BEL substitution",
+      "human review before any real-money discussion"
+    ],
+    "non_goals": [
+      "do not treat widened stub-race EV as observed settlement P&L",
+      "do not use allow-all counterfactuals to widen the current paper default",
+      "do not promote the same-family shadow rule from this artifact",
+      "do not displace the current paper anchor from this artifact",
+      "do not substitute BAQ for BEL",
+      "do not discuss real-money scaling from this artifact"
+    ],
+    "anchor_rule_id": "OP_DURABLE_K7",
+    "primary_companion_rule_id": "CD_CORE_K8",
+    "same_family_shadow_rule_id": "OP_REFINED_K7"
+  },
+  "guardrail": {
+    "live_default": "default_selective_phase7_filter",
+    "research_override": "allow_all_combos",
+    "anchor": "OP_DURABLE_K7",
+    "primary_shadow": "CD_CORE_K8",
+    "primary_companion": "CD_CORE_K8",
+    "secondary_shadow": "OP_REFINED_K7",
+    "promotion_read": "not a paper-promotion case"
+  },
+  "scorecard_decision_gate_minimums": {
+    "source": "forward_evidence_scorecard.json",
+    "source_path": "decision_gate_minimums",
+    "anchor_displacement_min_roi_complete_settled_observations": 30,
+    "phase8_promotion_review_min_roi_complete_settled_observations": 20,
+    "real_money_discussion_min_total_settled_observations_with_usable_roi": 100,
+    "real_money_no_baq_as_bel_required": true,
+    "read": "widened scope comparisons are counterfactual research only; current paper scope changes still require scorecard-sourced ROI-complete observation gates and the no-BAQ-as-BEL prerequisite"
+  },
+  "scorecard_audit_route": {
+    "markdown_path": "SCORECARD_RANKING_CONTRACT_AUDIT.md",
+    "json_path": "scorecard_ranking_contract_audit.json",
+    "validator_command": "python3 validate_scorecard_ranking_contract_audit.py",
+    "gate_floor_source": "forward_evidence_scorecard.json:decision_gate_minimums",
+    "gate_floor_snapshot": {
+      "anchor_displacement_min_roi_complete_settled_observations": 30,
+      "phase8_promotion_review_min_roi_complete_settled_observations": 20,
+      "real_money_discussion_min_total_settled_observations_with_usable_roi": 100,
+      "real_money_no_baq_as_bel_required": true
+    },
+    "route_read": "Use `SCORECARD_RANKING_CONTRACT_AUDIT.md` / `scorecard_ranking_contract_audit.json` plus `python3 validate_scorecard_ranking_contract_audit.py` to check copied 30/20/100 gate floors, tier-first ranking, OP_REFINED CI-only support context, generated-at timezone provenance, and no-BAQ-as-BEL prerequisite drift across report-facing surfaces.",
+    "valid_use": "navigation route for scorecard gate/ranking/CI-only/timezone/no-BAQ synchronization checks",
+    "artifacts_present": true,
+    "not_forward_performance_evidence": true,
+    "not_settled_roi_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_bankroll_guidance": true,
+    "not_real_money_evidence": true,
+    "source": "current_evidence_summary.json",
+    "source_path": "scorecard_audit_route"
+  },
+  "current_evidence_rebuild_validation_contract": {
+    "rebuild_command": "python3 current_evidence_summary.py",
+    "prerequisite_rebuild_command": "python3 paper_trade_settlement_audit.py",
+    "upstream_refresh_order": [
+      {
+        "order": 1,
+        "command": "python3 paper_trade_settlement_audit.py",
+        "reason": "refresh settlement-audit source fingerprints after scorecard, rules, signals, or settlement-ledger byte changes"
+      },
+      {
+        "order": 2,
+        "command": "python3 current_evidence_summary.py",
+        "reason": "rebuild the bridge from the refreshed scorecard, right-now card, settlement audit, and CSV recompute"
+      },
+      {
+        "order": 3,
+        "command": "python3 validate_current_evidence_summary.py",
+        "reason": "confirm source fingerprint parity, gate-source alignment, and non-evidence boundaries before quoting the bridge"
+      }
+    ],
+    "requires_settlement_audit_refresh_before_bridge_when_source_bytes_change": true,
+    "upstream_refresh_order_valid_use": "reproducible rebuild order for current bridge provenance after scorecard/rules/ledger byte changes",
+    "direct_validation_command": "python3 validate_current_evidence_summary.py",
+    "broader_rollup_commands_after_report_surface_edits": [
+      "python3 validate_report_surfaces.py --reuse-existing-child-json",
+      "python3 validate_project_surfaces.py --reuse-existing-child-json"
+    ],
+    "direct_output_paths": [
+      "CURRENT_EVIDENCE_SUMMARY.md",
+      "current_evidence_summary.json"
+    ],
+    "validation_output_paths": [
+      "out/status_validation/current_evidence_summary/current_evidence_summary_validation.md",
+      "out/status_validation/current_evidence_summary/current_evidence_summary_validation.json"
+    ],
+    "green_checks_are_reproducibility_metadata_only": true,
+    "requires_source_consistency_before_quoting_current_totals": true,
+    "requires_source_freshness_before_right_now_instruction_use": true,
+    "upstream_refresh_order_is_provenance_metadata_only": true,
+    "not_settled_roi_or_real_money_evidence": true,
+    "source": "current_evidence_summary.json",
+    "source_path": "rebuild_validation_contract",
+    "upstream_refresh_order_commands": [
+      "python3 paper_trade_settlement_audit.py",
+      "python3 current_evidence_summary.py",
+      "python3 validate_current_evidence_summary.py"
+    ]
+  },
+  "source_provenance": {
+    "read": "source fingerprints are reproducibility metadata for the selective-vs-allow-all scope guardrail only; they are not settled ROI, not promotion readiness, not live profitability, and not real-money evidence",
+    "source_fingerprints": {
+      "compare_recommender_scope_paths": {
+        "path": "compare_recommender_scope_paths.py",
+        "bytes": 34131,
+        "sha256": "1666452e6bb301b436ad45d6e52cd1c0ff9d9b6c5e675bbb7edf722c03b4ccf3"
+      },
+      "cross_family_decision_card": {
+        "path": "cross_family_decision_card.csv",
+        "bytes": 2266,
+        "sha256": "4be838c8552f2c0909387928a879452ce6b0a5584c2e6f30da5b4985f76059ba"
+      },
+      "forward_evidence_scorecard_json": {
+        "path": "forward_evidence_scorecard.json",
+        "bytes": 25686,
+        "sha256": "f9862ab5df38e02b45dc508ddffad6735bd388be5c088f1ebde3cc7dc5e08c49"
+      },
+      "current_evidence_summary_json": {
+        "path": "current_evidence_summary.json",
+        "bytes": 50352,
+        "sha256": "f86cdd072e9b5073c59c502811c712f21d08effa75e334904c49573f86ba30b9"
+      },
+      "ev_ticket_engine": {
+        "path": "ev_ticket_engine.py",
+        "bytes": 16678,
+        "sha256": "8fdacb13c00973f8ceec435fb1fa96f5aa7a432ca1c4f71f9ff2a2c1770ad9ab"
+      },
+      "paper_trade_recommender": {
+        "path": "paper_trade_recommender.py",
+        "bytes": 22300,
+        "sha256": "36de3011b7a3639b68680e3f44f17d1fbb7a0b14088a682d39e472bcd4ee6ada"
+      }
+    }
+  }
+}

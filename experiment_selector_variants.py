@@ -289,6 +289,16 @@ def build_report(summary: pd.DataFrame, details: pd.DataFrame) -> str:
     lines = [
         "# Selector Scoring Experiment",
         "",
+        "## Current Evidence Boundary",
+        "",
+        "- This is historical selector-scoring research on frozen walk-forward artifacts. It is useful for understanding why ROI dampening improved the selector replay, but it is not a live paper-trade ledger, settled ROI evidence, promotion readiness, live profitability, bankroll guidance, or real-money evidence.",
+        "- Valid evidence scope: `valid_evidence_scope=selector_scoring_replay_diagnostic_only`.",
+        "- Valid use: compare ROI-dampening variants against the original +22.46% train-only selector and explain why `sqrt|strict` looked better in replay. Do not treat the `Recommended action` line below as permission to change the current paper basket or override `forward_evidence_scorecard.txt`.",
+        "- Current posture still comes from the frozen scorecard plus paper-observation lane: keep `OP_DURABLE_K7` as the safest anchor, `CD_CORE_K8` as the primary OP/CD paper-basket companion, and `OP_REFINED_K7` in shadow/watch until ROI-complete paper evidence clears the scorecard gates.",
+        "- The fold-2017 improvement, BEL bridge rows, and CD selection details are replay diagnostics on already-mined candidate rules, not a fresh from-scratch discovery loop and not proof that CD_REFINED, CD_CORE, or a selector variant should displace OP anchor evidence.",
+        "- If this selector-research report is regenerated after scorecard/rules/signals/settlement-ledger byte changes, follow `current_evidence_summary.json.rebuild_validation_contract`: `python3 paper_trade_settlement_audit.py` -> `python3 current_evidence_summary.py` -> `python3 validate_current_evidence_summary.py`; this rebuild route is provenance metadata only, not settled ROI, promotion readiness, live profitability, bankroll guidance, or real-money evidence.",
+        "- Do not substitute `BAQ` for dormant `BEL`, and validate this boundary with `python3 validate_selector_experiment_caution.py`.",
+        "",
         "## Purpose",
         "",
         "Test whether dampening the ROI term in the walk-forward selection score",
@@ -443,24 +453,36 @@ def build_report(summary: pd.DataFrame, details: pd.DataFrame) -> str:
             )
     lines.append("")
 
+    # ── Mechanism check ─────────────────────────────────────────────────
+    lines.extend(["## What Actually Happened", ""])
+    lines.extend([
+        "The mechanism of improvement is not a clean CD_CORE-over-CD_REFINED fix:",
+        "",
+        f"1. **CD_CORE_K8 is still selected in {int(best['cd_core_folds'])}/{int(best['total_years'])} folds** — "
+        f"the same as the baseline. ROI dampening compresses the CD_REFINED/CD_CORE score ratio, but CD_CORE's lower "
+        "positive-year ratio and the races-factor cap at 150 still prevent it from overtaking CD_REFINED in most folds.",
+        "2. **The largest replay win is fold 2017:** dampening reduced CD_REFINED_K9 enough that OP_DURABLE_K7 entered the top-3 portfolio. CD_REFINED had -88.28% test ROI in 2017, so removing it drove most of the headline improvement.",
+        "3. **BEL bridge rows remain replay diagnostics only.** Any fold that uses `BEL_BROAD1_K7_BRIDGE_BAQ` is not permission to substitute BAQ for dormant BEL in current paper observation.",
+        "4. **Guardrail relaxation (`relaxed_n150`) has zero effect** in this dataset: each relaxed variant ties its strict counterpart.",
+        "",
+        "The selector result is useful for understanding why raw train ROI was too dominant, but it does not create new forward evidence and does not change the current OP_DURABLE_K7 / CD_CORE_K8 / OP_REFINED_K7 posture by itself.",
+        "",
+    ])
+
     # ── Recommendation ───────────────────────────────────────────────────
     lines.extend(["## Recommendation", ""])
 
     if delta > 5.0:
         lines.extend([
-            f"The **{best['variant']}** variant improves walk-forward ROI by **{delta:+.2f}pp** "
+            f"The **{best['variant']}** variant improves the historical walk-forward replay by **{delta:+.2f}pp** "
             f"({baseline['total_roi']:+.2f}% → {best['total_roi']:+.2f}%).",
             "",
             f"CD_CORE_K8 is selected in **{best['cd_core_folds']}/{best['total_years']}** folds "
-            f"(up from {baseline['cd_core_folds']}/{baseline['total_years']} under baseline).",
+            f"(unchanged from {baseline['cd_core_folds']}/{baseline['total_years']} under baseline).",
             "",
-            "The improvement comes from fixing the CD selection bottleneck identified in "
-            "`DIAGNOSE_CD_SELECTION.md`. The dampened ROI term prevents high-ROI-but-fragile "
-            "rules from dominating the score over stable-but-modest rules.",
+            "The improvement is best read as a historical selector-scoring diagnostic: dampening raw train ROI helps stop high-ROI-but-fragile rules from crowding out better portfolio choices in some folds, especially fold 2017. It is not a current paper-basket change or promotion signal.",
             "",
-            "**Recommended action:** update the selection score formula in "
-            "`walk_forward_validation.py` to use the dampened variant, then re-run the full "
-            "walk-forward to confirm.",
+            "**Recommended action:** keep `sqrt|strict` as the best tested selector-replay variant for research comparisons, but do not change the current paper basket from this experiment alone. Current posture still comes from `forward_evidence_scorecard.txt` plus ROI-complete paper observations.",
         ])
     elif delta > 2.0:
         lines.extend([

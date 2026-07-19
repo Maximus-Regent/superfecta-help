@@ -42,6 +42,7 @@ MIN_ACTIVE_TRAIN_YEARS = 4
 MIN_POSITIVE_YEAR_RATIO = 0.50
 MAX_TOP1_SHARE = 0.55
 MAX_TOP3_SHARE = 0.85
+VALID_EVIDENCE_SCOPE = "train_only_walk_forward_selector_benchmark_only"
 
 
 PHASE8_FROZEN_RULES = [
@@ -559,6 +560,15 @@ def build_report(
     lines = [
         "# Walk-Forward Validation",
         "",
+        "## Current Evidence Boundary",
+        "",
+        "- This is a historical train-only selector benchmark, not a live paper-trade ledger, current-day scanner output, settled ROI evidence, promotion readiness, live profitability, bankroll guidance, or real-money evidence.",
+        f"- Valid evidence scope: `valid_evidence_scope={VALID_EVIDENCE_SCOPE}`.",
+        "- Valid use: compare stricter train-only rule selection against fixed Phase 7 / Phase 8 replays and explain why the honest forward expectation is lower than full-sample discovery headlines.",
+        "- Limitation: the candidate universe was still mined from previous full-sample research before this walk-forward, so the +22.46% selector result is useful but still optimistic versus a true from-scratch yearly rediscovery loop.",
+        "- Current operator posture still comes from the frozen scorecard and current paper-observation lane: keep `OP_DURABLE_K7` as the safest anchor, `CD_CORE_K8` as the primary OP/CD paper-basket companion, and `OP_REFINED_K7` shadow/watch until forward paper gates are met.",
+        "- The fixed Phase 7 / Phase 8 comparison below is replay context on the same test years, not extra train-only validation, and the BEL->BAQ bridge rows are a coverage diagnostic only. Do not substitute BAQ for dormant BEL.",
+        "",
         "## What This Is",
         "",
         "- Candidate universe: existing promoted rules from `phase7_live_rules.json` and the frozen Phase 8 rules.",
@@ -587,7 +597,7 @@ def build_report(
         "",
         "## Full-Sample-Mined Portfolio Comparison",
         "",
-        f"- Fixed Phase 7 live portfolio over the same test years: {format_pct(fixed_phase7['roi'])} ROI on {fixed_phase7['races']} races, {fixed_phase7['positive_years']}/{fixed_phase7['years']} positive years.",
+        f"- Fixed Phase 7 current-paper rule portfolio over the same test years: {format_pct(fixed_phase7['roi'])} ROI on {fixed_phase7['races']} races, {fixed_phase7['positive_years']}/{fixed_phase7['years']} positive years.",
         f"- Fixed Phase 8 frozen portfolio over the same test years: {format_pct(fixed_phase8['roi'])} ROI on {fixed_phase8['races']} races, {fixed_phase8['positive_years']}/{fixed_phase8['years']} positive years.",
         f"- Train-only selection result: {format_pct(total['roi'])} ROI on {total['races']} races, {total['positive_years']}/{total['years']} positive years.",
         "",

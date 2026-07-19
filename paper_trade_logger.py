@@ -77,6 +77,14 @@ RECOMMENDATION_FIELDS = [
     "outcome",
     "notes",
 ]
+LOGGER_VALID_EVIDENCE_SCOPE = "paper_trade_logger_append_dedup_metadata_only"
+LOGGER_EVIDENCE_BOUNDARY_TEXT = (
+    "paper-trade logger output is ledger-append and dedup metadata only; it is not new forward evidence, "
+    "not a current-day scanner result by itself, not settled ROI evidence, not promotion readiness, "
+    "not live-profitability evidence, and not real-money support. Logged open rows require settlement-sync, "
+    "actual result, return, cost, and settled_ts completion plus later audit or forward-check review before "
+    "they can count toward ROI-complete sample gates."
+)
 
 
 def parse_args():
@@ -132,6 +140,17 @@ def load_state(path: Path) -> Set[str]:
         return set()
 
 
+def load_logged_keys_from_ledger(path: Path) -> Set[str]:
+    if not path.exists():
+        return set()
+    try:
+        with open(path, "r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            return {str(row.get("signal_key", "")).strip() for row in reader if str(row.get("signal_key", "")).strip()}
+    except Exception:
+        return set()
+
+
 def save_state(path: Path, logged: Set[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps({"logged": sorted(logged)}, indent=2), encoding="utf-8")
@@ -141,7 +160,7 @@ def ensure_ledger(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if not path.exists():
         with open(path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=FIELDS)
+            writer = csv.DictWriter(f, fieldnames=FIELDS, lineterminator="\n")
             writer.writeheader()
 
 
@@ -149,7 +168,7 @@ def ensure_recommendation_ledger(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if not path.exists():
         with open(path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=RECOMMENDATION_FIELDS)
+            writer = csv.DictWriter(f, fieldnames=RECOMMENDATION_FIELDS, lineterminator="\n")
             writer.writeheader()
 
 
@@ -157,7 +176,7 @@ def append_rows(path: Path, rows: List[Dict]) -> None:
     if not rows:
         return
     with open(path, "a", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=FIELDS)
+        writer = csv.DictWriter(f, fieldnames=FIELDS, lineterminator="\n")
         for row in rows:
             writer.writerow(row)
 
@@ -166,7 +185,7 @@ def append_recommendation_rows(path: Path, rows: List[Dict]) -> None:
     if not rows:
         return
     with open(path, "a", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=RECOMMENDATION_FIELDS)
+        writer = csv.DictWriter(f, fieldnames=RECOMMENDATION_FIELDS, lineterminator="\n")
         for row in rows:
             writer.writerow(row)
 
@@ -182,7 +201,7 @@ def main():
 
     hits = load_hits(input_path)
     ensure_ledger(ledger_path)
-    logged = load_state(state_path)
+    logged = load_state(state_path) | load_logged_keys_from_ledger(ledger_path)
 
     new_rows = []
     for hit in hits:
@@ -221,7 +240,7 @@ def main():
 
     recommendations = load_recommendations(recommendations_input_path)
     ensure_recommendation_ledger(recommendation_ledger_path)
-    logged_recommendations = load_state(recommendation_state_path)
+    logged_recommendations = load_state(recommendation_state_path) | load_logged_keys_from_ledger(recommendation_ledger_path)
 
     new_recommendation_rows = []
     for rec in recommendations:
@@ -268,6 +287,8 @@ def main():
         f"Logged {len(new_recommendation_rows)} new recommendation row(s) "
         f"to {recommendation_ledger_path}"
     )
+    print(f"valid_evidence_scope={LOGGER_VALID_EVIDENCE_SCOPE}")
+    print(f"Evidence boundary: {LOGGER_EVIDENCE_BOUNDARY_TEXT}")
 
 
 if __name__ == "__main__":

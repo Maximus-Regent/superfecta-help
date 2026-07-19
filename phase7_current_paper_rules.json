@@ -1,8 +1,8 @@
 {
   "generated_from": "phase7_live_rules.json",
   "notes": [
-    "Current paper-trade basket for the active Phase 7 portfolio.",
-    "This keeps the live paper path aligned with current operational reality: BEL is dormant, so the active basket is OP + CD.",
+    "Current primary paper-trade rule-component basket for Phase 7; target-card availability still comes from daily preflight.",
+    "This keeps the paper path aligned with current operational reality: BEL is dormant, so OP + CD are paper-active rule components rather than a claim that today's card is active.",
     "Use this as the primary paper baseline when you want the strongest current portfolio-level holdout result without carrying the dormant BEL leg.",
     "No unsupported track aliasing is applied. BAQ is not treated as BEL."
   ],

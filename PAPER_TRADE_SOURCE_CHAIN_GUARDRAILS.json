@@ -1,0 +1,640 @@
+{
+  "suite_status": "pass",
+  "artifact_status": "pass",
+  "valid_evidence_scope": "source_chain_operational_readiness_guardrail_only",
+  "source_scope": "saved direct source-layer validator JSON artifacts for paper_trade_pipeline, paper_trade_recommender, ev_ticket_engine, and paper_trade_logger, plus the direct live-scan validator's scanner-boundary contract",
+  "evidence_boundary": "This matrix summarizes saved source-layer validation JSON for the scan -> recommend -> size -> log paper-trade chain. It is an operational reproducibility/readiness artifact only: it is not a live paper-trade ledger, not settlement-complete ROI, not a promotion signal, and not real-money profitability evidence.",
+  "evidence_boundary_metadata": {
+    "artifact_role": "paper-trade source-chain guardrail matrix",
+    "valid_evidence_scope": "source_chain_operational_readiness_guardrail_only",
+    "valid_use": "source-layer reproducibility and failure-mode readiness audit for scan -> recommend -> size -> log",
+    "source_scope": "saved direct source-layer validator JSON artifacts for paper_trade_pipeline, paper_trade_recommender, ev_ticket_engine, and paper_trade_logger, plus the direct live-scan validator's scanner-boundary contract",
+    "decision_gate_source": "forward_evidence_scorecard.json",
+    "decision_gate_source_path": "decision_gate_minimums",
+    "current_evidence_rebuild_contract_source": "current_evidence_summary.json",
+    "current_evidence_rebuild_contract_source_path": "rebuild_validation_contract",
+    "current_evidence_rebuild_contract_is_provenance_metadata_only": true,
+    "anchor_displacement_min_roi_complete_settled_observations": 30,
+    "phase8_promotion_review_min_roi_complete_settled_observations": 20,
+    "real_money_discussion_min_total_settled_observations_with_usable_roi": 100,
+    "real_money_no_baq_as_bel_required": true,
+    "not_live_paper_trade_ledger": true,
+    "not_current_day_scanner_result": true,
+    "not_observed_settlement_pnl": true,
+    "not_settled_roi_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_real_money_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_anchor_change_evidence": true,
+    "not_companion_change_evidence": true,
+    "not_paper_scope_change_evidence": true,
+    "not_phase8_promotion_evidence": true,
+    "not_odds_only_xgboost_reopening_evidence": true,
+    "baq_as_bel_substitution_allowed": false,
+    "non_goals": [
+      "do not treat source-chain readiness as settled ROI",
+      "do not treat green source validators as promotion readiness",
+      "do not use this matrix to change the OP_DURABLE_K7 anchor",
+      "do not use this matrix to promote OP_REFINED_K7 or widen the current paper scope",
+      "do not reopen odds-only XGBoost from this artifact",
+      "do not substitute BAQ for BEL",
+      "do not discuss real-money profitability from this artifact"
+    ]
+  },
+  "current_hierarchy_boundary": {
+    "anchor": "OP_DURABLE_K7",
+    "primary_paper_basket_companion": "CD_CORE_K8",
+    "same_family_shadow_watch": "OP_REFINED_K7",
+    "boundary_read": "OP_DURABLE_K7 remains the safest current OP anchor; CD_CORE_K8 remains the primary OP/CD paper-basket companion, not a Phase 8 shadow-lane promotion; OP_REFINED_K7 remains the closest same-family shadow/watch challenger; BAQ is not BEL; source-chain readiness and validator cleanliness are not settled ROI, live-profitability evidence, promotion readiness, anchor-change evidence, or real-money evidence.",
+    "not_settled_roi_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_anchor_change_evidence": true,
+    "not_real_money_evidence": true
+  },
+  "decision_gate_minimums": {
+    "source_path": "forward_evidence_scorecard.json",
+    "source_loaded": true,
+    "anchor_displacement_min": 30,
+    "anchor_displacement_scope": "same candidate paper observations",
+    "phase8_promotion_review_min": 20,
+    "phase8_promotion_review_scope": "candidate shadow observations",
+    "real_money_discussion_min": 100,
+    "real_money_discussion_also_requires": [
+      "positive paper ROI",
+      "concentration checks",
+      "payout-distribution sanity checks",
+      "no BAQ-as-BEL substitution"
+    ],
+    "real_money_no_baq_as_bel_required": true,
+    "evidence_boundary": "These are future ROI-complete paper-observation gates sourced from the scorecard; source-chain readiness, scan fallback coverage, fingerprints, and green validators do not clear them.",
+    "gate_read": "scorecard-sourced decision gates: anchor_displacement=30, phase8_promotion_review=20, real_money_discussion=100; real-money discussion also requires positive paper ROI, concentration checks, payout-distribution sanity checks, no BAQ-as-BEL substitution"
+  },
+  "current_evidence_rebuild_validation_contract": {
+    "rebuild_command": "python3 current_evidence_summary.py",
+    "prerequisite_rebuild_command": "python3 paper_trade_settlement_audit.py",
+    "upstream_refresh_order": [
+      {
+        "order": 1,
+        "command": "python3 paper_trade_settlement_audit.py",
+        "reason": "refresh settlement-audit source fingerprints after scorecard, rules, signals, or settlement-ledger byte changes"
+      },
+      {
+        "order": 2,
+        "command": "python3 current_evidence_summary.py",
+        "reason": "rebuild the bridge from the refreshed scorecard, right-now card, settlement audit, and CSV recompute"
+      },
+      {
+        "order": 3,
+        "command": "python3 validate_current_evidence_summary.py",
+        "reason": "confirm source fingerprint parity, gate-source alignment, and non-evidence boundaries before quoting the bridge"
+      }
+    ],
+    "requires_settlement_audit_refresh_before_bridge_when_source_bytes_change": true,
+    "upstream_refresh_order_valid_use": "reproducible rebuild order for current bridge provenance after scorecard/rules/ledger byte changes",
+    "direct_validation_command": "python3 validate_current_evidence_summary.py",
+    "broader_rollup_commands_after_report_surface_edits": [
+      "python3 validate_report_surfaces.py --reuse-existing-child-json",
+      "python3 validate_project_surfaces.py --reuse-existing-child-json"
+    ],
+    "direct_output_paths": [
+      "CURRENT_EVIDENCE_SUMMARY.md",
+      "current_evidence_summary.json"
+    ],
+    "validation_output_paths": [
+      "out/status_validation/current_evidence_summary/current_evidence_summary_validation.md",
+      "out/status_validation/current_evidence_summary/current_evidence_summary_validation.json"
+    ],
+    "green_checks_are_reproducibility_metadata_only": true,
+    "requires_source_consistency_before_quoting_current_totals": true,
+    "requires_source_freshness_before_right_now_instruction_use": true,
+    "upstream_refresh_order_is_provenance_metadata_only": true,
+    "not_settled_roi_or_real_money_evidence": true,
+    "source": "current_evidence_summary.json",
+    "source_path": "rebuild_validation_contract",
+    "upstream_refresh_commands": [
+      "python3 paper_trade_settlement_audit.py",
+      "python3 current_evidence_summary.py",
+      "python3 validate_current_evidence_summary.py"
+    ],
+    "rebuild_route_read": "current_evidence_summary.json rebuild_validation_contract routes source-byte changes through python3 paper_trade_settlement_audit.py -> python3 current_evidence_summary.py -> python3 validate_current_evidence_summary.py before quoting CURRENT_EVIDENCE_SUMMARY.* as provenance/rebuild metadata only"
+  },
+  "live_scan_boundary_contract": {
+    "source_validator": "validate_live_scan_targeting_and_limit_status.py",
+    "source_validator_report_json": "out/status_validation/live_scan_targeting_and_limit_status/live_scan_targeting_and_limit_status_validation.json",
+    "source_validator_report_md": "out/status_validation/live_scan_targeting_and_limit_status/live_scan_targeting_and_limit_status_validation.md",
+    "source_script": "live_portfolio_scanner.py",
+    "suite_status": "pass",
+    "total_checks": 18,
+    "valid_evidence_scope": "live_scanner_paper_alert_metadata_only",
+    "status_sidecar_fields_pinned": [
+      "valid_evidence_scope",
+      "evidence_boundary",
+      "evidence_boundary_text"
+    ],
+    "hit_row_fields_pinned": [
+      "valid_evidence_scope",
+      "evidence_boundary",
+      "evidence_boundary_text"
+    ],
+    "text_output_scope_line_pinned": true,
+    "empty_csv_header_fields_pinned": [
+      "valid_evidence_scope",
+      "evidence_boundary_text"
+    ],
+    "api_access_status_sidecar_boundary_pinned": true,
+    "boundary_checks_pinned": [
+      "scanner_publishes_target_coverage_gap_counts",
+      "scanner_text_and_empty_csv_outputs_publish_valid_scope",
+      "scanner_api_access_failure_or_fallback_sidecar_is_structured"
+    ],
+    "evidence_boundary_text": "live scanner output is source-layer paper-alert metadata only; it is not settled ROI evidence, not live-profitability evidence, not promotion readiness, not OP-anchor replacement evidence, not Phase 8 promotion evidence, not bankroll guidance, and not real-money support.",
+    "evidence_boundary": "This contract is source-level scanner boundary metadata only. It is not a current-day scanner result, not a paper-trade ledger append, not settled ROI, not promotion readiness, not live profitability, not bankroll guidance, and not real-money evidence.",
+    "validator_report_fingerprint": {
+      "path": "out/status_validation/live_scan_targeting_and_limit_status/live_scan_targeting_and_limit_status_validation.json",
+      "bytes": 30756,
+      "sha256": "55134bf3c99a4660b795d6d26f7c3a80ffc82cc39cae1be1bc495f4d497b920c"
+    },
+    "source_script_fingerprint": {
+      "path": "live_portfolio_scanner.py",
+      "bytes": 32696,
+      "sha256": "5776ee54c04d98d302fbb9ad93adc59fe508f824a00f2f21eef3051f23b747b1"
+    },
+    "validator_script_fingerprint": {
+      "path": "validate_live_scan_targeting_and_limit_status.py",
+      "bytes": 41510,
+      "sha256": "4408144901e24bca8281e04566c8b674245a8da8e74494e74519cae8eb2a2001"
+    }
+  },
+  "input_fingerprints": {
+    "paper_trade_pipeline": {
+      "path": "out/status_validation/paper_trade_pipeline/paper_trade_pipeline_validation.json",
+      "bytes": 32616,
+      "sha256": "e50440512e039a6173895f6977e70def71e528056dc932fb9c2e5964f66aeb30"
+    },
+    "paper_trade_recommender": {
+      "path": "out/status_validation/paper_trade_recommender/paper_trade_recommender_validation.json",
+      "bytes": 11661,
+      "sha256": "844dd553de7f05d53d9c1f2c1bce5041a15ad59ff8097681e7e8278a1f4f15a7"
+    },
+    "ev_ticket_engine": {
+      "path": "out/status_validation/ev_ticket_engine/ev_ticket_engine_validation.json",
+      "bytes": 10706,
+      "sha256": "dde560094e507791e5b964523fac3e84098e3e0d87b5b5126e744e547a80593c"
+    },
+    "paper_trade_logger": {
+      "path": "out/status_validation/paper_trade_logger/paper_trade_logger_validation.json",
+      "bytes": 11542,
+      "sha256": "ac79f2bf16142c689095fbcb418c7229ad2afc63fe5d582751da6745a482c4bd"
+    }
+  },
+  "source_file_fingerprints": {
+    "paper_trade_pipeline": {
+      "source_script": {
+        "path": "paper_trade_pipeline.py",
+        "bytes": 32046,
+        "sha256": "87633a8c3782069cc9baac04649163f84c5cf619dffd70330b4cb96ce9c05f37"
+      },
+      "validator": {
+        "path": "validate_paper_trade_pipeline.py",
+        "bytes": 121480,
+        "sha256": "c5f2b87652c36685945d88466041f5da6c7722f072ff7f6e3aa27c24b333063f"
+      }
+    },
+    "paper_trade_recommender": {
+      "source_script": {
+        "path": "paper_trade_recommender.py",
+        "bytes": 22300,
+        "sha256": "36de3011b7a3639b68680e3f44f17d1fbb7a0b14088a682d39e472bcd4ee6ada"
+      },
+      "validator": {
+        "path": "validate_paper_trade_recommender.py",
+        "bytes": 42627,
+        "sha256": "c965a5f68e40862ec4541e9946a0f0890928d23284292c83026bc11a207aec05"
+      }
+    },
+    "ev_ticket_engine": {
+      "source_script": {
+        "path": "ev_ticket_engine.py",
+        "bytes": 16678,
+        "sha256": "8fdacb13c00973f8ceec435fb1fa96f5aa7a432ca1c4f71f9ff2a2c1770ad9ab"
+      },
+      "validator": {
+        "path": "validate_ev_ticket_engine.py",
+        "bytes": 37284,
+        "sha256": "f95c370950813cccf015e6e7b1cf3decb3f56c527d4b368c59c2f672c4d768cf"
+      }
+    },
+    "paper_trade_logger": {
+      "source_script": {
+        "path": "paper_trade_logger.py",
+        "bytes": 10468,
+        "sha256": "01e66ad198f76cd52fcb5b4ee037cc0aa3f5a3472140760bae438693ea249619"
+      },
+      "validator": {
+        "path": "validate_paper_trade_logger.py",
+        "bytes": 42895,
+        "sha256": "28226cbce6dc042507504b239e0924b23ef084b8e31f29a7f681c398bf7f7000"
+      }
+    }
+  },
+  "matrix_tooling_fingerprints": {
+    "generator": {
+      "path": "paper_trade_source_chain_guardrails.py",
+      "bytes": 52171,
+      "sha256": "06fcc18ec1b9ac59760611ee924806c1a79f2c74ce30cec768429ec2c9ee632e"
+    },
+    "validator": {
+      "path": "validate_paper_trade_source_chain_guardrails.py",
+      "bytes": 50075,
+      "sha256": "ec7409d75f8c3b787fb2f9891dd234f420f71f4909afd6779614be42fea05b59"
+    }
+  },
+  "total_layers": 4,
+  "total_fixture_scenarios": 48,
+  "total_source_validator_checks": 48,
+  "total_guardrail_checks": 46,
+  "layers": [
+    {
+      "label": "paper_trade_pipeline",
+      "stage": "scan wrapper",
+      "source_script": "paper_trade_pipeline.py",
+      "validator": "validate_paper_trade_pipeline.py",
+      "report_json": "out/status_validation/paper_trade_pipeline/paper_trade_pipeline_validation.json",
+      "report_md": "out/status_validation/paper_trade_pipeline/paper_trade_pipeline_validation.md",
+      "suite_status": "pass",
+      "total_fixture_scenarios": 32,
+      "total_checks": 32,
+      "check_count": 32,
+      "child_guardrail_check_count": 12,
+      "guardrail_checks": [
+        {
+          "check": "scorecard_boolean_gate_floor_fails_before_pipeline_artifacts",
+          "status": "pass",
+          "detail": "a boolean anchor-displacement floor in forward_evidence_scorecard.json fails before the pipeline validator creates fixture roots or report artifacts"
+        },
+        {
+          "check": "scorecard_nonpositive_phase8_gate_floor_fails_before_pipeline_artifacts",
+          "status": "pass",
+          "detail": "a non-positive Phase 8 promotion-review floor in forward_evidence_scorecard.json fails before the pipeline validator creates fixture roots or report artifacts"
+        },
+        {
+          "check": "scorecard_nonpositive_real_money_gate_floor_fails_before_pipeline_artifacts",
+          "status": "pass",
+          "detail": "a non-positive real-money discussion floor in forward_evidence_scorecard.json fails before the pipeline validator creates fixture roots or report artifacts"
+        },
+        {
+          "check": "scorecard_missing_no_baq_fails_before_pipeline_artifacts",
+          "status": "pass",
+          "detail": "a scorecard real-money gate that drops the no BAQ-as-BEL prerequisite fails before the pipeline validator creates fixture roots or report artifacts"
+        },
+        {
+          "check": "pipeline_status_matrix_stays_operationally_distinct",
+          "status": "pass",
+          "detail": "the validator still covers clean-empty reuse, skip-scan missing reuse, skip-scan missing reuse with empty, readable, and unreadable sidecars, skip-scan zero-byte reuse, skip-scan zero-byte reuse with empty, readable, and unreadable sidecars, skip-scan malformed reuse, skip-scan malformed reuse with empty, readable, and unreadable sidecars, skip-scan invalid-shape reuse, skip-scan invalid-shape reuse with empty, readable, and unreadable sidecars, bets-ready reuse, cache-only miss, API-access stale-cache fallback, scanner failure and missing scan output with explicit empty-scan fallback metadata, scanner-failure stale-scan overwrite protection, recommender-failure stale recommendation artifact cleanup including non-reuse prediction CSV cleanup, empty/unreadable/invalid-shape scanner-status sidecars, partial-cache empty, partial-cache-with-activity, and signals-logged-no-bet states instead of flattening them into one quiet-run branch or reusing stale scan activity after a failed scanner run or stale recommendation tickets/scored-race context after a failed recommender run"
+        },
+        {
+          "check": "pipeline_status_publishes_workflow_only_evidence_boundary",
+          "status": "pass",
+          "detail": "every saved pipeline-status fixture now carries `valid_evidence_scope`, the prose `evidence_boundary`, and structured `evidence_boundary_metadata`, and every fixture stdout prints the same scope/boundary lines, so automation and copied logs see the scan/recommend/log sidecar as workflow-state metadata rather than live profitability, promotion, real-money evidence, OP_REFINED_K7 / Phase 8 promotion, odds-only XGBoost reopening, or BAQ/BEL substitution evidence"
+        },
+        {
+          "check": "scanner_status_sidecar_paths_and_states_stay_machine_readable",
+          "status": "pass",
+          "detail": "custom scanner-status sidecar paths plus empty/unreadable/invalid-shape scanner-status states stay explicit in JSON instead of being inferred from default filenames or prose-only warnings"
+        },
+        {
+          "check": "pipeline_errors_preserve_pre_error_context",
+          "status": "pass",
+          "detail": "recommender and logger failures still preserve upstream scanner/recommendation counts plus last-completed-stage context, and recommender failures clear stale recommendation summaries/plan artifacts plus non-reuse prediction CSVs before the failed subprocess can leave old actionable tickets or scored-race context behind"
+        },
+        {
+          "check": "pipeline_validator_stays_source_layer_not_new_evidence",
+          "status": "pass",
+          "detail": "the direct pipeline validator summary still frames a green result as source-layer workflow/status reproducibility, not new forward edge evidence"
+        },
+        {
+          "check": "direct_validation_report_exposes_pipeline_valid_scope",
+          "status": "pass",
+          "detail": "the direct pipeline validation markdown and JSON now expose valid_evidence_scope=scan_recommend_log_status_only so the report artifact itself cannot be copied as scanner evidence, settled ROI, promotion readiness, live profitability, real-money support, XGBoost reopening, Phase 8 promotion, or BAQ-as-BEL evidence"
+        },
+        {
+          "check": "pipeline_preserves_scorecard_gate_boundary",
+          "status": "pass",
+          "detail": "the direct pipeline validator now reads forward_evidence_scorecard.json decision_gate_minimums and publishes the 30-row anchor-review floor, 20-row Phase 8 review floor, 100-row real-money discussion floor, and no-BAQ-as-BEL prerequisite as workflow-status boundary metadata only"
+        },
+        {
+          "check": "fixture_scratch_metadata_published",
+          "status": "pass",
+          "detail": "the direct pipeline validator now publishes project-local fixture scratch metadata so parent rollups can verify isolated pipeline-fixture hygiene without parsing markdown prose"
+        }
+      ],
+      "current_read": "paper-trade pipeline still classifies skip-scan empty reuse, skip-scan missing reuse, skip-scan missing reuse with empty, readable, and unreadable sidecars, skip-scan zero-byte reuse, skip-scan zero-byte reuse with empty, readable, and unreadable sidecars, skip-scan malformed reuse, skip-scan malformed reuse with empty, readable, and unreadable sidecars, skip-scan invalid-shape reuse, skip-scan invalid-shape reuse with empty, readable, and unreadable sidecars, bets-ready reuse, skip-scan custom scanner-status reuse, cache-only missing-cache runs, API-access stale-cache fallback runs, scanner-failed and missing-output empty runs with explicit scan-input fallback reason fields, scanner-failure stale-scan overwrite protection, recommender-failure stale recommendation artifact cleanup including non-reuse prediction CSV cleanup, empty scanner-status sidecars, unreadable scanner-status sidecars with activity, readable-but-invalid-shape scanner-status sidecars with activity, partial-cache empty runs, partial-cache activity, and signals-logged-no-bet runs distinctly in its machine-readable status output, now also publishing explicit observation-scope and observation-reason fields plus `valid_evidence_scope` / `evidence_boundary` metadata, structured `evidence_boundary_metadata`, and stdout-visible source-level valid_evidence_scope plus evidence-boundary lines so downstream helpers and copied logs do not have to infer cache-miss vs API-access stale-cache fallback vs missing scan output vs invalid scan output vs sidecar-unavailable vs invalid scanner-status shape vs partial-cache vs true clean-empty meaning from mixed sidecar strings or let stale scan hits survive a failed scanner run, stale recommendation tickets or scored-race context survive a failed recommender run, or treat a green workflow sidecar or copied log as live profitability, promotion, or real-money evidence, while preserving the scorecard-sourced 30/20/100 decision gates plus the no-BAQ-as-BEL prerequisite as a boundary that pipeline status fixtures and workflow sidecars do not advance, rejecting malformed and non-positive scorecard gates before fixture/report artifacts, accepting an explicit scanner-status-output path so reused or scratch live-scan artifacts do not have to keep a hard-coded sidecar basename, preserving scanner/recommendation context plus last-completed-stage detail across direct recommender and logger pipeline_error fixtures, publishing project-local fixture scratch metadata as a structured guardrail, exposing exact valid_evidence_scope=scan_recommend_log_status_only as direct validator-report metadata only, and publishing its validator report at the standard paper-trade-pipeline validation path",
+      "plain_role": "keeps live scan/recommend/log wrapper status, stdout-visible valid_evidence_scope plus boundary lines, direct validator valid_evidence_scope exposure, scanner sidecars, cache misses, API-access stale-cache fallback metadata, scanner-failure stale-scan overwrite protection, recommender-failure stale recommendation/prediction cleanup, pipeline errors, malformed/non-positive scorecard gates, project-local fixture scratch metadata, and scorecard gate boundaries operationally distinct"
+    },
+    {
+      "label": "paper_trade_recommender",
+      "stage": "recommend",
+      "source_script": "paper_trade_recommender.py",
+      "validator": "validate_paper_trade_recommender.py",
+      "report_json": "out/status_validation/paper_trade_recommender/paper_trade_recommender_validation.json",
+      "report_md": "out/status_validation/paper_trade_recommender/paper_trade_recommender_validation.md",
+      "suite_status": "pass",
+      "total_fixture_scenarios": 6,
+      "total_checks": 6,
+      "check_count": 6,
+      "child_guardrail_check_count": 12,
+      "guardrail_checks": [
+        {
+          "check": "scorecard_boolean_gate_floor_fails_before_recommender_artifacts",
+          "status": "pass",
+          "detail": "a boolean anchor-displacement floor in forward_evidence_scorecard.json fails before the recommender validator creates fixture roots or report artifacts"
+        },
+        {
+          "check": "scorecard_nonpositive_phase8_gate_floor_fails_before_recommender_artifacts",
+          "status": "pass",
+          "detail": "a non-positive Phase 8 promotion-review floor in forward_evidence_scorecard.json fails before the recommender validator creates fixture roots or report artifacts"
+        },
+        {
+          "check": "scorecard_nonpositive_real_money_gate_floor_fails_before_recommender_artifacts",
+          "status": "pass",
+          "detail": "a non-positive real-money discussion floor in forward_evidence_scorecard.json fails before the recommender validator creates fixture roots or report artifacts"
+        },
+        {
+          "check": "scorecard_missing_no_baq_fails_before_recommender_artifacts",
+          "status": "pass",
+          "detail": "a scorecard real-money gate that drops the no BAQ-as-BEL prerequisite fails before the recommender validator creates fixture roots or report artifacts"
+        },
+        {
+          "check": "empty_scan_input_writes_stable_empty_artifacts",
+          "status": "pass",
+          "detail": "empty scan inputs still write stable JSON/TXT/CSV summary artifacts, clear stale per-race plan files plus non-reuse prediction CSVs, and do not try to score nonexistent races"
+        },
+        {
+          "check": "missing_race_id_hits_become_per_hit_error_rows",
+          "status": "pass",
+          "detail": "scanner hits that lack race_id now produce explicit per-hit ERROR recommendation rows instead of disappearing from the summary artifacts"
+        },
+        {
+          "check": "default_phase7_filter_stays_inside_scanner_combo_universe",
+          "status": "pass",
+          "detail": "the default recommender path still sizes only the scanner-approved Phase 7 ticket universe instead of widening to all model-scored combos"
+        },
+        {
+          "check": "off_universe_predictions_stay_no_bet_unless_override_is_explicit",
+          "status": "pass",
+          "detail": "off-universe-only prediction rows remain honest NO BETs by default, and the allow-all-combos widening path is only accepted when the explicit override is present"
+        },
+        {
+          "check": "malformed_prediction_files_become_per_race_error_rows",
+          "status": "pass",
+          "detail": "malformed prediction files still produce explicit per-race ERROR recommendation rows instead of aborting the whole consolidated summary build"
+        },
+        {
+          "check": "fixture_scratch_metadata_published",
+          "status": "pass",
+          "detail": "the direct recommender validator now publishes project-local fixture scratch metadata so parent rollups can verify isolated recommender-fixture hygiene without parsing markdown prose"
+        },
+        {
+          "check": "recommender_validator_stays_reuse_fixture_not_new_evidence",
+          "status": "pass",
+          "detail": "the direct recommender validator summary now frames a green reused-prediction fixture sweep plus a no-reuse cleanup check as source-layer reproducibility, exposes the exact raw valid_evidence_scope in its own report, and keeps every successful stdout/text summary plus non-empty JSON/CSV payload carrying source-level valid_evidence_scope plus evidence-boundary metadata rather than live scoring, promotion, settled ROI, live profitability, or real-money evidence"
+        },
+        {
+          "check": "recommender_preserves_scorecard_gate_boundary",
+          "status": "pass",
+          "detail": "the direct recommender validator now reads forward_evidence_scorecard.json decision_gate_minimums and publishes the 30-row anchor-review floor, 20-row Phase 8 review floor, 100-row real-money discussion floor, and no-BAQ-as-BEL prerequisite as source-layer boundary metadata only"
+        }
+      ],
+      "current_read": "paper-trade recommender still preserves the default Phase 7 combo filter, keeps off-universe-only races as honest NO BETs, allows the explicit allow-all-combos override to widen the ticket universe when requested, turns missing race_id scanner hits and malformed prediction files into ERROR rows instead of letting scanner hits disappear or aborting the whole summary build, writes stable summary artifacts even when the scan input is empty, clears stale plan artifacts and non-reuse prediction CSVs on direct empty reruns so old tickets or scored-race context cannot survive as current plan/prediction files, prints source-level valid_evidence_scope plus evidence-boundary lines in successful CLI and text-summary output, exposes exact valid_evidence_scope=scanner_hit_recommendation_sizing_metadata_only in the direct validator report as recommendation/sizing metadata only, carries source-level valid_evidence_scope plus machine-readable evidence-boundary fields in non-empty recommendation JSON rows, carries valid_evidence_scope plus evidence-boundary text in non-empty summary CSV rows, rejects malformed and non-positive scorecard gates before fixture/report artifacts, publishes project-local fixture scratch metadata, preserves the scorecard-sourced 30/20/100 decision gates plus the no-BAQ-as-BEL prerequisite as a boundary that reused-prediction fixtures do not advance, and now publishes its direct validator report at the standard paper-trade-recommender validation path; this is mostly reused-prediction source-layer reproducibility plus one no-reuse cleanup check, not live model scoring, promotion, settled ROI, live profitability, or real-money evidence",
+      "plain_role": "keeps the default Phase 7 combo universe narrow and explicit about missing-race-id scanner hits, off-universe rows, malformed-prediction fallback behavior, stale plan-file and non-reuse prediction cleanup on direct reruns, source-level valid_evidence_scope plus evidence-boundary output, direct validator valid_evidence_scope exposure, malformed/non-positive scorecard gates, project-local fixture scratch metadata, and scorecard gate boundaries"
+    },
+    {
+      "label": "ev_ticket_engine",
+      "stage": "size",
+      "source_script": "ev_ticket_engine.py",
+      "validator": "validate_ev_ticket_engine.py",
+      "report_json": "out/status_validation/ev_ticket_engine/ev_ticket_engine_validation.json",
+      "report_md": "out/status_validation/ev_ticket_engine/ev_ticket_engine_validation.md",
+      "suite_status": "pass",
+      "total_fixture_scenarios": 6,
+      "total_checks": 6,
+      "check_count": 6,
+      "child_guardrail_check_count": 11,
+      "guardrail_checks": [
+        {
+          "check": "scorecard_boolean_gate_floor_fails_before_ev_ticket_artifacts",
+          "status": "pass",
+          "detail": "a boolean anchor-displacement floor in forward_evidence_scorecard.json fails before nested EV ticket-engine fixture/report artifacts are created"
+        },
+        {
+          "check": "scorecard_nonpositive_phase8_gate_floor_fails_before_ev_ticket_artifacts",
+          "status": "pass",
+          "detail": "a non-positive Phase 8 promotion-review floor in forward_evidence_scorecard.json fails before nested EV ticket-engine fixture/report artifacts are created"
+        },
+        {
+          "check": "scorecard_nonpositive_real_money_gate_floor_fails_before_ev_ticket_artifacts",
+          "status": "pass",
+          "detail": "a non-positive real-money discussion floor in forward_evidence_scorecard.json fails before nested EV ticket-engine fixture/report artifacts are created"
+        },
+        {
+          "check": "scorecard_missing_no_baq_fails_before_ev_ticket_artifacts",
+          "status": "pass",
+          "detail": "a scorecard missing the no-BAQ-as-BEL real-money prerequisite fails before nested EV ticket-engine fixture/report artifacts are created"
+        },
+        {
+          "check": "empty_negative_and_low_probability_inputs_stay_no_bet",
+          "status": "pass",
+          "detail": "empty prediction files, negative-edge tickets, and too-low-probability longshots still stop as conservative NO BET plans before any stake is allocated"
+        },
+        {
+          "check": "risk_caps_and_ticket_increment_floor_stay_conservative",
+          "status": "pass",
+          "detail": "eligible edges still degrade to NO BET when bankroll caps and ticket-increment floors push every playable stake below the minimum ticket increment"
+        },
+        {
+          "check": "positive_ev_ticket_sizing_respects_rank_and_caps",
+          "status": "pass",
+          "detail": "positive-EV cases still select only the top ranked tickets allowed by `--max-tickets`, keep stakes inside the race risk budget, and write stable selected-ticket artifacts"
+        },
+        {
+          "check": "malformed_probability_inputs_fail_loudly_without_plan_artifacts",
+          "status": "pass",
+          "detail": "malformed prediction inputs still fail loudly on the required probability column instead of fabricating a JSON/CSV betting plan"
+        },
+        {
+          "check": "fixture_scratch_metadata_published",
+          "status": "pass",
+          "detail": "the direct EV ticket-engine validator now publishes project-local fixture scratch metadata so parent rollups can verify isolated stake-sizing fixture hygiene without parsing markdown prose"
+        },
+        {
+          "check": "ev_ticket_engine_validator_stays_sizing_reproducibility_not_new_evidence",
+          "status": "pass",
+          "detail": "the direct EV sizing validator summary now frames a green fixture sweep as stake-sizing reproducibility, with successful stdout, JSON plans, selected-ticket CSV rows, and the validator report itself carrying exact valid_evidence_scope metadata rather than live profitability, promotion, or real-money evidence"
+        },
+        {
+          "check": "ev_ticket_engine_preserves_scorecard_gate_boundary",
+          "status": "pass",
+          "detail": "the direct EV sizing validator now reads forward_evidence_scorecard.json decision_gate_minimums and publishes the 30-row anchor-review floor, 20-row Phase 8 review floor, 100-row real-money discussion floor, and no-BAQ-as-BEL prerequisite as stake-sizing boundary metadata only"
+        }
+      ],
+      "current_read": "the EV sizing engine still rejects empty, negative-edge, low-probability, and under-minimum-stake cases conservatively, selects only the top positive-EV tickets that fit inside bankroll caps, fails loudly on malformed probability inputs instead of fabricating a plan, prints source-level valid_evidence_scope plus evidence-boundary lines in successful CLI output, carries source-level valid_evidence_scope plus machine-readable evidence-boundary fields in successful JSON plan artifacts, carries valid_evidence_scope plus evidence-boundary text in selected-ticket CSV rows, rejects malformed and non-positive scorecard gates before fixture/report artifacts, publishes project-local fixture scratch metadata, exposes exact valid_evidence_scope=ev_ticket_stake_sizing_metadata_only as direct validator-report metadata only, preserves the scorecard-sourced 30/20/100 decision gates plus the no-BAQ-as-BEL prerequisite as a boundary that stake-sizing fixtures do not advance, and now publishes its direct validator report at the standard ev-ticket-engine validation path; this is a source-layer stake-sizing reproducibility check, not live profitability, promotion, or real-money evidence",
+      "plain_role": "keeps conservative no-bet filters, risk caps, ticket floors, malformed probability-input failures, source-level valid_evidence_scope plus evidence-boundary output, direct validator valid_evidence_scope exposure, malformed/non-positive scorecard gates, project-local fixture scratch metadata, and scorecard gate boundaries pinned"
+    },
+    {
+      "label": "paper_trade_logger",
+      "stage": "log",
+      "source_script": "paper_trade_logger.py",
+      "validator": "validate_paper_trade_logger.py",
+      "report_json": "out/status_validation/paper_trade_logger/paper_trade_logger_validation.json",
+      "report_md": "out/status_validation/paper_trade_logger/paper_trade_logger_validation.md",
+      "suite_status": "pass",
+      "total_fixture_scenarios": 4,
+      "total_checks": 4,
+      "check_count": 4,
+      "child_guardrail_check_count": 11,
+      "guardrail_checks": [
+        {
+          "check": "scorecard_boolean_gate_floor_fails_before_logger_artifacts",
+          "status": "pass",
+          "detail": "a malformed boolean anchor-displacement scorecard gate fails before nested logger validation outputs are created"
+        },
+        {
+          "check": "scorecard_nonpositive_phase8_gate_floor_fails_before_logger_artifacts",
+          "status": "pass",
+          "detail": "a non-positive Phase 8 promotion-review scorecard gate fails before nested logger validation outputs are created"
+        },
+        {
+          "check": "scorecard_nonpositive_real_money_gate_floor_fails_before_logger_artifacts",
+          "status": "pass",
+          "detail": "a non-positive real-money discussion scorecard gate fails before nested logger validation outputs are created"
+        },
+        {
+          "check": "scorecard_missing_no_baq_fails_before_logger_artifacts",
+          "status": "pass",
+          "detail": "a scorecard gate missing the no-BAQ-as-BEL real-money prerequisite fails before nested logger validation outputs are created"
+        },
+        {
+          "check": "empty_inputs_create_header_only_ledgers_and_empty_states",
+          "status": "pass",
+          "detail": "empty signal and recommendation inputs still create stable header-only ledgers plus empty dedup state files instead of leaving downstream append targets undefined"
+        },
+        {
+          "check": "new_rows_append_serialized_payloads_with_open_status_fields",
+          "status": "pass",
+          "detail": "new signal and recommendation rows still append with serialized list payloads and open status/outcome fields that settlement and monitoring tools can update later"
+        },
+        {
+          "check": "existing_state_dedups_old_keys_and_allows_new_keys",
+          "status": "pass",
+          "detail": "existing dedup state still blocks duplicate signal keys while allowing genuinely new signal/recommendation keys through and preserving sorted state files"
+        },
+        {
+          "check": "malformed_state_rebuilds_dedup_from_existing_ledgers_and_ignores_blank_recommendation_keys",
+          "status": "pass",
+          "detail": "malformed dedup-state JSON now rebuilds the dedup set from existing signal/recommendation ledger rows, appends only new keys, and still ignores blank recommendation keys rather than creating garbage rows or state entries"
+        },
+        {
+          "check": "fixture_scratch_metadata_published",
+          "status": "pass",
+          "detail": "the direct logger validator now publishes project-local fixture scratch metadata so parent rollups can verify isolated ledger-fixture hygiene without parsing markdown prose"
+        },
+        {
+          "check": "paper_trade_logger_validator_stays_ledger_reproducibility_not_settlement_evidence",
+          "status": "pass",
+          "detail": "the direct logger validator summary now frames a green fixture sweep as ledger append/dedup reproducibility, every successful fixture stdout and the validator report itself carry exact valid_evidence_scope metadata, and the summary stays out of settled ROI, promotion, live profitability, or real-money evidence"
+        },
+        {
+          "check": "logger_preserves_scorecard_gate_boundary",
+          "status": "pass",
+          "detail": "the direct logger validator now reads forward_evidence_scorecard.json decision_gate_minimums and publishes the 30-row anchor-review floor, 20-row Phase 8 review floor, 100-row real-money discussion floor, and no-BAQ-as-BEL prerequisite as ledger-layer boundary metadata only"
+        }
+      ],
+      "current_read": "paper-trade logger still creates stable signal and recommendation ledgers on empty runs, appends new rows with serialized list payloads, dedups previously logged signal keys via state files plus existing ledger rows, tolerates malformed state by rebuilding dedup from the ledger before appending only new keys, ignores blank recommendation keys instead of polluting the ledger, prints source-level valid_evidence_scope plus evidence-boundary lines in successful CLI output, publishes project-local fixture scratch metadata, exposes exact valid_evidence_scope=paper_trade_logger_append_dedup_metadata_only as direct validator-report metadata only, rejects malformed/non-positive scorecard gates before fixture/report artifacts, preserves the scorecard-sourced 30/20/100 decision gates plus the no-BAQ-as-BEL prerequisite as a boundary that fixture ledgers and state files do not advance, and now publishes its direct validator report at the standard paper-trade-logger validation path; this is a source-layer ledger reproducibility check, not settlement-complete ROI, promotion, live profitability, or real-money evidence",
+      "plain_role": "keeps signal/recommendation ledger headers, append rows, state-plus-ledger dedup, malformed-state ledger rebuild fallback, blank-key handling, source-level valid_evidence_scope plus evidence-boundary output, direct validator valid_evidence_scope exposure, project-local fixture scratch metadata, scorecard gate boundaries, and malformed/non-positive-scorecard no-artifact failures pinned"
+    }
+  ],
+  "scan_reuse_coverage_contract": {
+    "source_layer": "paper_trade_pipeline",
+    "source_validator": "validate_paper_trade_pipeline.py",
+    "policy": "The direct pipeline fixtures pin every missing/zero-byte scan-input sidecar state because those are the most likely copied or partial-artifact failure modes. Malformed and invalid-shape scan inputs are now also pinned against no sidecar, readable active-looking sidecar provenance, empty sidecar metadata, and unreadable sidecar metadata so invalid scan payloads consistently outrank sidecar provenance.",
+    "required_case_count": 16,
+    "required_case_names": [
+      "case_skip_scan_missing_reuse",
+      "case_skip_scan_missing_reuse_with_sidecar",
+      "case_skip_scan_missing_reuse_with_empty_sidecar",
+      "case_skip_scan_missing_reuse_with_unreadable_sidecar",
+      "case_skip_scan_zero_byte_reuse",
+      "case_skip_scan_zero_byte_reuse_with_sidecar",
+      "case_skip_scan_zero_byte_reuse_with_empty_sidecar",
+      "case_skip_scan_zero_byte_reuse_with_unreadable_sidecar",
+      "case_skip_scan_malformed_reuse",
+      "case_skip_scan_malformed_reuse_with_sidecar",
+      "case_skip_scan_malformed_reuse_with_empty_sidecar",
+      "case_skip_scan_malformed_reuse_with_unreadable_sidecar",
+      "case_skip_scan_invalid_shape_reuse",
+      "case_skip_scan_invalid_shape_reuse_with_sidecar",
+      "case_skip_scan_invalid_shape_reuse_with_empty_sidecar",
+      "case_skip_scan_invalid_shape_reuse_with_unreadable_sidecar"
+    ],
+    "covered_rows": [
+      {
+        "scan_input_state": "missing",
+        "sidecar_states_pinned": "missing/default, readable, empty, unreadable",
+        "controlling_result": "missing_scan_output",
+        "operator_meaning": "the scan payload is absent, so the day is refresh-required even if a sidecar looks active"
+      },
+      {
+        "scan_input_state": "empty",
+        "sidecar_states_pinned": "missing/default, readable, empty, unreadable",
+        "controlling_result": "missing_scan_output",
+        "operator_meaning": "the scan payload is zero-byte, so the day is refresh-required rather than a clean empty observation"
+      },
+      {
+        "scan_input_state": "unreadable",
+        "sidecar_states_pinned": "missing/default, readable, empty, unreadable",
+        "controlling_result": "invalid_scan_output",
+        "operator_meaning": "the scan payload is malformed JSON, so the invalid scan outranks sidecar provenance"
+      },
+      {
+        "scan_input_state": "invalid_shape",
+        "sidecar_states_pinned": "missing/default, readable, empty, unreadable",
+        "controlling_result": "invalid_scan_output",
+        "operator_meaning": "the scan payload is readable but not the scanner-output list shape, so the invalid scan outranks sidecar provenance"
+      }
+    ],
+    "intentional_non_expansion": [],
+    "stop_rule": "Do not add another scan-input / sidecar-state fixture solely to grow counts; add one only when it reduces a real operator ambiguity in whether a run is refresh-required, clean observation, or activity-looking provenance. The current matrix explicitly covers empty-sidecar provenance for malformed and invalid-shape reused scan inputs.",
+    "evidence_boundary": "This coverage contract is fixture-matrix scope metadata only, not settled ROI, promotion readiness, live profitability, or real-money evidence."
+  },
+  "parent_rollup_propagation": {
+    "boundary": "Parent rollup passes preserve this matrix as propagation/readiness metadata only: not settled ROI, not promotion readiness, not live profitability, and not real-money evidence.",
+    "rollups": [
+      {
+        "surface": "operator suite",
+        "validator": "validate_paper_trade_operator_suite.py",
+        "recommended_command": "python3 validate_paper_trade_operator_suite.py --reuse-existing-child-json",
+        "embedded_key": "auxiliary_source_chain_matrix",
+        "preserves": "saved matrix paths, direct matrix checks, all-46-guardrails read, validator-JSON fingerprints, code fingerprints, matrix-tooling fingerprints, matrix-payload rebuild parity, and non-promotional boundary",
+        "use_only_after": "Run the direct scan/recommend/size/log validators and validate_paper_trade_source_chain_guardrails.py first so child JSON is fresh."
+      },
+      {
+        "surface": "project surfaces",
+        "validator": "validate_project_surfaces.py",
+        "recommended_command": "python3 validate_project_surfaces.py --reuse-existing-child-json",
+        "embedded_key": "paper_trade_operator_suite.auxiliary_source_chain_matrix",
+        "preserves": "the operator-embedded matrix result and parent-side matrix-payload rebuild parity as project-level readiness metadata rather than a generic umbrella pass",
+        "use_only_after": "Use after the operator suite has refreshed or reused a fresh source-chain validator JSON."
+      }
+    ]
+  },
+  "summary": {
+    "suite_read": "scan/recommend/size/log source validators are all passing and publish 46 machine-readable guardrails across 48 fixture scenarios, fingerprint the summarized validator JSON artifacts, their source/validator scripts, and the matrix generator/validator tooling, and document how operator/project parent rollups should preserve `auxiliary_source_chain_matrix` with parent-side matrix-payload rebuild parity as readiness-only propagation metadata rather than flattening the chain into a generic green pass; it also publishes the current hierarchy boundary that keeps OP_DURABLE_K7 as anchor, CD_CORE_K8 as the primary OP/CD paper-basket companion, and OP_REFINED_K7 in shadow/watch, and carries the scorecard-sourced 30/20/100 decision gates plus the no-BAQ-as-BEL real-money prerequisite plus the current-evidence rebuild route through settlement audit -> current bridge -> bridge validator before CURRENT_EVIDENCE_SUMMARY totals are quoted; it exposes exact valid_evidence_scope=source_chain_operational_readiness_guardrail_only as matrix-scope metadata only; it also pins the direct live-scanner source-boundary fields for status sidecars, scanner hit rows, copied text output, and empty saved-CSV headers as paper-alert metadata only; use this matrix to audit paper-trade source-chain readiness and failure-mode meaning, not to infer settled ROI, promotion readiness, or live/real-money profitability"
+  },
+  "rebuild": {
+    "workdir": "/Users/maximusregent_ai/Shared/Superfecta Help",
+    "command": "python3 paper_trade_source_chain_guardrails.py",
+    "output_md": "PAPER_TRADE_SOURCE_CHAIN_GUARDRAILS.md",
+    "output_json": "PAPER_TRADE_SOURCE_CHAIN_GUARDRAILS.json"
+  }
+}

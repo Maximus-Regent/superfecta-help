@@ -10,19 +10,587 @@ Purpose:
 
 from __future__ import annotations
 
+import argparse
+import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
 BASE = Path(__file__).resolve().parent
 OUT_MD = BASE / "DAILY_ARTIFACT_GUIDE.md"
 RUNS_ROOT = BASE / "out" / "daily_portfolio_runs"
+CURRENT_EVIDENCE_JSON = BASE / "current_evidence_summary.json"
+SCORECARD_JSON = BASE / "forward_evidence_scorecard.json"
+SOURCE_CHAIN_JSON = BASE / "PAPER_TRADE_SOURCE_CHAIN_GUARDRAILS.json"
+VALID_EVIDENCE_SCOPE = "daily_artifact_guide_navigation_routing_only"
+NO_BAQ_AS_BEL_PREREQUISITE = "no BAQ-as-BEL substitution"
+CI_ONLY_SOURCE = "forward_evidence_scorecard.json:ci_only_promotion_diagnostics.OP_REFINED_K7"
+REQUIRED_REFRESH_ACTION_BOUNDARY_TEXT_FIELDS = [
+    "command",
+    "valid_use",
+    "read",
+]
+REQUIRED_REFRESH_ACTION_BOUNDARY_BOOL_FIELDS = [
+    "required_before_right_now_instruction_use",
+    "source_action_counts_as_current_instruction_before_refresh",
+    "not_forward_performance_evidence",
+    "not_live_profitability_evidence",
+    "not_promotion_readiness_evidence",
+    "not_real_money_evidence",
+    "wrapper_refresh_can_update_operator_surfaces",
+    "wrapper_refresh_can_settle_open_rows_by_itself",
+    "wrapper_refresh_counts_as_roi_complete_evidence_by_itself",
+    "clean_empty_refresh_counts_as_forward_performance",
+    "missing_or_invalid_artifact_counts_as_clean_quiet_day",
+]
 
 
 @dataclass
 class Item:
     path: Path
     why: str
+
+
+@dataclass(frozen=True)
+class CurrentEvidenceContext:
+    first_gate: str
+    broad_gate: str
+    gate_pair: str
+    cd_rows: int | None
+    op_rows: int | None
+    cd_only_sample_phrase: str
+    combined_operator_route_instruction: str
+    source_freshness_instruction: str
+    operator_read_gate_phrase: str
+    open_row_context_phrase: str
+    bridge_queue_navigation: str
+    ci_only_source: str
+    ci_only_allowed: bool
+    ci_only_phrase: str
+    scorecard_audit_route_phrase: str
+    rebuild_order_phrase: str
+
+
+@dataclass(frozen=True)
+class DecisionGateContext:
+    anchor_min: int
+    phase8_min: int
+    real_money_min: int
+    no_baq_as_bel_required: bool
+    source_line: str
+
+
+@dataclass(frozen=True)
+class SourceChainContext:
+    guardrail_count: int
+    fixture_count: int
+
+
+def source_chain_context() -> SourceChainContext:
+    """Return source-chain matrix counts from the validated JSON sidecar."""
+
+    payload = json.loads(SOURCE_CHAIN_JSON.read_text(encoding="utf-8"))
+    return SourceChainContext(
+        guardrail_count=int(payload["total_guardrail_checks"]),
+        fixture_count=int(payload["total_fixture_scenarios"]),
+    )
+
+
+def require_positive_non_bool_int(value: Any, *, source_name: str, field_name: str) -> int:
+    """Return a positive integer gate floor without allowing bool-as-int coercion."""
+
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        raise ValueError(f"{source_name} {field_name} must be a positive non-boolean integer")
+    return value
+
+
+def require_string_list(value: Any, *, source_name: str, field_name: str) -> list[str]:
+    if not isinstance(value, list) or any(not isinstance(item, str) or not item.strip() for item in value):
+        raise ValueError(f"{source_name} {field_name} must be a list of non-empty strings")
+    return value
+
+
+def decision_gate_context(scorecard_json_path: Path = SCORECARD_JSON) -> DecisionGateContext:
+    """Return scorecard-sourced gate wording for the daily navigation guide."""
+
+    source_path = Path(scorecard_json_path)
+    source_name = source_path.name
+    payload = json.loads(source_path.read_text(encoding="utf-8"))
+    gates = payload.get("decision_gate_minimums")
+    if not isinstance(gates, dict):
+        raise ValueError(f"{source_name} is missing decision_gate_minimums")
+
+    anchor_gate = gates.get("anchor_displacement")
+    phase8_gate = gates.get("phase8_promotion_review")
+    real_money_gate = gates.get("real_money_discussion")
+    if not isinstance(anchor_gate, dict) or not isinstance(phase8_gate, dict) or not isinstance(real_money_gate, dict):
+        raise ValueError(f"{source_name} decision_gate_minimums is missing a required gate")
+
+    anchor_min = require_positive_non_bool_int(
+        anchor_gate.get("min_roi_complete_settled_observations"),
+        source_name=source_name,
+        field_name="decision_gate_minimums.anchor_displacement.min_roi_complete_settled_observations",
+    )
+    phase8_min = require_positive_non_bool_int(
+        phase8_gate.get("min_roi_complete_settled_observations"),
+        source_name=source_name,
+        field_name="decision_gate_minimums.phase8_promotion_review.min_roi_complete_settled_observations",
+    )
+    real_money_min = require_positive_non_bool_int(
+        real_money_gate.get("min_total_settled_observations_with_usable_roi"),
+        source_name=source_name,
+        field_name="decision_gate_minimums.real_money_discussion.min_total_settled_observations_with_usable_roi",
+    )
+    real_money_requirements = require_string_list(
+        real_money_gate.get("also_requires"),
+        source_name=source_name,
+        field_name="decision_gate_minimums.real_money_discussion.also_requires",
+    )
+    if NO_BAQ_AS_BEL_PREREQUISITE not in real_money_requirements:
+        raise ValueError(
+            f"{source_name} decision_gate_minimums.real_money_discussion.also_requires "
+            f"must include {NO_BAQ_AS_BEL_PREREQUISITE}"
+        )
+    no_baq_as_bel_required = True
+    no_baq_clause = "; the real-money discussion floor also requires no BAQ-as-BEL substitution" if no_baq_as_bel_required else ""
+    source_line = (
+        f"Decision-gate source: `{source_path.name}` `decision_gate_minimums` sets "
+        f"`anchor_displacement={anchor_min}`, `phase8_promotion_review={phase8_min}`, "
+        f"and `real_money_discussion={real_money_min}`{no_baq_clause}. These are future "
+        "ROI-complete paper-observation floors only; they are not cleared gates, not Phase 8 "
+        "promotion, not OP-anchor replacement, and not real-money authorization."
+    )
+    return DecisionGateContext(
+        anchor_min=anchor_min,
+        phase8_min=phase8_min,
+        real_money_min=real_money_min,
+        no_baq_as_bel_required=no_baq_as_bel_required,
+        source_line=source_line,
+    )
+
+
+def require_dict(value: Any, source_name: str, path: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ValueError(f"{source_name} is missing {path}")
+    return value
+
+
+def validate_refresh_action_boundary(source_freshness: dict[str, Any], source_name: str) -> dict[str, Any]:
+    refresh_action = require_dict(
+        source_freshness.get("refresh_action_boundary"),
+        source_name,
+        "source_freshness.refresh_action_boundary",
+    )
+    missing = [
+        field
+        for field in REQUIRED_REFRESH_ACTION_BOUNDARY_TEXT_FIELDS
+        if not isinstance(refresh_action.get(field), str) or not str(refresh_action.get(field)).strip()
+    ]
+    missing.extend(
+        field
+        for field in REQUIRED_REFRESH_ACTION_BOUNDARY_BOOL_FIELDS
+        if not isinstance(refresh_action.get(field), bool)
+    )
+    if missing:
+        raise ValueError(
+            f"{source_name} source_freshness.refresh_action_boundary is missing fields: "
+            f"{', '.join(missing)}"
+        )
+
+    required_true_fields = [
+        "not_forward_performance_evidence",
+        "not_live_profitability_evidence",
+        "not_promotion_readiness_evidence",
+        "not_real_money_evidence",
+    ]
+    weakened_true_fields = [
+        field for field in required_true_fields if refresh_action.get(field) is not True
+    ]
+    if weakened_true_fields:
+        raise ValueError(
+            f"{source_name} source_freshness.refresh_action_boundary must mark "
+            f"{', '.join(weakened_true_fields)}=true"
+        )
+
+    if refresh_action.get("wrapper_refresh_can_update_operator_surfaces") is not True:
+        raise ValueError(
+            f"{source_name} source_freshness.refresh_action_boundary must mark "
+            "wrapper_refresh_can_update_operator_surfaces=true"
+        )
+
+    required_false_fields = [
+        "wrapper_refresh_can_settle_open_rows_by_itself",
+        "wrapper_refresh_counts_as_roi_complete_evidence_by_itself",
+        "clean_empty_refresh_counts_as_forward_performance",
+        "missing_or_invalid_artifact_counts_as_clean_quiet_day",
+    ]
+    weakened_false_fields = [
+        field for field in required_false_fields if refresh_action.get(field) is not False
+    ]
+    if weakened_false_fields:
+        raise ValueError(
+            f"{source_name} source_freshness.refresh_action_boundary must mark "
+            f"{', '.join(weakened_false_fields)}=false"
+        )
+    return refresh_action
+
+
+def current_evidence_ci_only_phrase(
+    payload: dict[str, Any],
+    source_name: str,
+    scorecard_json: Path = SCORECARD_JSON,
+) -> tuple[str, bool, str]:
+    """Return the source-matched OP_REFINED CI-only boundary from the bridge."""
+
+    scorecard_path = Path(scorecard_json)
+    scorecard_payload = json.loads(scorecard_path.read_text(encoding="utf-8"))
+    diagnostics = scorecard_payload.get("ci_only_promotion_diagnostics")
+    source_diagnostic = diagnostics.get("OP_REFINED_K7") if isinstance(diagnostics, dict) else None
+    if not isinstance(source_diagnostic, dict):
+        raise ValueError(f"{scorecard_path.name} is missing ci_only_promotion_diagnostics.OP_REFINED_K7")
+
+    current_check = require_dict(
+        payload.get("scorecard_ci_only_promotion_check"),
+        source_name,
+        "scorecard_ci_only_promotion_check",
+    )
+    if current_check.get("source") != CI_ONLY_SOURCE:
+        raise ValueError(f"{source_name} scorecard_ci_only_promotion_check.source must be {CI_ONLY_SOURCE}")
+    if current_check.get("scorecard_ci_only_promotion_diagnostic") != source_diagnostic:
+        raise ValueError(
+            f"{source_name} scorecard_ci_only_promotion_check must copy the scorecard diagnostic exactly"
+        )
+    if current_check.get("ci_only_promotion_allowed") is not False:
+        raise ValueError(f"{source_name} scorecard_ci_only_promotion_check.ci_only_promotion_allowed must be false")
+
+    phrase = (
+        f"carries `{CI_ONLY_SOURCE}` with `ci_only_promotion_allowed=false`, so OP_REFINED's positive "
+        "CI lower bound stays support context rather than a current-paper promotion trigger"
+    )
+    return CI_ONLY_SOURCE, False, phrase
+
+
+def current_evidence_scorecard_audit_route_phrase(
+    payload: dict[str, Any],
+    source_name: str,
+    scorecard_json: Path = SCORECARD_JSON,
+) -> str:
+    """Return the scorecard-audit navigation route published by the bridge."""
+
+    route = require_dict(payload.get("scorecard_audit_route"), source_name, "scorecard_audit_route")
+    gate_context = decision_gate_context(scorecard_json)
+    expected_snapshot = {
+        "anchor_displacement_min_roi_complete_settled_observations": gate_context.anchor_min,
+        "phase8_promotion_review_min_roi_complete_settled_observations": gate_context.phase8_min,
+        "real_money_discussion_min_total_settled_observations_with_usable_roi": gate_context.real_money_min,
+        "real_money_no_baq_as_bel_required": gate_context.no_baq_as_bel_required,
+    }
+    expected_fields = {
+        "markdown_path": "SCORECARD_RANKING_CONTRACT_AUDIT.md",
+        "json_path": "scorecard_ranking_contract_audit.json",
+        "validator_command": "python3 validate_scorecard_ranking_contract_audit.py",
+        "gate_floor_source": "forward_evidence_scorecard.json:decision_gate_minimums",
+        "valid_use": "navigation route for scorecard gate/ranking/CI-only/timezone/no-BAQ synchronization checks",
+    }
+    for key, expected in expected_fields.items():
+        if route.get(key) != expected:
+            raise ValueError(f"{source_name} scorecard_audit_route.{key} must be {expected}")
+    if route.get("gate_floor_snapshot") != expected_snapshot:
+        raise ValueError(f"{source_name} scorecard_audit_route.gate_floor_snapshot must copy scorecard gate floors")
+    if route.get("artifacts_present") is not True:
+        raise ValueError(f"{source_name} scorecard_audit_route.artifacts_present must be true")
+    for field in [
+        "not_forward_performance_evidence",
+        "not_settled_roi_evidence",
+        "not_promotion_readiness_evidence",
+        "not_live_profitability_evidence",
+        "not_bankroll_guidance",
+        "not_real_money_evidence",
+    ]:
+        if route.get(field) is not True:
+            raise ValueError(f"{source_name} scorecard_audit_route.{field} must be true")
+    route_read = str(route.get("route_read") or "").strip()
+    for phrase in [
+        "copied 30/20/100 gate floors",
+        "tier-first ranking",
+        "OP_REFINED CI-only support context",
+        "generated-at timezone provenance",
+        "no-BAQ-as-BEL prerequisite drift",
+    ]:
+        if phrase not in route_read:
+            raise ValueError(f"{source_name} scorecard_audit_route.route_read must include {phrase}")
+    return (
+        "publishes `scorecard_audit_route` to `SCORECARD_RANKING_CONTRACT_AUDIT.md` / "
+        "`scorecard_ranking_contract_audit.json` plus `python3 validate_scorecard_ranking_contract_audit.py` "
+        "for copied gate/ranking/CI-only/timezone/no-BAQ synchronization checks as report-synchronization "
+        "metadata only"
+    )
+
+
+def current_evidence_rebuild_order_phrase(payload: dict[str, Any], source_name: str) -> str:
+    """Return the bridge-published upstream rebuild order as a daily-guide phrase."""
+
+    contract = require_dict(payload.get("rebuild_validation_contract"), source_name, "rebuild_validation_contract")
+    order = contract.get("upstream_refresh_order")
+    if not isinstance(order, list) or len(order) != 3:
+        raise ValueError(f"{source_name} rebuild_validation_contract.upstream_refresh_order must have three steps")
+    expected_commands = [
+        "python3 paper_trade_settlement_audit.py",
+        "python3 current_evidence_summary.py",
+        "python3 validate_current_evidence_summary.py",
+    ]
+    commands: list[str] = []
+    for expected_index, (step, expected_command) in enumerate(zip(order, expected_commands), start=1):
+        if not isinstance(step, dict):
+            raise ValueError(f"{source_name} rebuild_validation_contract.upstream_refresh_order step must be an object")
+        if step.get("order") != expected_index or step.get("command") != expected_command:
+            raise ValueError(
+                f"{source_name} rebuild_validation_contract.upstream_refresh_order must be "
+                "settlement audit -> current bridge -> bridge validator"
+            )
+        reason = step.get("reason")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError(
+                f"{source_name} rebuild_validation_contract.upstream_refresh_order step {expected_index} "
+                "must publish a non-empty reason"
+            )
+        commands.append(expected_command)
+
+    if contract.get("prerequisite_rebuild_command") != expected_commands[0]:
+        raise ValueError(f"{source_name} rebuild_validation_contract.prerequisite_rebuild_command is not the settlement audit")
+    if contract.get("rebuild_command") != expected_commands[1]:
+        raise ValueError(f"{source_name} rebuild_validation_contract.rebuild_command is not the current bridge")
+    if contract.get("direct_validation_command") != expected_commands[2]:
+        raise ValueError(f"{source_name} rebuild_validation_contract.direct_validation_command is not the bridge validator")
+    if contract.get("requires_settlement_audit_refresh_before_bridge_when_source_bytes_change") is not True:
+        raise ValueError(
+            f"{source_name} rebuild_validation_contract must require settlement-audit refresh before bridge rebuilds"
+        )
+    if contract.get("requires_source_consistency_before_quoting_current_totals") is not True:
+        raise ValueError(
+            f"{source_name} rebuild_validation_contract must require source consistency before quoting current totals"
+        )
+    if contract.get("upstream_refresh_order_is_provenance_metadata_only") is not True:
+        raise ValueError(
+            f"{source_name} rebuild_validation_contract must keep the upstream order as provenance metadata only"
+        )
+    if contract.get("not_settled_roi_or_real_money_evidence") is not True:
+        raise ValueError(
+            f"{source_name} rebuild_validation_contract must keep green rebuilds out of settled-ROI/real-money evidence"
+        )
+
+    return (
+        "publishes `rebuild_validation_contract` for source-byte changes: run "
+        f"`{commands[0]}`, then `{commands[1]}`, then `{commands[2]}` before quoting "
+        "`CURRENT_EVIDENCE_SUMMARY.*`; this is provenance/rebuild metadata only, not settled ROI, "
+        "promotion readiness, live profitability, bankroll guidance, or real-money evidence"
+    )
+
+
+def current_evidence_context(
+    current_evidence_json: Path = CURRENT_EVIDENCE_JSON,
+    scorecard_json: Path = SCORECARD_JSON,
+) -> CurrentEvidenceContext:
+    """Return the current-paper gate/freshness wording from the bridge JSON.
+
+    The daily guide is a navigation surface, not an evidence source. It should
+    quote the current bridge's machine-readable state instead of pinning a gate
+    count that can drift after the next settlement.
+    """
+
+    source_path = Path(current_evidence_json)
+    source_name = source_path.name
+    payload = json.loads(source_path.read_text(encoding="utf-8"))
+    ci_only_source, ci_only_allowed, ci_only_phrase = current_evidence_ci_only_phrase(
+        payload,
+        source_name,
+        scorecard_json,
+    )
+    scorecard_audit_route_phrase = current_evidence_scorecard_audit_route_phrase(
+        payload,
+        source_name,
+        scorecard_json,
+    )
+    rebuild_order_phrase = current_evidence_rebuild_order_phrase(payload, source_name)
+    current_paper_status = require_dict(payload.get("current_paper_status"), source_name, "current_paper_status")
+    primary = require_dict(current_paper_status.get("primary"), source_name, "current_paper_status.primary")
+    first = require_dict(primary.get("first_read"), source_name, "current_paper_status.primary.first_read")
+    broad = require_dict(primary.get("portfolio_review"), source_name, "current_paper_status.primary.portfolio_review")
+    source_freshness = require_dict(payload.get("source_freshness"), source_name, "source_freshness")
+    validate_refresh_action_boundary(source_freshness, source_name)
+    operator_read_gate = require_dict(payload.get("operator_read_gate"), source_name, "operator_read_gate")
+    operator_read_gate_read = str(operator_read_gate.get("read") or "").strip()
+    operator_read_gate_status = str(operator_read_gate.get("gate_status") or "").strip()
+    if not operator_read_gate_read or not operator_read_gate_status:
+        raise ValueError(f"{source_name} operator_read_gate must publish non-empty read and gate_status fields")
+    if not isinstance(operator_read_gate.get("requires_refresh_before_evidence_read"), bool):
+        raise ValueError(f"{source_name} operator_read_gate.requires_refresh_before_evidence_read must be boolean")
+    if operator_read_gate.get("valid_use") != "operator instruction/evidence-read gating only":
+        raise ValueError(f"{source_name} operator_read_gate.valid_use must stay instruction/evidence-read gating only")
+    for field in [
+        "has_api_access_failure_context",
+        "has_scanner_failure_boundary",
+        "has_stale_cache_fallback_context",
+    ]:
+        if not isinstance(operator_read_gate.get(field), bool):
+            raise ValueError(f"{source_name} operator_read_gate.{field} must be boolean")
+    for field in [
+        "not_forward_performance_evidence",
+        "not_promotion_readiness_evidence",
+        "not_live_profitability_evidence",
+        "not_real_money_evidence",
+    ]:
+        if operator_read_gate.get(field) is not True:
+            raise ValueError(f"{source_name} operator_read_gate.{field} must be true")
+    for field in [
+        "current_top_card_counts_as_no_target_evidence",
+        "current_top_card_counts_as_clean_empty_evidence",
+        "current_top_card_counts_as_bet_readiness_evidence",
+        "current_top_card_counts_as_settled_roi_evidence",
+    ]:
+        if operator_read_gate.get(field) is not False:
+            raise ValueError(f"{source_name} operator_read_gate.{field} must be false")
+
+    first_gate = f"{int(first['current'])}/{int(first['threshold'])}"
+    broad_gate = f"{int(broad['current'])}/{int(broad['threshold'])}"
+    rule_progress = primary.get("rule_progress")
+    if not isinstance(rule_progress, list):
+        raise ValueError(f"{source_name} is missing current_paper_status.primary.rule_progress")
+    rule_rows = {
+        str(row["rule_id"]): row
+        for row in rule_progress
+        if isinstance(row, dict) and row.get("rule_id")
+    }
+    cd_rows = int(rule_rows.get("CD_CORE_K8", {}).get("roi_complete_settled_rows", 0))
+    op_rows = int(rule_rows.get("OP_DURABLE_K7", {}).get("roi_complete_settled_rows", 0))
+    requires_refresh = bool(source_freshness.get("requires_refresh_before_right_now_use"))
+    open_settlements_raw = primary.get("open_settlements", 0)
+    if isinstance(open_settlements_raw, bool):
+        raise ValueError(f"{source_name} current_paper_status.primary.open_settlements must be an integer")
+    try:
+        open_settlements = int(open_settlements_raw)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{source_name} current_paper_status.primary.open_settlements must be an integer") from exc
+    open_summary = str(primary.get("open_settlement_summary", "")).strip()
+    if open_settlements < 0:
+        raise ValueError(f"{source_name} current_paper_status.primary.open_settlements cannot be negative")
+    if open_settlements > 0 and open_summary.lower() in {"", "none"}:
+        raise ValueError(
+            f"{source_name} current_paper_status.primary.open_settlement_summary must identify open rows when open_settlements > 0"
+        )
+    open_queue = require_dict(
+        primary.get("open_settlement_queue_by_rule"),
+        source_name,
+        "current_paper_status.primary.open_settlement_queue_by_rule",
+    )
+    open_settlement_queue_state = str(open_queue.get("open_settlement_queue_state") or "").strip()
+    open_settlement_context = str(open_queue.get("open_settlement_context") or "").strip()
+    open_settlement_queue_read = str(open_queue.get("detail_read") or "").strip()
+    expected_open_settlement_queue_state = "closed" if open_settlements == 0 else "open"
+    if open_settlement_queue_state not in {"closed", "open"}:
+        raise ValueError(
+            f"{source_name} current_paper_status.primary.open_settlement_queue_by_rule."
+            "open_settlement_queue_state must be closed or open"
+        )
+    if open_settlement_queue_state != expected_open_settlement_queue_state:
+        raise ValueError(
+            f"{source_name} current_paper_status.primary.open_settlement_queue_by_rule."
+            "open_settlement_queue_state must match current_paper_status.primary.open_settlements"
+        )
+    if not open_settlement_context:
+        raise ValueError(
+            f"{source_name} current_paper_status.primary.open_settlement_queue_by_rule."
+            "open_settlement_context is required"
+        )
+    if open_settlements == 0 and open_settlement_context != "no open primary settlement rows":
+        raise ValueError(
+            f"{source_name} current_paper_status.primary.open_settlement_queue_by_rule."
+            "open_settlement_context must read no open primary settlement rows when open_settlements is 0"
+        )
+    if open_settlements > 0 and "open" not in open_settlement_context.lower():
+        raise ValueError(
+            f"{source_name} current_paper_status.primary.open_settlement_queue_by_rule."
+            "open_settlement_context must identify open rows when open_settlements is greater than 0"
+        )
+    if "Open settlement queue by rule:" not in open_settlement_queue_read:
+        raise ValueError(
+            f"{source_name} current_paper_status.primary.open_settlement_queue_by_rule."
+            "detail_read must carry the by-rule open settlement detail"
+        )
+    if "Settlement queue state:" in open_settlement_queue_read:
+        raise ValueError(
+            f"{source_name} current_paper_status.primary.open_settlement_queue_by_rule."
+            "detail_read must not nest the settlement queue state wrapper"
+        )
+    recommendation_context = require_dict(
+        primary.get("recommendation_context"),
+        source_name,
+        "current_paper_status.primary.recommendation_context",
+    )
+    recommendation_read = str(recommendation_context.get("read") or "").strip()
+
+    if requires_refresh:
+        freshness_instruction = (
+            "inspect `source_freshness` / `requires_refresh_before_right_now_use` and rerun "
+            "`./run_daily_portfolio_observation.sh` before treating a stale best-action card "
+            "as today's operator instruction"
+        )
+        combined_operator_route_instruction = (
+            "use the combined `operator_status_context` + `source_freshness` / "
+            "`requires_refresh_before_right_now_use` + `operator_read_gate` / "
+            "`requires_refresh_before_evidence_read` route and rerun "
+            "`./run_daily_portfolio_observation.sh` before treating a stale/API-failure "
+            "best-action card as today's operator instruction or evidence"
+        )
+    else:
+        freshness_instruction = (
+            "inspect `source_freshness` / `requires_refresh_before_right_now_use`; when false, the saved "
+            "best-action card is fresh against the bridge reference date, but still only operator-readiness "
+            "metadata rather than performance proof"
+        )
+        combined_operator_route_instruction = (
+            "use the combined `operator_status_context` + `source_freshness` / "
+            "`requires_refresh_before_right_now_use` + `operator_read_gate` / "
+            "`requires_refresh_before_evidence_read` route; when "
+            "`requires_refresh_before_right_now_use=false`, the saved best-action card is "
+            "fresh against the bridge reference date, but still only operator-readiness / "
+            "instruction-evidence routing metadata rather than performance proof"
+        )
+    operator_read_gate_phrase = (
+        f"publishes `operator_read_gate` (`{operator_read_gate_status}`) so the saved top-card read is "
+        "operator instruction/evidence gating only, not no-target, clean-empty, bet-readiness, settled ROI, "
+        "promotion readiness, live profitability, bankroll guidance, or real-money evidence"
+    )
+
+    open_row_context = (
+        f"uses the source-published settlement queue state `{open_settlement_queue_state}` "
+        f"({open_settlement_context}; detail: {open_settlement_queue_read}) as operator workflow context"
+    )
+    if open_settlements > 0 and open_summary:
+        open_row_context += f" and keeps the current open settlement row `{open_summary}` as settlement work"
+    if recommendation_read:
+        open_row_context += f" beside the latest recommendation-state context ({recommendation_read})"
+    open_row_context += ", not bet-ready or forward-performance evidence"
+    bridge_queue_navigation = f"{open_settlement_queue_state} settlement-queue plus recommendation-state context"
+
+    return CurrentEvidenceContext(
+        first_gate=first_gate,
+        broad_gate=broad_gate,
+        gate_pair=f"{first_gate} and {broad_gate}",
+        cd_rows=cd_rows,
+        op_rows=op_rows,
+        cd_only_sample_phrase=f"current CD-only {first_gate} and {broad_gate} sample",
+        combined_operator_route_instruction=combined_operator_route_instruction,
+        source_freshness_instruction=freshness_instruction,
+        operator_read_gate_phrase=operator_read_gate_phrase,
+        open_row_context_phrase=open_row_context,
+        bridge_queue_navigation=bridge_queue_navigation,
+        ci_only_source=ci_only_source,
+        ci_only_allowed=ci_only_allowed,
+        ci_only_phrase=ci_only_phrase,
+        scorecard_audit_route_phrase=scorecard_audit_route_phrase,
+        rebuild_order_phrase=rebuild_order_phrase,
+    )
 
 
 def latest_run_root() -> Path | None:
@@ -32,6 +600,34 @@ def latest_run_root() -> Path | None:
     if not candidates:
         return None
     return sorted(candidates)[-1]
+
+
+def latest_preflight_surface(run_root: Path | None) -> Path:
+    if run_root is None:
+        return BASE / "out" / "daily_portfolio_runs" / "YYYY-MM-DD" / "preflight_note.txt"
+    text_path = run_root / "preflight_note.txt"
+    json_path = run_root / "preflight_note.json"
+
+    if text_path.exists():
+        try:
+            if text_path.read_text(encoding="utf-8").strip():
+                return text_path
+        except OSError:
+            pass
+
+    if json_path.exists():
+        try:
+            payload = json.loads(json_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            payload = None
+        if isinstance(payload, dict) and str(payload.get("note", "")).strip():
+            return json_path
+
+    if text_path.exists():
+        return text_path
+    if json_path.exists():
+        return json_path
+    return text_path
 
 
 def rel(path: Path) -> str:
@@ -52,12 +648,24 @@ def render_items(items: Iterable[Item]) -> list[str]:
     return lines
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Generate the daily artifact guide")
+    parser.add_argument("--current-evidence-json", type=Path, default=CURRENT_EVIDENCE_JSON)
+    parser.add_argument("--scorecard-json", type=Path, default=SCORECARD_JSON)
+    parser.add_argument("--out-md", type=Path, default=OUT_MD)
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
     latest = latest_run_root()
     latest_label = rel(latest) if latest else "none yet"
+    current_context = current_evidence_context(args.current_evidence_json, args.scorecard_json)
+    gate_context = decision_gate_context(args.scorecard_json)
+    source_chain = source_chain_context()
 
     latest_daily = latest / "daily_summary.txt" if latest else BASE / "out" / "daily_portfolio_runs" / "YYYY-MM-DD" / "daily_summary.txt"
-    latest_preflight = latest / "preflight_note.txt" if latest else BASE / "out" / "daily_portfolio_runs" / "YYYY-MM-DD" / "preflight_note.txt"
+    latest_preflight = latest_preflight_surface(latest)
     latest_primary_monitor = latest / "phase7_current_paper" / "lane_monitor.md" if latest else BASE / "out" / "daily_portfolio_runs" / "YYYY-MM-DD" / "phase7_current_paper" / "lane_monitor.md"
     latest_shadow_monitor = latest / "phase8_shadow" / "lane_monitor.md" if latest else BASE / "out" / "daily_portfolio_runs" / "YYYY-MM-DD" / "phase8_shadow" / "lane_monitor.md"
     latest_primary_next = latest / "phase7_current_paper" / "next_steps.md" if latest else BASE / "out" / "daily_portfolio_runs" / "YYYY-MM-DD" / "phase7_current_paper" / "next_steps.md"
@@ -66,51 +674,116 @@ def main() -> int:
     latest_shadow_forward = latest / "phase8_shadow" / "forward_check.md" if latest else BASE / "out" / "daily_portfolio_runs" / "YYYY-MM-DD" / "phase8_shadow" / "forward_check.md"
 
     daily_use = [
-        Item(BASE / "COLE_STATUS_AND_PLAN.md", "Single honest status document. Read first when deciding what matters."),
+        Item(BASE / "COLE_STATUS_AND_PLAN.md", "Single honest status document. Read first when deciding what matters; pair status-doc / repo-map edits with `validate_cole_status_and_plan.py`, including the `status_doc_base_api_access_route_documented` route for base API-access / HTTP 403 status-summary wording before lane enrichment."),
         Item(BASE / "run_daily_portfolio_observation.sh", "Preferred daily runner for primary Phase 7 current-paper lane plus Phase 8 shadow lane."),
-        Item(latest_daily, f"Combined latest run summary. Current latest run root: `{latest_label}`."),
+        Item(BASE / "PAPER_TRADE_NOW.md", "Best single-answer operator read: one honest command plus preserved primary/shadow recent-run context and lifted lane why-now lines behind it, with direct primary/shadow pipeline/scanner status-sidecar pointers for issue-day debugging. The adjacent `PAPER_TRADE_NOW.txt` / `PAPER_TRADE_NOW.json` siblings should stay source-matched to the same top-card payload, with JSON serving as the machine-readable automation card rather than separate evidence, including `operator_read_gate` as the first read-gating field. When the card is stale, those downstream lane details are explicitly inherited snapshot context, not current-day state."),
+        Item(BASE / "CURRENT_EVIDENCE_SUMMARY.md", f"Source-checked and source-freshness-aware frozen-to-current bridge for short Cole updates: pairs with `current_evidence_summary.json`, source-checks `PAPER_TRADE_NOW`, the settlement audit, and the timestamp-aware primary settlement CSV recompute that requires actual `settled_ts`, publishes `source_freshness` / `requires_refresh_before_right_now_use` plus `operator_status_context` and `operator_read_gate`, and requires readers to {current_context.combined_operator_route_instruction}. It also {current_context.operator_read_gate_phrase}. It also {current_context.open_row_context_phrase}. It {current_context.ci_only_phrase}. It also {current_context.scorecard_audit_route_phrase}. It also {current_context.rebuild_order_phrase}. It keeps the {current_context.cd_only_sample_phrase} separate from OP-anchor proof, promotion readiness, live profitability, or real-money evidence."),
+        Item(latest_daily, f"Combined latest run summary. Current latest run root: `{latest_label}`. Surfaces explicit primary/shadow recent-run context plus next-step states, settlement-audit action lines (`next_action` / `next_action_reason`) with the no-new-evidence boundary, and first-read / broader-review readiness lines so shadow review-readiness is visible, with OP_REFINED_K7 treated as the closest challenger and KEE_K9 / SA_K9 / DMR_FALL_K7 treated as observation-only pockets rather than live-promotion candidates."),
+        Item(BASE / "out" / "paper_trade_settlement_audit.md", "Daily ledger-readiness audit. Read before interpreting paper ROI: it publishes primary/shadow `next_action` / `next_action_reason` routing for collect/settle/repair work, but those actions are ledger-readiness guidance only, not forward-performance evidence."),
         Item(BASE / "OPS_HISTORY.md", "Rolling ops log across recent daily runs. Best first read when several quiet days in a row need explanation."),
-        Item(latest_preflight, "Shared calendar note for the latest run. Read this first on empty days to see whether OP / CD were even active."),
+        Item(latest_preflight, "Shared calendar note surface for the latest run. Read this first on empty days to see whether OP / CD were even active, even if the sibling text note is missing or blank and the saved JSON note is the strongest surviving source."),
         Item(latest_primary_next, "Best immediate operator read for the current primary lane: exact next commands based on the current lane state."),
         Item(latest_shadow_next, "Best immediate operator read for the shadow lane: exact next commands based on the current lane state."),
         Item(latest_primary_monitor, "Best one-glance context read for the current primary lane: forward state plus settlement queue."),
         Item(latest_shadow_monitor, "Best one-glance context read for the shadow lane: forward state plus settlement queue."),
         Item(BASE / "paper_trade_settlement_helper.py", "Use after races settle to list open rows and enter one result safely."),
-        Item(BASE / "phase7_current_paper_rules.json", "Current active paper basket: OP + CD, with dormant BEL removed."),
-        Item(BASE / "phase8_shadow_rules.json", "Shadow-only watch basket. Log it, do not promote it by default."),
+        Item(BASE / "phase7_current_paper_rules.json", "Current primary paper rule-component basket: OP + CD, dormant BEL removed; target cards still require daily preflight."),
+        Item(BASE / "phase8_shadow_rules.json", "Shadow-only watch basket. Treat OP_REFINED_K7 as the closest challenger, and KEE_K9 / SA_K9 / DMR_FALL_K7 as observation-only pockets; log them, do not promote them by default."),
     ]
 
     decision_cards = [
-        Item(BASE / "forward_evidence_scorecard.txt", "Fast rule ranking by forward evidence quality."),
+        Item(BASE / "forward_evidence_scorecard.txt", "Read this first for the fastest rule ranking by forward evidence quality."),
+        Item(BASE / "SCORECARD_RANKING_CONTRACT_AUDIT.md", "Cross-surface scorecard ranking / CI-only / gate-floor audit. Use when Cole needs to know whether report-facing surfaces still carry tier-first ranking, OP_REFINED CI-only support context, copied 30/20/100 gate floors, and the no-BAQ-as-BEL prerequisite as reproducibility metadata only."),
+        Item(BASE / "validate_scorecard_ranking_contract_audit.py", "Direct validator for the scorecard audit, so tier-first ranking, OP_REFINED CI-only diagnostic routing, copied 30/20/100 gate floors, no-BAQ-as-BEL prerequisite routing, generated_at timezone provenance, and no-new-evidence boundaries do not drift quietly."),
+        Item(BASE / "validate_current_evidence_summary.py", f"Direct validator for the source-checked current-evidence bridge, so `CURRENT_EVIDENCE_SUMMARY.md`, `current_evidence_summary.json`, source consistency, CSV settled_ts gap exclusion, operator-status context, source freshness / refresh-before-right-now-use instruction, operator-read-gate routing, settlement-queue state plus recommendation-state context plus branch-specific scanner/API-failure wording when that route is present, scorecard-sourced OP_REFINED CI-only routing, scorecard_audit_route synchronization routing, rebuild_validation_contract order, CD-only rule mix, bridge-published current gates, and no-new-forward-evidence / no-promotion / no-real-money boundaries do not drift quietly."),
+        Item(BASE / "compare_main_approaches.md", "Human-facing member of the matched `compare_main_approaches.csv` / `.md` / `.json` bundle for the current OP/CD paper core, OP_REFINED_K7 shadow-only challenger, Harville benchmark-only lane, parked current odds-only XGBoost lane, BEL-not-BAQ caution, source-provenance/parity metadata, and evidence-scope decision gates; JSON is automation/provenance support, not new live or promotion evidence."),
+        Item(BASE / "validate_compare_main_approaches.py", "Direct validator for that main comparison bundle, so Cole's one-screen read, matched CSV/markdown/JSON sidecar, current paper ladder, evidence-class triage, method-family comparison, and evidence-scope decision gates do not drift quietly."),
+        Item(BASE / "VALIDATION_QUICKSTART.md", "Short runbook for which validator to run after which kind of edit, including the broader operator-suite route, the direct main-comparison route, narrow comparison validators, the direct source-layer paper-trade chain routes, the parent-rollup reuse shortcut guardrails, documented output paths, and the dated-report / legacy-alias policy."),
+        Item(BASE / "validate_validation_quickstart.py", "Validator for the runbook itself, so the documented validation ladder, broader operator-suite route, main-comparison route, narrow comparison routes, direct source-layer paper-trade chain routes, the parent-rollup reuse shortcut guardrails, documented output paths, and the dated-report / legacy-alias policy do not drift quietly."),
+        Item(BASE / "validate_cole_status_and_plan.py", "Direct validator for the main status document and repo map, including the frozen posture, validation reading order, top paths, machine-readable status-map boundary, and `status_doc_base_api_access_route_documented` for base API-access / HTTP 403 status-summary action-recheck routing before lane enrichment."),
+        Item(BASE / "PAPER_TRADE_USAGE.md", "Operator runbook for moving from the daily top cards into exact paper-trade commands. It also names `OP_ANCHOR_METHOD_COMPARISON.md` / `op_anchor_method_comparison.json` plus `validate_op_anchor_method_comparison.py` as the OP-anchor source-provenance plus readable-boundary route, with fingerprints and JSON `evidence_boundary_text` kept as provenance/reproducibility and no-new-evidence metadata only rather than settled ROI, promotion readiness, live profitability, or real-money evidence."),
+        Item(BASE / "validate_paper_trade_usage.py", "Direct validator for that operator runbook, so the OP-anchor-first command path, primary-vs-shadow routine, closest-challenger vs observation-only shadow split, OP-anchor provenance/readable-boundary route, audit-only fingerprint / boundary-text boundary, and operator validator stack do not drift quietly."),
+        Item(BASE / "PAPER_TRADE_SOURCE_CHAIN_GUARDRAILS.md", f"Compact scan -> recommend -> size -> log source-chain matrix for the four direct source-layer validators, including fixture counts, guardrail inventories, validator JSON fingerprints, source/validator script fingerprints, matrix generator/validator fingerprints, and {source_chain.guardrail_count} guardrails, plus the direct live-scanner source-boundary contract for status sidecars and scanner hit rows; the direct validation report fingerprints the matrix markdown/JSON artifacts too, and this is not a live paper-trade ledger, settlement-complete ROI, promotion signal, or real-money profitability evidence."),
+        Item(BASE / "validate_paper_trade_source_chain_guardrails.py", "Direct validator for the source-chain matrix, so the saved markdown/JSON matrix and live-scanner boundary contract stay source-matched to the scan, recommender, EV-sizing, and logger validator JSON artifacts plus source/validator scripts, matrix generator/validator tooling, and validated matrix artifact fingerprints before Cole drills into individual source-layer leaves."),
+        Item(BASE / "validate_paper_trade_pipeline.py", "Direct validator for the machine-readable paper-trade pipeline status contract, so clean-empty reuse, malformed/invalid-shape/zero-byte/missing reused scan fallbacks, missing and zero-byte reused scan fallbacks with empty/readable/unreadable sidecar provenance, malformed/invalid-shape reused scan fallbacks with empty/readable/unreadable sidecar provenance, bets-ready reuse, scanner-failure and missing-output fallback with explicit empty-scan fallback metadata, scanner-failure stale-scan overwrite protection, empty/unreadable scanner-status sidecars, partial-cache activity, signals-logged-no-bet runs, and scorecard-sourced gate boundaries do not drift quietly."),
+        Item(BASE / "validate_scanner_sidecar_resolution_contract.py", "Direct validator for scanner-status sidecar path resolution, so a pipeline-declared `scanner_status_path` stays authoritative across status summary, next steps, `PAPER_TRADE_NOW`, `OPS_HISTORY`, and saved-live refresh when stale default `live_scan.status.json` files are present, including HTTP 403 action/recheck preservation."),
+        Item(BASE / "validate_paper_trade_recommender.py", "Direct validator for the recommendation builder, so the selective Phase 7 combo universe, honest `NO BET` handling, missing-race-id scanner-hit errors, and malformed-prediction fallback do not drift quietly."),
+        Item(BASE / "LIVE_SCANNER_USAGE.md", "Live paper-alert scanner usage note, now framed as operational routing only: valid_evidence_scope=live_scanner_usage_paper_alert_runbook_navigation_only, daily observation still routes through the wrapper, scanner hits/alerts/clean-empty/capped/cache-only/API-access-failure results are not settled ROI or real-money evidence, HTTP 403/API-access failures preserve refresh_daily_wrapper_before_evidence_read plus ./run_daily_portfolio_observation.sh as operator routing only, and BAQ is not BEL."),
+        Item(BASE / "validate_live_scanner_usage.py", "Direct validator for the live scanner usage note, so quick-start examples, OP/CD track filters, base-stake wording, cron monitoring, capped/partial coverage caveats, API-access-failure handling with explicit action/recheck fields, the live-scanner usage valid_evidence_scope, and no-BAQ-as-BEL boundaries do not drift quietly."),
+        Item(BASE / "EV_TICKET_ENGINE_USAGE.md", "Source-layer EV sizing usage note for paper-trade/debugging context only: valid_evidence_scope=ev_ticket_engine_usage_source_layer_runbook_navigation_only, daily use still routes through the wrapper and recommender, BET means hypothetical paper-ticket plan only, fixture bankroll defaults are not authorized bankroll, BAQ is not BEL, and source-byte changes route through `current_evidence_summary.json.rebuild_validation_contract` before current totals are quoted."),
+        Item(BASE / "validate_ev_ticket_engine_usage.py", "Direct validator for the EV usage note, so source-layer examples stay paper-only, route daily use through the wrapper/recommender, require the EV usage valid_evidence_scope, avoid dormant-BEL labels, preserve the no-bankroll / no-real-money boundary, and source-check the current-evidence rebuild order."),
+        Item(BASE / "validate_ev_ticket_engine.py", "Direct validator for the EV sizing layer, so conservative no-bet boundaries, bankroll-cap sizing, malformed-probability failures, and scorecard-sourced gate boundaries do not drift quietly."),
+        Item(BASE / "validate_paper_trade_logger.py", "Direct validator for the persistent paper-trade ledgers, so stable headers, serialized payload appends, state-plus-ledger dedup, malformed-state ledger rebuild fallback, and blank-key skips do not drift quietly."),
+        Item(BASE / "validate_paper_trade_preflight_note.py", "Direct validator for the shared preflight note, so active-target, no-target, and unknown-calendar wording do not drift quietly."),
+        Item(BASE / "validate_paper_trade_status_summary.py", "Direct validator for the one-line base lane summary, so its text/JSON branch behavior, scanner/pipeline sidecar issue wording, API-access / HTTP 403 action-recheck route wording, stale-cache fallback metadata, missing-scan-output fallback wording, pipeline-recorded scanner-status state preservation, cache / error state wording, and saved recommender/logger failure detail line do not drift quietly."),
+        Item(BASE / "validate_paper_trade_now.py", "Direct validator for the right-now top-card bundle, so text, markdown, and JSON outputs stay source-matched to `paper_trade_now.py --format json`, markdown-only placeholder fallback stays separate from full helper-failure JSON placeholders, and stale-card inherited-snapshot wording / missing scan-output refresh wording / `operator_read_gate` no-evidence routing / sidecar pointers do not drift quietly."),
+        Item(BASE / "validate_current_hierarchy_language.py", "Direct validator for current live hierarchy wording and structured keys, so `OP_DURABLE_K7` stays the anchor, `CD_CORE_K8` stays the primary OP/CD paper-basket companion, `OP_REFINED_K7` stays shadow/watch, and legacy `primary_shadow` compatibility does not become promotion, ROI, live-profitability, or real-money evidence."),
+        Item(BASE / "validate_paper_trade_settlement_sync.py", "Direct validator for the settlement-template sync helper, so stable empty headers, one-row-per-signal-key syncing, preserved manual settlement fields, blank and duplicate signal-key skips, blank settlement-key drops, and orphan-row cleanup do not drift quietly."),
+        Item(BASE / "validate_paper_trade_settlement_helper.py", "Direct validator for the human-facing settlement helper, so open-queue rendering, separate settled-row ROI-gap visibility, queue truncation, one-row settlement updates, duplicate signal-key rejection before mutation, settlement cost-source reporting, expected-cost fallback, supplied settled_ts validation, timestamp-omission ROI-gate warnings, true missing/malformed-cost handling, and missing-signal failures do not drift quietly."),
+        Item(BASE / "validate_paper_trade_settlement_audit.py", "Direct validator for the ledger-completeness / ROI-coverage audit, so primary/shadow `next_action` / `next_action_reason` routing, blank signal-key versus blank settlement-key repair labeling, duplicate custom lane-name rejection before output artifacts, ROI-complete row counting, and the no-new-forward-evidence boundary do not drift quietly."),
+        Item(BASE / "validate_paper_trade_next_steps.py", "Direct validator for the per-lane next-step helper, so settlement-first, missing scan-output refresh guidance, pipeline-recorded scanner-status refresh guidance, API-access stale-cache fallback routing, rerun-live, limited-cache, explicit recommender/logger pipeline-failure recovery, and decision-grade command routing do not drift quietly."),
+        Item(BASE / "validate_paper_trade_forward_check.py", "Direct validator for the frozen-baseline forward check, so its assessment states, recommendation-flow detail, ROI-fallback wording, explicit ROI cost-source counts, malformed actual-cost gap wording, and no-overpromotion decision gate do not drift quietly."),
+        Item(BASE / "validate_paper_trade_lane_monitor.py", "Direct validator for the compact per-lane monitor, so its forward assessment, no-overpromotion decision gate, queue visibility, and ROI-detail wording do not drift quietly."),
+        Item(BASE / "validate_paper_trade_daily_summary.py", "Direct validator for the combined daily summary, so its full routed quick-jump bundle, routed top-card focus/timing/freshness/ops snapshot, explicit primary/shadow recent-run context lines, explicit primary/shadow next-step state lines plus settlement-audit action lines and lifted no-overpromotion decision-gate snapshot lines, first-read and broader-review readiness lines, lane sections, artifacts-root line, explicit recommender/logger failure context, pipeline-recorded scanner-status issue lines, and missing-artifact placeholders do not drift quietly."),
+        Item(BASE / "validate_paper_trade_lane_summary.py", "Direct validator for one lane summary surface, so its full routed quick-files bundle, no-overpromotion decision-gate snapshot line, missing scan-output fallback context, pipeline-recorded scanner-status base headlines, section layout, placeholders, and temp-write display path handling do not drift quietly."),
+        Item(BASE / "refresh_live_paper_trade_surfaces.py", "Direct saved-live rebuild path when helper/render logic changes underneath matched `PAPER_TRADE_NOW` text/markdown/JSON outputs, `OPS_HISTORY`, `CURRENT_EVIDENCE_SUMMARY`, saved `preflight_note` text/JSON, or per-run summaries and you want source-matched artifacts without rerunning the full wrapper. It now refreshes per-run lane/preflight artifacts first, then top-level `PAPER_TRADE_NOW` text/markdown/JSON / `OPS_HISTORY` / `CURRENT_EVIDENCE_SUMMARY` markdown/JSON, then each `daily_summary.txt`, so routed top-card snapshot lines and current-evidence bridge reads do not drift behind stale top-level surfaces; the current bridge preserves `current_evidence_summary.json.rebuild_validation_contract` as the settlement-audit -> current-bridge -> bridge-validator route. Optional `--as-of-date YYYY-MM-DD` also pins rebuilt top-card freshness and the helper says in stdout whether that pin was actually applied or skipped, and if a rebuilt top card is still stale it keeps the explicit inherited-snapshot honesty note. Under `--latest-only`, that rebuild scope stays confined to the newest copied run's preflight, lane, and daily-summary surfaces. Under `--skip-top-level`, it leaves `OPS_HISTORY` / matched `PAPER_TRADE_NOW` / `CURRENT_EVIDENCE_SUMMARY` outputs untouched while still rerendering those per-run surfaces against the existing top-level outputs, and the helper says when `--as-of-date` was ignored because top-level refresh was skipped. This rerenders saved surfaces from existing artifacts; it is not a new forward result."),
+        Item(BASE / "validate_refresh_live_paper_trade_surfaces.py", "Direct validator for that saved-live rebuild path, so regenerated per-run summaries, saved `preflight_note` text/JSON, plus top-level `PAPER_TRADE_NOW` text/markdown/JSON / `OPS_HISTORY` / `CURRENT_EVIDENCE_SUMMARY` outputs stay source-matched, current-evidence bridge rebuilds preserve `current_evidence_summary.json.rebuild_validation_contract`, rebuilt daily summaries keep missing scan-output context plus the routed top-card focus/timing/freshness/ops snapshot, rebuilt `PAPER_TRADE_NOW.json` matches the source-layer right-now payload while rebuilt text/markdown keep preserved primary/shadow recent-run context plus lifted lane why-now lines when current lane artifacts provide them, still marks stale rebuilt cards as inherited snapshot context rather than current-day state, `--latest-only` stays honest about refreshing only the newest copied run's preflight, lane, and daily-summary surfaces, `--skip-top-level` stays honest about leaving top-level outputs untouched while still rebuilding the per-run preflight/lane/daily layer against those existing top-level outputs, `--as-of-date` applied-vs-skipped stdout behavior stays honest, and the helper keeps saying explicitly that rerendering is not new forward evidence."),
+        Item(BASE / "validate_run_daily_portfolio_observation.py", "Direct validator for the real daily wrapper, so missing scan-output refresh, helper-failure / placeholder-fallback orchestration, preflight-plus-summary stitching, wrapper-generated `CURRENT_EVIDENCE_SUMMARY` refresh/placeholder behavior, source-backed recommendation-context/open-row separation, direct scorecard-sourced 30/20/100 gate-boundary publication, and the inherited wrapper-guardrail inventory that broader operator/project sweeps are supposed to preserve do not drift quietly."),
+        Item(BASE / "WORKING_STATUS_REPORT_2026-04-15.md", "Dated live/demo-vs-production note for the corrected operational state, with the 2026-04-15 Keeneland demo artifacts kept as the stable evidence anchor."),
+        Item(BASE / "validate_working_status_report.py", "Direct validator for that dated working-status note, so the production-basket vs demo-lane distinction and mutable latest-demo alias do not drift quietly."),
+        Item(BASE / "validate_report_surfaces.py", "Direct validator for the shareable report layer, so README, the long-form report, the working-status note, the presentation outline, and the HTML report stay aligned on the frozen story, the dated report trust path, and the README-inherited wrapper-leaf source-of-truth note the narrative rollup should preserve rather than flatten away."),
         Item(BASE / "OP_FAMILY_DECISION.md", "Whether anything clearly beats OP_DURABLE_K7 as the safest OP anchor."),
-        Item(BASE / "CROSS_FAMILY_DECISION.md", "Anchor / paper / watch roles for OP_DURABLE_K7, CD_CORE_K8, and OP_REFINED_K7."),
+        Item(BASE / "validate_op_family_decision.py", "Direct validator for the OP-family card, so the saved surfaces, real CLI output, and conservative anchor-replacement bar do not drift quietly."),
+        Item(BASE / "CROSS_FAMILY_DECISION.md", "Anchor / paper / watch roles for OP_DURABLE_K7, CD_CORE_K8, and OP_REFINED_K7, plus the current-paper snapshot that keeps CD-only settled context and source-published settlement-queue state/context out of OP-anchor proof or cross-family promotion evidence."),
+        Item(BASE / "validate_cross_family_decision.py", "Direct validator for the cross-family shortlist, so the saved surfaces, real CLI output, current anchor / paper / watch ordering, current-paper snapshot caveat, and no cross-family promotion-evidence boundary do not drift quietly."),
         Item(BASE / "PORTFOLIO_DECISION_CARD.md", "Phase 7 vs Phase 8 vs train-only selector at the portfolio level."),
-        Item(BASE / "METHOD_FAMILY_DECISION.md", "Harville vs XGBoost vs selective rule path, for retiring dead-end method families."),
+        Item(BASE / "validate_portfolio_decision_card.py", "Direct validator for the top-level portfolio card, so the saved surfaces, real CLI output, and current paper / shadow / benchmark ordering do not drift quietly."),
+        Item(BASE / "METHOD_FAMILY_DECISION.md", "Selective rule path versus the Harville benchmark and the parked current odds-only XGBoost path, for retiring dead-end method families."),
+        Item(BASE / "validate_method_family_decision_card.py", "Direct validator for the method-family card, so the saved surfaces, real CLI output, and current selective-rule / Harville / XGBoost ordering do not drift quietly."),
+        Item(BASE / "OP_ANCHOR_METHOD_COMPARISON.md", "Cold-read OP-centered answer that makes unlike evidence classes explicit, so OP_DURABLE_K7 still outranks Harville while the current odds-only XGBoost path stays parked unless its evidence class changes materially; the matched JSON sidecar carries source-byte provenance for reproducibility only, not settled ROI, promotion readiness, live profitability, or real-money evidence."),
+        Item(BASE / "AB_DOWNSTREAM_COMPARISON.md", "Matched downstream enriched-horse-history XGBoost A/B report showing that modest prediction gains still do not improve the paper-betting case; validate with the source-aware A/B checker because full CLI parity needs raw rebuild inputs."),
+        Item(BASE / "FULL_DATA_RETRAIN_ARTIFACTS.md", "Full-data XGBoost retrain artifact for model-fit reproducibility only: the large RMSE / MAE improvements are diagnostic metrics, not paper-trade evidence, live profitability, promotion readiness, bankroll guidance, or real-money evidence."),
+        Item(BASE / "validate_full_data_retrain_artifacts.py", "Direct validator for the full-data retrain artifact, so exact retrain/prediction commands and the model-fit-not-betting-evidence boundary do not drift quietly."),
+        Item(
+            BASE / "compare_recommender_scope_paths.md",
+            "Selective-vs-widened recommender scope guardrail, showing why `--allow-all-combos` stays research-only and now breaking out how much modeled stub EV lift comes from off-scope tickets rather than observed P&L.",
+        ),
     ]
 
     after_settlement = [
         Item(BASE / "paper_trades" / "phase7_current_paper_paper_trade_settlements.csv", "Manual settlement ledger for the primary lane."),
         Item(BASE / "paper_trades" / "phase8_shadow_paper_trade_settlements.csv", "Manual settlement ledger for the shadow lane."),
+        Item(BASE / "paper_trade_settlement_audit.py", "Regenerate the primary/shadow ledger-completeness and ROI-coverage audit before interpreting settled paper ROI."),
         Item(BASE / "paper_trade_forward_check.py", "Conservative forward check against frozen holdout baselines."),
         Item(latest_primary_forward, "Detailed current primary forward-check artifact."),
         Item(latest_shadow_forward, "Detailed current shadow forward-check artifact."),
         Item(BASE / "paper_trade_lane_monitor.py", "Regenerate compact lane summaries after settlement updates."),
         Item(BASE / "paper_trade_next_steps.py", "Regenerate exact next-command guidance after settlement updates or manual checks."),
+        Item(BASE / "paper_trade_now.py", "Regenerate the single best operator action for the latest daily run."),
     ]
 
     benchmark_only = [
-        Item(BASE / "WALK_FORWARD_VALIDATION.md", "Honest validation benchmark. Use for context, not as the daily operating recipe."),
-        Item(BASE / "BACKTEST_REPORT.md", "Large-sample negative baseline for Harville / generic ML / broad structural strategies."),
+        Item(BASE / "WALK_FORWARD_VALIDATION.md", "Honest train-only validation benchmark with valid_evidence_scope=train_only_walk_forward_selector_benchmark_only. Use for context, not as the daily operating recipe."),
+        Item(BASE / "validate_walk_forward_validation_caution.py", "Direct validator for the walk-forward caution boundary, so the +22.46% train-only selector result and valid_evidence_scope stay benchmark context rather than settled ROI, promotion readiness, real-money evidence, or BAQ/BEL aliasing."),
+        Item(BASE / "BACKTEST_REPORT.md", "Legacy large-sample negative baseline for Harville / generic odds-only ML / broad structural strategies, now with a current evidence-boundary banner."),
+        Item(BASE / "validate_backtest_report_caution.py", "Direct validator for the legacy backtest-report caution, so broad negative-baseline context, odds-only XGBoost parking, full-data retrain routing, and no-BAQ-as-BEL wording do not drift quietly."),
+        Item(BASE / "PHASE7_REPORT.md", "Historical Phase 7 discovery report and strongest candidate-family context with valid_evidence_scope=legacy_phase7_discovery_context_only; use it for frozen OP/CD/BEL context, not as a live deployment guide or real-money instruction."),
+        Item(BASE / "validate_phase7_report_caution.py", "Direct validator for the legacy Phase 7 report caution, so the Phase 7 valid_evidence_scope, three-track headline, dormant BEL, cost/Kelly/historical profit lines, OP_DURABLE_K7 anchor, CD_CORE_K8 companion, paper-observation posture, and no-BAQ-as-BEL wording do not drift quietly."),
         Item(BASE / "PHASE8_REPORT.md", "Research context only. Treat with skepticism when it conflicts with frozen holdout."),
-        Item(BASE / "DIAGNOSE_CD_SELECTION.md", "Important selector diagnosis, but not part of the daily operating loop."),
-        Item(BASE / "SELECTOR_EXPERIMENT.md", "Selector-tuning research context, not a daily-use artifact."),
-        Item(BASE / "SAMPLE_SIZE_EXPERIMENT.md", "Follow-up selector experiment context, not a daily-use artifact."),
+        Item(BASE / "validate_phase8_report_caution.py", "Direct validator for the legacy Phase 8 report caution, so the full-sample headline, $2/cost lines, OP_DURABLE_K7 anchor, shadow/watch status, no-real-money boundary, and BAQ-is-not-BEL wording do not drift quietly."),
+        Item(BASE / "DIAGNOSE_CD_SELECTION.md", "Historical CD selector diagnostic, now with valid_evidence_scope=cd_track_group_selector_replay_diagnostic_only; use the Always-CD_CORE and No-CD rows as replay diagnostics only, not as a new expected ROI range or a live paper-basket instruction."),
+        Item(BASE / "validate_diagnose_cd_selection_caution.py", "Direct validator for the CD selector diagnostic boundary, so the CD selector valid_evidence_scope, Always-CD_CORE, and No-CD counterfactuals stay frozen replay research rather than current paper-basket, promotion, live-profitability, bankroll, real-money, or BAQ/BEL evidence."),
+        Item(BASE / "SELECTOR_EXPERIMENT.md", "Selector-scoring research context, not a daily-use artifact; valid_evidence_scope=selector_scoring_replay_diagnostic_only; it shows sqrt|strict improved the frozen replay, but the recommendation is historical research and cannot override the scorecard-backed OP_DURABLE_K7 / CD_CORE_K8 / OP_REFINED_K7 posture."),
+        Item(BASE / "validate_selector_experiment_caution.py", "Direct validator for the selector-scoring experiment boundary, so the selector-scoring valid_evidence_scope, sqrt|strict adoption wording, fold-2017 win, BEL bridge rows, and CD details stay historical selector research rather than current paper-basket, promotion, live-profitability, real-money, or BAQ/BEL evidence."),
+        Item(BASE / "SAMPLE_SIZE_EXPERIMENT.md", "Follow-up selector experiment context, not a daily-use artifact; valid_evidence_scope=sample_size_selector_replay_diagnostic_only; it shows races-factor tuning did not improve on sqrt_r150, but the selector recommendation is historical research and cannot override the scorecard-backed OP_DURABLE_K7 / CD_CORE_K8 / OP_REFINED_K7 posture."),
+        Item(BASE / "validate_sample_size_experiment_caution.py", "Direct validator for the sample-size selector experiment boundary, so the sample-size selector valid_evidence_scope, keep-sqrt_r150 recommendation, always-CD_CORE counterfactual, and races-factor variants stay historical selector research rather than current paper-basket, promotion, live-profitability, real-money, or BAQ/BEL evidence."),
     ]
 
     do_not_drive_daily = [
         Item(BASE / "XGBoost", "Model research only. Do not treat this directory as a live decision surface."),
-        Item(BASE / "phase7_live_rules.json", "Historical frozen ruleset that still includes dormant BEL. Reference only, not the cleanest live-paper entrypoint."),
+        Item(BASE / "phase7_live_rules.json", "Historical frozen ruleset that still includes dormant BEL. Reference only, not the cleanest current-paper entrypoint."),
         Item(BASE / "run_paper_trade_cycle.sh", "Useful one-basket wrapper, but the two-lane daily wrapper is the preferred routine now."),
+        Item(BASE / "out" / "paper_trade_preflight_note.txt", "Standalone manual preflight-helper cache / scratch output. Do not use it as the validated live calendar surface; daily operator reads should use the run-root `out/daily_portfolio_runs/YYYY-MM-DD/preflight_note.txt` / `.json` pair generated by the wrapper."),
         Item(BASE / "backtest_phase7_summary.csv", "Historical discovery output. Useful for research, not for daily deployment decisions."),
     ]
 
@@ -119,16 +792,138 @@ def main() -> int:
         "",
         "This note separates **what Cole should actually use day to day** from the growing pile of benchmark and research artifacts.",
         "",
+        f"Valid evidence scope: `valid_evidence_scope={VALID_EVIDENCE_SCOPE}`. This guide is navigation, triage, and validator-routing metadata only; it is not settled ROI, promotion readiness, live profitability, bankroll guidance, or real-money evidence.",
+        "",
         "## Fast daily routine",
         "",
         "1. Run `./run_daily_portfolio_observation.sh`",
-        "2. Read the latest `daily_summary.txt`, `preflight_note.txt`, and `OPS_HISTORY.md` when a quiet streak needs context",
-        "3. Read `phase7_current_paper/next_steps.md` first, then `phase8_shadow/next_steps.md`",
-        "4. Use the lane monitors only when you need more context on why those next steps were suggested",
-        "5. If settlement rows are open, use `paper_trade_settlement_helper.py`",
-        "6. Only then dip into the decision cards or benchmark reports",
+        "2. Read `PAPER_TRADE_NOW.md` first when you want one honest answer about what to do next, and keep `PAPER_TRADE_NOW.json` paired as the machine-readable sibling rather than separate evidence",
+        f"3. Read `CURRENT_EVIDENCE_SUMMARY.md` when preparing a short Cole update or interpreting current paper totals, because it is the source-checked bridge from frozen posture to current paper status rather than new forward evidence; {current_context.combined_operator_route_instruction}; use its scorecard-sourced `{current_context.ci_only_source}` read before quoting OP_REFINED's positive CI lower bound; use its `scorecard_audit_route` before checking copied gate/ranking/CI-only/timezone/no-BAQ synchronization drift; use its `rebuild_validation_contract` before rebuilding or quoting the bridge after scorecard/rules/signals/settlement-ledger byte changes",
+        "4. Read the latest `daily_summary.txt`, the saved preflight note (`preflight_note.txt`, or `preflight_note.json` if the text surface is missing or blank), and `OPS_HISTORY.md` when a quiet streak needs context",
+        "5. Read `phase7_current_paper/next_steps.md` first, then `phase8_shadow/next_steps.md`",
+        "6. Use the lane monitors only when you need more context on why those next steps were suggested",
+        "7. If settlement rows are open, use `paper_trade_settlement_helper.py`",
+        "8. Only then dip into the decision cards or benchmark reports",
         "",
         f"Latest detected daily run root: `{latest_label}`",
+        "",
+        "## Decision-Gate Source",
+        "",
+        gate_context.source_line,
+        "",
+        "## Quiet day vs broken day cheat sheet",
+        "",
+        "- Treat `NO TARGETS` and active-target clean-empty / zero-hit reads as true stand-down days.",
+        "- Only call it a true no-target day when the saved preflight note (`preflight_note.txt`, or `preflight_note.json` if the text surface is missing or blank) explicitly says no primary paper-basket target tracks (OP / CD) are racing; if the preflight note says the calendar state is unknown or the upstream card check failed, that is degraded coverage, not a clean no-target read.",
+        "- Treat `cache-only-miss` and `partial-cache` as incomplete-data states that need a rerun / refresh, not as evidence that nothing happened; green `validate_cache_only_messaging.py` or `validate_partial_cache_messaging.py` passes prove cache-edge routing / reproducibility only, not a quiet day, current-day scanner result, settled ROI, live profitability, promotion readiness, or real-money readiness.",
+        "- Treat explicit `CHECK PIPELINE FAILURE`, `recommender failure`, and `logger failure` reads as operational failures that need a wrapper refresh / sidecar re-check, not as normal no-bet or quiet-market outcomes.",
+        "- Treat `scanner-failure`, `unreadable-calendar`, missing scan-output artifacts, missing/empty/unreadable artifact states, and helper-failure placeholders as operational issue states, not quiet-market reads.",
+        "- If that distinction is unclear, read the saved preflight note (`preflight_note.txt`, or `preflight_note.json` if the text surface is missing or blank), `PAPER_TRADE_NOW.md` / `PAPER_TRADE_NOW.json`, and `OPS_HISTORY.md` together before deciding the lane was truly quiet, and on issue days follow the direct pipeline/scanner sidecar pointers surfaced in `PAPER_TRADE_NOW.md` before treating the branch as a generic failure.",
+        "",
+        "## Validation after edits",
+        "",
+        "If you changed files and want the shortest honest re-check, use this ladder:",
+        "",
+        "1. **Paper-trade operator-surface change** (`PAPER_TRADE_NOW`, `daily_summary`, lane summaries, cache / empty-run messaging)",
+        "   - run `python3 validate_paper_trade_operator_suite.py`",
+        "   - treat that suite as an operator-surface alignment/readiness sweep, not as new forward evidence by itself",
+        "   - run `python3 validate_cache_only_messaging.py` or `python3 validate_partial_cache_messaging.py` first when the question is specifically cache-only-miss or partial-cache operator messaging; green passes prove cache-edge routing / reproducibility toward refresh or rerun only, not quiet-day, current scanner, settled ROI, live profitability, promotion, or real-money evidence",
+        "   - run `python3 validate_paper_trade_now.py` when the question is specifically the right-now text/markdown/JSON top-card bundle, its source-layer JSON parity, markdown-only placeholder fallback, full helper-failure JSON placeholder, stale-snapshot note, missing scan-output refresh wording, `operator_read_gate` no-evidence routing, or sidecar pointers",
+        "   - run `python3 validate_current_hierarchy_language.py` when the question is specifically the live hierarchy wording, `live_hierarchy`, `primary_companion`, or legacy `primary_shadow` keys across the right-now / daily-summary / front-door surfaces; a green read is hierarchy wording / metadata routing only, not ROI, promotion, live-profitability, or real-money evidence",
+        "   - if saved live paper-trade artifacts drift only because helper/render logic changed underneath them, rebuild first with `python3 refresh_live_paper_trade_surfaces.py` and then check that rebuild path directly with `python3 validate_refresh_live_paper_trade_surfaces.py`; that refresh path now also proves missing scan-output context survives rebuilt per-run surfaces, rebuilt `PAPER_TRADE_NOW.json` parity, rebuilt `CURRENT_EVIDENCE_SUMMARY` bridge surfaces preserve `current_evidence_summary.json.rebuild_validation_contract`, rebuilt daily summaries inherit the routed top-card focus/timing/freshness/ops snapshot from the refreshed top-level surfaces, keeps `--latest-only` confined to the newest copied run's preflight, lane, and daily-summary surfaces, keeps `--skip-top-level` confined to leaving `OPS_HISTORY` / matched `PAPER_TRADE_NOW` / `CURRENT_EVIDENCE_SUMMARY` outputs untouched while still rebuilding those per-run surfaces against the existing top-level outputs, and if you add `--as-of-date YYYY-MM-DD` the helper now says whether that freshness pin was actually applied or skipped (including when top-level refresh was skipped)",
+        "   - if the question is specifically the real shell wrapper's fallback/rebuild orchestration, including wrapper-generated `CURRENT_EVIDENCE_SUMMARY` refresh/placeholder behavior, source-backed recommendation-context/open-row separation, and direct scorecard-sourced 30/20/100 gate-boundary publication, run `python3 validate_run_daily_portfolio_observation.py`; the refresh-helper and daily-wrapper validators are the leaf source-of-truth reports for those wrapper contracts, and the broader operator/project sweeps should preserve their inherited wrapper-guardrail inventories instead of flattening them into one umbrella pass count",
+        "   - a passing refresh only means the saved surfaces were rerendered from existing artifacts; it is not a new paper-trade outcome or a new forward-observation result",
+        "",
+        "Direct source-layer paper-trade chain shortcuts also matter when the question is upstream rather than operator-facing:",
+        f"- run `python3 validate_paper_trade_source_chain_guardrails.py` when the question is whether the compact `PAPER_TRADE_SOURCE_CHAIN_GUARDRAILS.md` / `.json` matrix still source-matches the scan -> recommend -> size -> log validators plus their source/validator scripts, matrix generator/validator tooling, validated matrix markdown/JSON artifact fingerprints, and live-scanner source-boundary contract, preserves {source_chain.guardrail_count} guardrails across {source_chain.fixture_count} fixture scenarios, renders markdown fingerprint tables exactly from the JSON sidecar, and stays operational reproducibility/readiness only rather than new forward evidence",
+        "- run `python3 validate_paper_trade_pipeline.py` when the question is specifically the machine-readable scan -> recommend -> size -> log status contract or its clean-empty reuse, malformed/invalid-shape/zero-byte/missing reused scan fallbacks, missing and zero-byte reused scan fallbacks with empty/readable/unreadable sidecar provenance, malformed/invalid-shape reused scan fallbacks with empty/readable/unreadable sidecar provenance, bets-ready reuse, scanner-failure and missing-output fallback with explicit empty-scan fallback metadata, scanner-failure stale-scan overwrite protection, empty/unreadable scanner-status sidecars, partial-cache, signals-logged-no-bet branches, or scorecard-sourced gate boundary underneath the wrapper",
+        "- run `python3 validate_scanner_sidecar_resolution_contract.py` when the question is specifically whether a pipeline-declared `scanner_status_path` stays authoritative over stale default `live_scan.status.json` files across status summary, next steps, `PAPER_TRADE_NOW`, `OPS_HISTORY`, and saved-live refresh, including HTTP 403 action/recheck preservation; this is routing-fixture metadata only, not a quiet-day, settled-ROI, promotion, live-profitability, bankroll, or real-money signal",
+        "- run `python3 validate_paper_trade_recommender.py` when the question is specifically the recommendation builder’s selective Phase 7 combo universe, honest `NO BET` handling, `--allow-all-combos` widening boundary, missing-race-id scanner-hit handling, or malformed-prediction fallback",
+        "- run `python3 validate_live_scanner_usage.py` when the question is specifically the live scanner usage note, valid_evidence_scope=live_scanner_usage_paper_alert_runbook_navigation_only, quick-start examples, OP/CD track-filter examples, base-stake wording, cron monitoring, capped/partial coverage caveats, API-access-failure handling such as HTTP 403 including refresh_daily_wrapper_before_evidence_read plus ./run_daily_portfolio_observation.sh, or no-BAQ-as-BEL scanner wording",
+        "- run `python3 validate_ev_ticket_engine_usage.py` when the question is specifically the EV usage note, valid_evidence_scope=ev_ticket_engine_usage_source_layer_runbook_navigation_only, standalone source-layer examples, fixture bankroll wording, paper-only BET interpretation, dormant-BEL/no-BAQ-as-BEL label boundary, or current-evidence rebuild-order route before quoting current totals after source-byte changes",
+        "- run `python3 validate_ev_ticket_engine.py` when the question is specifically the conservative no-bet boundary, bankroll-cap sizing, malformed-probability failure behavior, or scorecard-sourced gate boundary underneath the recommendation builder",
+        "- run `python3 validate_paper_trade_logger.py` when the question is specifically the persistent signal / recommendation ledger append contract, state-plus-ledger dedup behavior, malformed-state ledger rebuild fallback, or blank-key skip behavior",
+        "",
+        f"After the source-chain matrix is fresh, use `python3 validate_paper_trade_operator_suite.py --reuse-existing-child-json` and `python3 validate_project_surfaces.py --reuse-existing-child-json` only as parent propagation checks: the operator suite should keep the embedded `auxiliary_source_chain_matrix`, confirm the matrix artifact fingerprints still match disk, and recompute the matrix payload from current source-layer inputs plus the live-scanner boundary contract before accepting reused child JSON; the project sweep should verify that source-matched {source_chain.guardrail_count}-guardrail audit instead of flattening scan/recommend/size/log into one umbrella green light; this remains operational reproducibility/readiness only, not ROI or promotion evidence.",
+        "",
+        "2. **Direct preflight-note surface change**",
+        "   - run `python3 validate_paper_trade_preflight_note.py` when the question is specifically the shared calendar note or its JSON / text active-target, no-target, API-unreachable, and explicit-error branches",
+        "3. **Direct base status-summary surface change**",
+        "   - run `python3 validate_paper_trade_status_summary.py` when the question is specifically the one-line base lane summary or its text/JSON cache, alert, scanner/API-access failure, and other failure branches before lane enrichment, including API-access / HTTP 403 action-recheck route preservation with `refresh_daily_wrapper_before_evidence_read` plus `./run_daily_portfolio_observation.sh` as operator context only, stale-cache fallback count/kind/error visibility, missing-scan-output fallbacks, empty/unreadable scanner sidecars, pipeline-recorded empty/unreadable scanner-status states, wrapper-only required-pipeline missing/empty/unreadable sidecars, and saved recommender/logger failure lines that should keep stage / error type / detail visible",
+        "4. **Direct settlement-sync surface change**",
+        "   - run `python3 validate_paper_trade_settlement_sync.py` when the question is specifically the settlement-template sync helper or its real-CLI stable-header, one-open-row-per-live-signal-key, preserved-manual-settlement, refreshed-metadata, blank and duplicate signal-key skip, blank settlement-key drop, and orphan-row cleanup branches",
+        "5. **Direct settlement-helper / settlement-audit surface change**",
+        "   - run `python3 validate_paper_trade_settlement_helper.py` when the question is specifically the manual settlement-entry flow or its text / markdown / JSON open-queue rendering, separate settled-row ROI-gap visibility, queue truncation, exact one-row settlement updates, duplicate signal-key rejection before mutation, settlement cost-source reporting, expected-cost fallback, supplied settled_ts validation, timestamp-omission ROI-gate warnings, true missing/malformed-cost handling, computed profit, and missing-signal failure branches",
+        "   - run `python3 validate_paper_trade_settlement_audit.py` when the question is specifically the ledger-completeness / ROI-coverage audit, its primary/shadow `next_action` / `next_action_reason` routing, blank signal-key versus blank settlement-key repair labeling, duplicate custom lane-name rejection before output artifacts, ROI-complete row counting, or its no-new-forward-evidence boundary",
+        "6. **Direct next-steps surface change**",
+        "   - run `python3 validate_paper_trade_next_steps.py` when the question is specifically the exact next command guidance or its JSON / text / markdown settlement-first, missing scan-output refresh-artifacts, API-access stale-cache fallback, rerun-live, limited-cache, explicit recommender/logger pipeline-failure recovery, waiting-for-first-settled, collecting-sample, and decision-grade-review branches",
+        "7. **Direct frozen-baseline forward-check surface change**",
+        "   - run `python3 validate_paper_trade_forward_check.py` when the question is specifically the per-lane forward assessment or its JSON / text / markdown no-data, too-early, within-noise, running-cold, running-hot, no-baseline, recommendation-flow, ROI-fallback, ROI cost-source, malformed actual-cost gap, and no-overpromotion decision-gate branches",
+        "8. **Direct compact lane-monitor surface change**",
+        "   - run `python3 validate_paper_trade_lane_monitor.py` when the question is specifically the compact per-lane monitor or its JSON / text / markdown forward-assessment, no-overpromotion decision-gate, queue, truncation, and ROI-detail branches",
+        "9. **Direct combined daily-summary surface change**",
+        "   - run `python3 validate_paper_trade_daily_summary.py` when the question is specifically the combined `daily_summary.txt` full routed quick-jump bundle, routed top-card focus/timing/freshness/ops snapshot, explicit primary/shadow recent-run context lines, explicit primary/shadow next-step state lines plus settlement-audit action lines and lifted no-overpromotion decision-gate snapshot lines, first-read and broader-review readiness lines, lane sections, artifacts-root line, explicit recommender/logger failure context, pipeline-recorded scanner-status issue lines, or missing-preflight / missing-lane placeholders",
+        "10. **Direct per-lane summary surface change**",
+        "   - run `python3 validate_paper_trade_lane_summary.py` when the question is specifically one lane `summary.txt` surface, including its full routed quick-files bundle, no-overpromotion decision-gate snapshot line, missing scan-output fallback context, pipeline-recorded scanner-status base headlines, section layout, placeholders, or temp-write display path handling",
+        "11. **Research / decision-card / frozen-evidence change**",
+        "   - run `python3 validate_forward_evidence_scorecard.py` for scorecard ordering, tiering, or rendered-text changes",
+        "   - run `python3 validate_current_evidence_summary.py` for `CURRENT_EVIDENCE_SUMMARY.md` / `current_evidence_summary.json` / `current_evidence_summary.py` current-paper bridge, source-consistency, source-freshness, operator-read-gate routing, scanner/API-failure recommendation-context wording, scorecard-sourced OP_REFINED CI-only routing, scorecard_audit_route synchronization-routing, or rebuild_validation_contract order changes",
+        "   - after a settlement-audit -> current-bridge rebuild, validate the copied-current-paper fanout before quoting report-facing comparisons: frozen replay, downstream A/B, compare-main, OP-anchor, OP-family, cross-family, method-family, portfolio, selective-scope, scorecard audit, frozen evidence chain, report surfaces, and project surfaces; green rebuilds are drift prevention only, not evidence movement",
+        "   - run `python3 validate_cole_status_and_plan.py` when the question is whether the main status doc / repo map still exposes `status_doc_base_api_access_route_documented` for base API-access / HTTP 403 status-summary action-recheck route edits before lane enrichment",
+        "   - run `python3 validate_decision_cards_suite.py` for decision-card-only work",
+        "   - run `python3 validate_frozen_evidence_chain.py` when the broader frozen research story may have shifted",
+        "   - if the underlying child validator outputs are already fresh and the edit only touched a parent rollup or top-level wording, the smaller honest reruns are `python3 validate_decision_cards_suite.py --reuse-existing-child-json`, `python3 validate_frozen_evidence_chain.py --reuse-existing-child-json`, `python3 validate_paper_trade_operator_suite.py --reuse-existing-child-json`, `python3 validate_report_surfaces.py --reuse-existing-child-json`, or `python3 validate_project_surfaces.py --reuse-existing-child-json`",
+        "12. **Main/narrow comparison artifact change**",
+        "   - run `python3 validate_compare_main_approaches.py` for Cole's one-screen comparison read, matched CSV/markdown/JSON bundle, current paper ladder, evidence-class triage, method-family comparison, or evidence-scope decision-change gates",
+        "   - run `python3 validate_op_anchor_method_comparison.py` for the OP vs Harville vs parked-odds-only-XGBoost evidence-class comparison and OP-anchor markdown/JSON source-fingerprint plus readable `evidence_boundary_text` contract",
+        "   - run `python3 validate_cross_family_decision.py` when the anchor / paper / watch shortlist wording or current-paper snapshot caveat changes, including stale-card refresh routing, CD-only settled rows, source-published settlement-queue state/context, and the no OP-anchor / no cross-family-promotion evidence boundary",
+        "   - run `python3 validate_ab_downstream_comparison.py` for the downstream baseline-vs-enriched-horse-history XGBoost guardrail artifact, including saved JSON/markdown parity, dynamic hierarchy rerendering, and source-aware full-CLI `PASS` versus missing-input `SKIP` reporting",
+        "   - run `python3 validate_full_data_retrain_artifacts.py` when the question is specifically the full-data XGBoost retrain artifact, exact retrain/prediction commands, or the model-fit-diagnostic-only boundary",
+        "   - run `python3 validate_compare_recommender_scope_paths.py` for selective-vs-widened recommender scope guardrails",
+        "13. **Dated live/demo-vs-production note change**",
+        "   - run `python3 validate_working_status_report.py` when the working-status note or its stable-vs-mutable demo evidence framing changed",
+        "14. **Shareable wording / presentation / report-trust-path change**",
+        "   - run `python3 validate_report_surfaces.py` when the question is specifically README, long-form report, working-status note, presentation outline, or shareable HTML wording drift, including whether the narrative report sweep still preserves the README-inherited wrapper-leaf source-of-truth note instead of flattening it away",
+        "15. **Validation runbook, broader operator-suite route, direct source-layer route guidance, parent-rollup reuse shortcut guardrail, documented output paths, or dated-report / legacy-alias policy change**",
+        "   - run `python3 validate_validation_quickstart.py`",
+        "16. **Cross-layer or broad change**",
+        "   - run `python3 validate_project_surfaces.py`",
+        "   - treat that top-level sweep as the best cross-layer alignment answer for a broad change, including the direct current-hierarchy child validator, not as new forward evidence by itself",
+        "17. **If you are unsure which check fits the change**",
+        "   - read `VALIDATION_QUICKSTART.md`",
+        "",
+        "Current expected green read:",
+        "- `forward_evidence_scorecard.txt` stays the fastest research-side read, with `OP_DURABLE_K7` still on top",
+        f"- `CURRENT_EVIDENCE_SUMMARY.md` stays the fastest source-checked frozen-to-current bridge, with source consistency, CSV settled_ts gap exclusion, operator-status context, source freshness / refresh-before-right-now-use routing, operator-read-gate routing, {current_context.bridge_queue_navigation} plus branch-specific scanner/API-failure wording when that route is present, scorecard-sourced OP_REFINED CI-only routing, scorecard_audit_route synchronization routing, rebuild_validation_contract order routing, CD-only current rule mix, bridge-published current gates source-matched to `forward_evidence_scorecard.json` `decision_gate_minimums`, and no-new-forward-evidence / no-promotion / no-real-money boundaries visible",
+        f"- the direct current-evidence summary validator stays discoverable when the question is the current-paper bridge, source consistency, timestamp-gap exclusion, source freshness, operator-read-gate routing, {current_context.bridge_queue_navigation} plus branch-specific scanner/API-failure wording when that route is present, scorecard-sourced OP_REFINED CI-only routing, scorecard_audit_route synchronization routing, rebuild_validation_contract order routing, CD-only rule mix, bridge-published current gates, or no-overclaim wording",
+        "- the direct main-comparison validator stays discoverable when the question is Cole's one-screen OP/CD paper read, matched CSV/markdown/JSON bundle, evidence-class triage, method-family comparison, or evidence-scope decision-change gates",
+        "- the main status document plus its direct validator stay discoverable when the question is the frozen status map, repo-map paths, or `status_doc_base_api_access_route_documented` for base API-access / HTTP 403 status-summary action-recheck route edits before lane enrichment",
+        "- the direct cross-family validator stays discoverable when the question is the anchor / paper / watch shortlist or current-paper snapshot caveat, including stale-card refresh routing, CD-only settled rows, source-published settlement-queue state/context, and the no OP-anchor / no cross-family-promotion evidence boundary",
+        "- OP stays the safest anchor, and the OP-anchor markdown/JSON source fingerprints plus readable `evidence_boundary_text` are provenance/reproducibility and no-new-evidence metadata only, not settled ROI, promotion readiness, live profitability, or real-money evidence",
+        "- Phase 7 still beats Phase 8 on forward evidence, and the shadow lane still means OP_REFINED_K7 is only the closest challenger while KEE_K9 / SA_K9 / DMR_FALL_K7 stay observation-only pockets",
+        "- paper-trade operator surfaces still preserve settle-first, decision-grade review, and honest stand-down / cache-miss messaging",
+        "- the source-chain matrix plus direct paper-trade pipeline / scanner-sidecar path-resolution / recommender / EV-sizing / logger validators and live-scanner boundary contract stay discoverable when the question is upstream scan -> recommend -> size -> log behavior or copied-sidecar routing rather than downstream operator phrasing",
+        "- the live scanner usage note plus its direct validator stay discoverable when the question is scanner quick-start examples, valid_evidence_scope=live_scanner_usage_paper_alert_runbook_navigation_only, OP/CD track filters, base-stake wording, cron monitoring, capped/partial coverage caveats, API-access-failure handling such as HTTP 403 including refresh_daily_wrapper_before_evidence_read plus ./run_daily_portfolio_observation.sh, or no-BAQ-as-BEL scanner wording",
+        "- the EV ticket-engine usage note plus its direct validator stay discoverable when the question is source-layer sizing examples, valid_evidence_scope=ev_ticket_engine_usage_source_layer_runbook_navigation_only, fixture bankroll wording, paper-only BET interpretation, or dormant-BEL/no-BAQ-as-BEL label boundary",
+        "- the direct preflight-note validator stays discoverable when the question is specifically the shared calendar-note surface",
+        "- the direct status-summary validator stays discoverable when the question is specifically the one-line base lane summary surface, including API-access / HTTP 403 action-recheck route preservation, stale-cache fallback count/kind/error visibility, missing-scan-output fallbacks, empty/unreadable scanner sidecars, pipeline-recorded empty/unreadable scanner-status states, wrapper-only required-pipeline sidecar issues, and saved recommender/logger failure lines with stage / error type / detail",
+        "- the direct right-now validator stays discoverable when the question is specifically the `PAPER_TRADE_NOW` text/markdown/JSON bundle, source-layer JSON parity, placeholder boundaries, stale-snapshot note, operator-read-gate no-evidence routing, or sidecar pointers",
+        "- the direct current-hierarchy validator stays discoverable when the question is specifically `OP_DURABLE_K7` / `CD_CORE_K8` / `OP_REFINED_K7` live hierarchy wording, `live_hierarchy`, `primary_companion`, or legacy `primary_shadow` keys; the green read is hierarchy wording / metadata routing only, not settled ROI, promotion readiness, live profitability, or real-money evidence",
+        "- the direct settlement-sync validator stays discoverable when the question is specifically the settlement-template sync surface",
+        "- the direct settlement-helper and settlement-audit validators stay discoverable when the question is specifically manual settlement entry or the ledger-completeness / ROI-coverage audit, including primary/shadow action routing, blank signal-key versus blank settlement-key repair labeling, and the no-new-forward-evidence boundary",
+        "- the direct next-steps validator stays discoverable when the question is specifically the exact next-command surface, including API-access stale-cache fallback routing and explicit recommender/logger pipeline-failure recovery",
+        "- the direct forward-check validator stays discoverable when the question is specifically the per-lane forward assessment surface",
+        "- the direct lane-monitor validator stays discoverable when the question is specifically the compact per-lane monitor surface",
+        "- the direct daily-summary validator stays discoverable when the question is specifically the combined `daily_summary.txt` surface, including the full routed quick-jump bundle, routed top-card focus/timing/freshness/ops snapshot, explicit primary/shadow recent-run context lines, explicit primary/shadow next-step state lines plus settlement-audit action lines, first-read and broader-review readiness lines, and explicit recommender/logger failure context",
+        "- the direct lane-summary validator stays discoverable when the question is specifically one lane `summary.txt` surface, including the full routed quick-files bundle and lifted no-overpromotion decision-gate line",
+        "- the saved-live refresh helper plus its direct validator stay discoverable when matched `PAPER_TRADE_NOW` text/markdown/JSON outputs, `OPS_HISTORY`, saved `preflight_note` text/JSON, or saved per-run summaries need a source-matched rebuild after helper/render edits, with rebuilt `PAPER_TRADE_NOW.json` keeping source-layer payload parity, missing scan-output context preservation in rebuilt per-run surfaces, missing scan-output context surviving rebuilt per-run surfaces, rebuilt daily summaries inheriting the routed top-card focus/timing/freshness/ops snapshot, rebuilt text/markdown preserving primary/shadow recent-run context plus lifted lane why-now lines when current lane artifacts provide them, distinct `--latest-only` newest-run and `--skip-top-level` top-card-preservation boundaries, optional `--as-of-date` freshness pinning reporting whether it was actually applied or skipped, and that path staying explicit about rerendering saved artifacts rather than creating new forward evidence",
+        "- the direct daily-wrapper validator stays discoverable when the question is specifically wrapper fallback/rebuild orchestration, wrapper-generated `CURRENT_EVIDENCE_SUMMARY` refresh/placeholder behavior, source-backed recommendation-context/open-row separation, or direct scorecard-sourced gate-boundary publication, and the guide now says that both wrapper leaves feed inherited wrapper-guardrail inventories the broader operator/project sweeps are supposed to preserve rather than flatten",
+        "- the dated working-status note and its direct validator stay discoverable when the question is production basket vs demo lane",
+        "- the direct report-surfaces validator stays discoverable when the question is shareable wording, presentation drift, or report-trust-path wording, including the README-inherited wrapper-leaf source-of-truth note that the narrative rollup is supposed to preserve rather than flatten away",
+        "- the shareable report trust path stays explicit: use `Superfecta_Project_Report_2026-04-15.html` as the validated trust anchor, `Superfecta_Project_Report_2026-04-15.pdf` as its derivative export, and treat `Superfecta_Project_Report.html`, `Superfecta_Project_Report.pdf`, `Superfecta_Project_Report.docx`, `Superfecta Prediction - Quick Start Guide.pdf`, and `OpenClaw Prompt.docx` as legacy aliases only",
+        "- the main comparison plus narrow OP / downstream-XGBoost / recommender-scope comparison artifacts stay discoverable instead of becoming filename-only knowledge, with the OP-anchor route naming source-byte provenance plus readable boundary text as reproducibility/no-new-evidence metadata rather than promotion or live-profitability evidence",
+        "- the full-data XGBoost retrain artifact and its direct validator stay discoverable as model-fit reproducibility metadata only, not a paper-trade signal, deployment route, live-profitability claim, bankroll guide, or real-money evidence",
+        "- the validation ladder now keeps the parent-rollup artifact-reuse shortcut visible too, but only when the underlying child validator outputs are already fresh",
         "",
         "## Use every day",
         "",
@@ -162,15 +957,17 @@ def main() -> int:
         "",
         "## Bottom line",
         "",
-        "- **Daily operating path**: read the preflight note, then Phase 7 current paper basket first, then Phase 8 shadow",
+        f"- **Daily operating path**: read `PAPER_TRADE_NOW.md` first while keeping `PAPER_TRADE_NOW.json` paired as the machine-readable sibling with `operator_read_gate`, read `CURRENT_EVIDENCE_SUMMARY.md` before turning current paper totals or OP_REFINED positive-CI wording into a Cole update and {current_context.combined_operator_route_instruction}, use its `scorecard_audit_route` before checking copied gate/ranking/CI-only/timezone/no-BAQ synchronization drift, use its `rebuild_validation_contract` before rebuilding or quoting the bridge after source-byte changes, then the preflight note and Phase 7 current paper basket, then Phase 8 shadow",
+        "- **Research / deployment path**: start with `forward_evidence_scorecard.txt`, use `CURRENT_EVIDENCE_SUMMARY.md` only to bridge frozen posture into current paper context, then drop into the decision cards only if the scorecard leaves a real question unanswered",
         "- **Safest anchor inside the live family**: `OP_DURABLE_K7`",
         "- **Paper alongside it**: `CD_CORE_K8`",
         "- **Do not drift back into generic Harville / XGBoost live claims** just because those artifacts are still in the repo",
         "",
     ]
 
-    OUT_MD.write_text("\n".join(lines), encoding="utf-8")
-    print(f"Wrote {OUT_MD}")
+    args.out_md.parent.mkdir(parents=True, exist_ok=True)
+    args.out_md.write_text("\n".join(lines), encoding="utf-8")
+    print(f"Wrote {args.out_md}")
     return 0
 
 

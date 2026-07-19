@@ -3,7 +3,7 @@
   "notes": [
     "Shadow-only Phase 8 watch-list basket for forward observation.",
     "This file intentionally excludes BEL_BROAD1_K7 because Belmont has no current forward races and is dormant until the track produces new qualifying data.",
-    "Use this for logging research challengers alongside the primary paper basket, not as the default live-paper portfolio.",
+    "Use this for logging research challengers alongside the primary paper basket, not as the default current-paper portfolio.",
     "No unsupported track aliasing is applied. BAQ is not treated as BEL."
   ],
   "rules": [

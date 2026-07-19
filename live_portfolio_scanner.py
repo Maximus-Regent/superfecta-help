@@ -9,7 +9,7 @@ Features:
   - Retry with exponential backoff (handles 429 / 5xx gracefully)
   - Date-stamped JSON cache with configurable TTL
   - --cache-only offline mode (no API calls)
-  - --max-races to cap API load
+  - Rule-targeted race-detail fetching before --max-races caps API load
   - Substring card-name matching via --include-cards
   - Duplicate alert detection via a ledger file
   - --discord output mode (webhook-ready)
@@ -40,6 +40,49 @@ ALERT_LEDGER = BASE / ".live_scan_alerts.json"
 FAST_CONDITIONS = {"FAST", "FIRM"}
 ACTIVE_RUNNER_STATUSES = {1, "1", None}
 RUN_STATS: dict[str, int] = {}
+API_ACCESS_STATUS_CODES = {401, 403}
+API_FAILURE_BOUNDARY_TEXT = (
+    "API-access-failure operator context only; not a no-target, clean-empty, "
+    "forward-performance, settled ROI, promotion, live-profitability, bankroll, "
+    "or real-money evidence."
+)
+API_FAILURE_OPERATOR_ACTION = "refresh_daily_wrapper_before_evidence_read"
+API_FAILURE_RECHECK_COMMAND = "./run_daily_portfolio_observation.sh"
+SCANNER_VALID_EVIDENCE_SCOPE = "live_scanner_paper_alert_metadata_only"
+SCANNER_EVIDENCE_BOUNDARY_TEXT = (
+    "live scanner output is source-layer paper-alert metadata only; it is not settled ROI evidence, "
+    "not live-profitability evidence, not promotion readiness, not OP-anchor replacement evidence, "
+    "not Phase 8 promotion evidence, not bankroll guidance, and not real-money support."
+)
+SCANNER_EVIDENCE_BOUNDARY_METADATA = {
+    "artifact_role": "live portfolio scanner output",
+    "valid_evidence_scope": SCANNER_VALID_EVIDENCE_SCOPE,
+    "source_scope": "current API/cache race-card scan plus frozen rule filters; not settlement ledger or forward ROI evidence",
+    "current_day_scanner_result_only": True,
+    "not_live_paper_trade_ledger": True,
+    "not_settled_roi_evidence": True,
+    "not_live_profitability_evidence": True,
+    "not_promotion_readiness_evidence": True,
+    "not_anchor_change_evidence": True,
+    "not_phase8_promotion_evidence": True,
+    "not_bankroll_guidance": True,
+    "not_real_money_evidence": True,
+    "baq_as_bel_substitution_allowed": False,
+    "stronger_forward_confidence_requires": [
+        "paper-trade logger append",
+        "settlement template sync",
+        "actual result, return, cost, and settled_ts completion",
+        "settlement audit or forward-check review before ROI-complete sample gates advance",
+    ],
+}
+BEL_ALIAS_EXCLUSION_TOKENS = (
+    "BAQ",
+    "BIG A",
+    "AQUEDUCT",
+    "BELMONT AT THE BIG A",
+    "BELMONT PARK AT THE BIG A",
+    "BELMONT PARK AT AQUEDUCT",
+)
 
 
 def reset_run_stats() -> None:
@@ -47,11 +90,24 @@ def reset_run_stats() -> None:
     RUN_STATS.update({
         "cards_fallback_uses": 0,
         "races_fallback_uses": 0,
+        "stale_cache_fallback_count": 0,
+        "stale_cache_fallback_applied": False,
         "missing_race_detail_cache_skips": 0,
         "race_details_attempted": 0,
         "race_details_loaded": 0,
         "max_race_limit_hit": 0,
+        "pre_detail_skipped_race_count": 0,
     })
+
+
+def target_coverage_counts(target_race_count: int, race_details_attempted: int) -> dict[str, int]:
+    """Return machine-readable coverage counts for rule-targeted race-detail attempts."""
+    target_count = max(0, int(target_race_count or 0))
+    attempted_count = max(0, int(race_details_attempted or 0))
+    return {
+        "full_target_coverage_min_races": target_count,
+        "unattempted_target_race_count": max(0, target_count - attempted_count),
+    }
 
 # ---------------------------------------------------------------------------
 # Retry / backoff
@@ -93,6 +149,33 @@ def _extract_status(exc: Exception) -> Optional[int]:
     if resp is not None:
         return getattr(resp, "status_code", None)
     return None
+
+
+def scanner_failure_metadata(exc: BaseException) -> dict[str, Any]:
+    """Return stable machine-readable metadata for scanner failures."""
+    status = _extract_status(exc) if isinstance(exc, Exception) else None
+    failure_class = "scanner_exception"
+    if status == 429:
+        failure_class = "api_rate_limit"
+    elif status in API_ACCESS_STATUS_CODES:
+        failure_class = "api_access_failure"
+    elif status is not None and 400 <= status < 500:
+        failure_class = "api_client_error"
+    elif status is not None and status >= 500:
+        failure_class = "api_server_error"
+
+    return {
+        "http_status": status,
+        "api_failure_class": failure_class,
+        "api_access_failure": failure_class == "api_access_failure",
+        "api_rate_limited": failure_class == "api_rate_limit",
+        "api_client_error": bool(status is not None and 400 <= status < 500),
+        "api_server_error": bool(status is not None and status >= 500),
+        "api_failure_valid_scope": "operator_refresh_context_only",
+        "api_failure_boundary": API_FAILURE_BOUNDARY_TEXT,
+        "api_failure_operator_action": API_FAILURE_OPERATOR_ACTION if failure_class == "api_access_failure" else "",
+        "api_failure_recheck_command": API_FAILURE_RECHECK_COMMAND if failure_class == "api_access_failure" else "",
+    }
 
 
 def _log(msg: str) -> None:
@@ -157,8 +240,16 @@ def cached_call(kind: str, key: str, fn, *args, cache_only: bool = False, cache_
         data = _call_with_retry(fn, *args, label=f"{kind}/{key[:24]}")
         path.write_text(json.dumps(data), encoding="utf-8")
         return data
-    except Exception:
+    except Exception as exc:
         if path.exists():
+            RUN_STATS[f"{kind}_fallback_uses"] = RUN_STATS.get(f"{kind}_fallback_uses", 0) + 1
+            RUN_STATS["stale_cache_fallback_count"] = RUN_STATS.get("stale_cache_fallback_count", 0) + 1
+            RUN_STATS["stale_cache_fallback_applied"] = True
+            RUN_STATS["stale_cache_fallback_kind"] = kind
+            RUN_STATS["stale_cache_fallback_key_prefix"] = key[:24]
+            RUN_STATS["stale_cache_fallback_error_type"] = exc.__class__.__name__
+            RUN_STATS["stale_cache_fallback_error"] = str(exc)
+            RUN_STATS.update(scanner_failure_metadata(exc))
             _log(f"[fallback] Using stale cache for {kind}/{key[:24]}")
             return json.loads(path.read_text(encoding="utf-8"))
         raise
@@ -184,11 +275,66 @@ def card_matches_rule(card_name: str, rule: dict[str, Any]) -> bool:
     Tries exact match first, then substring containment.
     """
     norm = normalize_name(card_name)
+    if rule_targets_belmont(rule) and is_excluded_belmont_alias(norm):
+        return False
     for rn in rule["card_names"]:
         rn_norm = normalize_name(rn)
         if norm == rn_norm or rn_norm in norm or norm in rn_norm:
             return True
     return False
+
+
+def rule_targets_belmont(rule: dict[str, Any]) -> bool:
+    if normalize_name(str(rule.get("track", ""))) == "BEL":
+        return True
+    return any(normalize_name(str(name)) == "BELMONT PARK" for name in rule.get("card_names", []))
+
+
+def is_excluded_belmont_alias(normalized_card_name: str) -> bool:
+    """Return true for BAQ / Big A labels that must not inherit BEL rules."""
+    return any(token in normalized_card_name for token in BEL_ALIAS_EXCLUSION_TOKENS)
+
+
+def race_number_from_summary(race: dict[str, Any]) -> int:
+    """Return the race number available from a list-races row, or 0 if absent."""
+    try:
+        return int(race.get("raceNumber") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def race_matches_rule_prefetch(card_name: str, race: dict[str, Any], rule: dict[str, Any]) -> bool:
+    """True when a race-summary row is worth fetching for a rule.
+
+    Field size, live prices, and condition need race-detail data, but card name and
+    race number are already present in the list-races row. Applying those two
+    cheap filters before fetching details prevents a small --max-races cap from
+    being exhausted by unrelated cards on busy racing days.
+    """
+    if not card_matches_rule(card_name, rule):
+        return False
+    return race_number_from_summary(race) >= int(rule.get("card_min", 0) or 0)
+
+
+def candidate_races_for_rules(
+    races: list[dict[str, Any]],
+    rules: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], int]:
+    """Filter list-races rows down to races that can still match a rule.
+
+    Returns (candidate_races, skipped_race_count). This is intentionally a
+    pre-detail filter only; final rule checks still happen in analyze_race after
+    runner, condition, and price data are loaded.
+    """
+    candidates: list[dict[str, Any]] = []
+    skipped = 0
+    for race in races:
+        card_name = race.get("raceMeetingName") or race.get("cardName") or ""
+        if any(race_matches_rule_prefetch(card_name, race, rule) for rule in rules):
+            candidates.append(race)
+        else:
+            skipped += 1
+    return candidates, skipped
 
 
 # ---------------------------------------------------------------------------
@@ -329,6 +475,9 @@ def analyze_race(
             "combos": combos,
             "why": rule["plain_english"],
             "scan_ts": datetime.now().isoformat(timespec="seconds"),
+            "valid_evidence_scope": SCANNER_VALID_EVIDENCE_SCOPE,
+            "evidence_boundary": SCANNER_EVIDENCE_BOUNDARY_METADATA,
+            "evidence_boundary_text": SCANNER_EVIDENCE_BOUNDARY_TEXT,
         })
 
     return out
@@ -380,9 +529,11 @@ def filter_new_alerts(hits: list[dict[str, Any]]) -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 
 def format_human(hits: list[dict[str, Any]], emit_combos: bool) -> str:
+    scope_line = f"valid_evidence_scope={SCANNER_VALID_EVIDENCE_SCOPE}"
+    boundary_line = f"Evidence boundary: {SCANNER_EVIDENCE_BOUNDARY_TEXT}"
     if not hits:
-        return "No qualifying races for the active ruleset."
-    lines = [f"Found {len(hits)} qualifying race(s).\n"]
+        return f"No qualifying races for the active ruleset.\n{scope_line}\n{boundary_line}"
+    lines = [f"Found {len(hits)} qualifying race(s).", scope_line, boundary_line, ""]
     for h in hits:
         lines.append(f"[{h['track']}] {h['card_name']} Race {h['race_number']} (raceId={h['race_id']})")
         lines.append(f"  Rule: {h['rule_id']}")
@@ -408,6 +559,8 @@ def format_discord(hits: list[dict[str, Any]]) -> str:
         lines.append(f"  Fav **#{h['favorite_program']} {h['favorite_name']}** {h['favorite_prob']:.0%} (gap {h['prob_gap']:.0%})")
         lines.append(f"  Key {h['favorite_program']} / {','.join(h['underneath_programs'])} → ${h['estimated_cost']:.2f}")
         lines.append("")
+    lines.append(f"_valid_evidence_scope={SCANNER_VALID_EVIDENCE_SCOPE}_")
+    lines.append(f"_Evidence boundary: {SCANNER_EVIDENCE_BOUNDARY_TEXT}_")
     return "\n".join(lines)
 
 
@@ -495,6 +648,9 @@ def main():
         "base_stake": float(args.base_stake),
         "include_cards": args.include_cards or [],
         "dedup_enabled": not args.no_dedup,
+        "valid_evidence_scope": SCANNER_VALID_EVIDENCE_SCOPE,
+        "evidence_boundary": SCANNER_EVIDENCE_BOUNDARY_METADATA,
+        "evidence_boundary_text": SCANNER_EVIDENCE_BOUNDARY_TEXT,
         "result": "running",
     }
 
@@ -509,9 +665,16 @@ def main():
             cards = [c for c in cards if card_matches_filter(c.get("cardName", ""), args.include_cards)]
 
         status["card_count"] = len(cards)
+        status["target_card_count"] = sum(
+            1
+            for card in cards
+            if any(card_matches_rule(card.get("cardName", ""), rule) for rule in rules)
+        )
         if not cards:
             status.update({
                 "race_count": 0,
+                "target_race_count": 0,
+                **target_coverage_counts(0, 0),
                 "raw_hit_count": 0,
                 "emitted_hit_count": 0,
                 "dedup_suppressed_count": 0,
@@ -520,7 +683,11 @@ def main():
                 **RUN_STATS,
             })
             write_status(args.status_json, status)
-            print("No matching cards found.")
+            print(
+                "No matching cards found.\n"
+                f"valid_evidence_scope={SCANNER_VALID_EVIDENCE_SCOPE}\n"
+                f"Evidence boundary: {SCANNER_EVIDENCE_BOUNDARY_TEXT}"
+            )
             return
 
         card_names = [c.get("cardName", "") for c in cards]
@@ -529,16 +696,20 @@ def main():
         races = cached_call("races", ",".join(map(str, sorted(card_ids))), list_races, card_ids,
                             cache_only=args.cache_only, cache_ttl=args.cache_ttl)
         status["race_count"] = len(races)
+        candidate_races, pre_detail_skipped = candidate_races_for_rules(races, rules)
+        RUN_STATS["pre_detail_skipped_race_count"] = pre_detail_skipped
+        status["target_race_count"] = len(candidate_races)
+        status["detail_fetch_scope"] = "rule_card_and_min_race_prefilter"
 
         hits: list[dict[str, Any]] = []
-        for race in races:
+        for race in candidate_races:
             card_name = race.get("raceMeetingName") or race.get("cardName") or ""
             if card_name not in card_names and card_name:
                 pass
 
             if args.max_races and RUN_STATS.get("race_details_attempted", 0) >= args.max_races:
                 RUN_STATS["max_race_limit_hit"] = 1
-                _log(f"[max-races] Reached limit of {args.max_races} race-detail attempts, stopping.")
+                _log(f"[max-races] Reached limit of {args.max_races} candidate race-detail attempts, stopping.")
                 break
 
             RUN_STATS["race_details_attempted"] = RUN_STATS.get("race_details_attempted", 0) + 1
@@ -576,6 +747,7 @@ def main():
             "dedup_suppressed_count": dedup_suppressed_count,
             "partial_cache": partial_cache,
             "result": summarize_result(raw_hit_count, emitted_hit_count, partial_cache),
+            **target_coverage_counts(len(candidate_races), RUN_STATS.get("race_details_attempted", 0)),
             **RUN_STATS,
         })
 
@@ -605,6 +777,7 @@ def main():
             "result": "scanner_error",
             "error_type": exc.__class__.__name__,
             "error": str(exc),
+            **scanner_failure_metadata(exc),
             **RUN_STATS,
         })
         write_status(args.status_json, status)
@@ -626,11 +799,11 @@ def _save_output(hits: list[dict[str, Any]], dest: str) -> None:
             })
         with open(path, "w", newline="", encoding="utf-8") as f:
             if rows:
-                w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+                w = csv.DictWriter(f, fieldnames=list(rows[0].keys()), lineterminator="\n")
                 w.writeheader()
                 w.writerows(rows)
             else:
-                f.write("rule_id,track,card_name,race_number\n")
+                f.write("rule_id,track,card_name,race_number,valid_evidence_scope,evidence_boundary_text\n")
     else:
         raise SystemExit("--save must end in .json or .csv")
 

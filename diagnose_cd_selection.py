@@ -36,6 +36,7 @@ PHASE7_RULES_PATH = BASE / "phase7_live_rules.json"
 
 OUT_CSV = BASE / "diagnose_cd_selection_comparison.csv"
 OUT_REPORT = BASE / "DIAGNOSE_CD_SELECTION.md"
+VALID_EVIDENCE_SCOPE = "cd_track_group_selector_replay_diagnostic_only"
 
 
 # ── Rule cost lookup ──────────────────────────────────────────────
@@ -203,6 +204,35 @@ def build_report(h2h: pd.DataFrame, cf: pd.DataFrame, agg: dict) -> str:
     lines = [
         "# CD Track-Group Selection Diagnostic",
         "",
+        "## Current Evidence Boundary",
+        "",
+        f"Valid evidence scope: `valid_evidence_scope={VALID_EVIDENCE_SCOPE}`.",
+        "",
+        "This is a historical CD track-group selector diagnostic on frozen walk-forward artifacts. "
+        "It is not a live paper-trade ledger, settled ROI evidence, promotion readiness, live profitability, "
+        "bankroll guidance, or real-money evidence.",
+        "",
+        "Valid use: explain why the train-only selector tends to pick `CD_REFINED_K9` over `CD_CORE_K8` "
+        "and why the current paper lane keeps `CD_CORE_K8` as the OP/CD companion. The `Always CD_CORE` "
+        "and `No CD rule` rows are replay diagnostics, not current deployment instructions or a new expected ROI range.",
+        "",
+        "Current posture still comes from `forward_evidence_scorecard.txt`, `compare_main_approaches.md`, "
+        "and the paper-observation gates: keep `OP_DURABLE_K7` as the safest anchor, `CD_CORE_K8` as the "
+        "primary OP/CD paper companion, and `OP_REFINED_K7` plus Phase 8 in shadow/watch until ROI-complete "
+        "paper evidence clears the scorecard gates.",
+        "",
+        "The `Always CD_CORE` replay and `No CD rule` replay do not override the +22.46% train-only benchmark, "
+        "the realistic +20-25% planning range, or settled-observation requirements; they identify selector "
+        "mechanism debt. BEL bridge rows are historical diagnostics only. Do not substitute `BAQ` for dormant `BEL`.",
+        "",
+        "If this CD diagnostic is regenerated after scorecard/rules/signals/settlement-ledger byte changes, follow "
+        "`current_evidence_summary.json.rebuild_validation_contract`: `python3 paper_trade_settlement_audit.py` -> "
+        "`python3 current_evidence_summary.py` -> `python3 validate_current_evidence_summary.py`; this rebuild route "
+        "is provenance metadata only, not settled ROI, promotion readiness, live profitability, bankroll guidance, "
+        "or real-money evidence.",
+        "",
+        "Validate this boundary with `python3 validate_diagnose_cd_selection_caution.py`.",
+        "",
         "## Problem",
         "",
         "The walk-forward selector picks CD_REFINED_K9 over CD_CORE_K8 in 7/10 folds.",
@@ -263,6 +293,11 @@ def build_report(h2h: pd.DataFrame, cf: pd.DataFrame, agg: dict) -> str:
             f"| {label} | ${stats['wagered']:,} | ${stats['profit']:,.2f} | "
             f"{stats['roi']:+.2f}% | {stats['positive_years']} |"
         )
+    lines.extend([
+        "",
+        "The `No CD rule` row is a stress-test comparator only; it is not a recommendation to remove "
+        "`CD_CORE_K8` from the current OP/CD paper basket.",
+    ])
 
     actual_roi = agg["Actual selector"]["roi"]
     core_roi = agg["Always CD_CORE"]["roi"]
@@ -272,15 +307,15 @@ def build_report(h2h: pd.DataFrame, cf: pd.DataFrame, agg: dict) -> str:
         "",
         "## Interpretation",
         "",
-        f"Substituting CD_CORE for CD_REFINED across all folds changes the walk-forward ROI "
+        f"Substituting CD_CORE for CD_REFINED across all folds changes the historical walk-forward replay ROI "
         f"from **{actual_roi:+.2f}%** to **{core_roi:+.2f}%** (delta: {delta:+.2f}pp).",
         "",
     ])
 
     if delta > 2.0:
         lines.extend([
-            "This is a meaningful improvement that comes entirely from fixing the CD selection, "
-            "not from mining new rules or loosening thresholds.",
+            "This is a meaningful replay diagnostic that comes entirely from fixing the CD selection, "
+            "not from mining new rules or loosening thresholds. It is not a fresh expected-ROI estimate.",
             "",
             "## Root Cause",
             "",
@@ -291,15 +326,15 @@ def build_report(h2h: pd.DataFrame, cf: pd.DataFrame, agg: dict) -> str:
             "",
             "## What This Means for Cole",
             "",
-            "1. **The current walk-forward benchmark (+22.46%) understates the portfolio's potential** because "
-            "it systematically picks the wrong CD variant. The honest number with the correct CD choice is closer "
-            f"to **{core_roi:+.2f}%**.",
+            "1. **The current walk-forward benchmark (+22.46%) likely understates the CD selection mechanism** because "
+            f"it systematically picks the wrong CD variant, but the **{core_roi:+.2f}%** replay is a counterfactual diagnostic, "
+            "not a new expected portfolio ROI or a replacement for the scorecard's planning range.",
             "2. **No rule change is needed.** CD_CORE_K8 is already in phase7_live_rules.json and the current paper basket. "
             "The problem is only in how the walk-forward validator selects rules — it picks CD_REFINED from the Phase 8 "
             "candidate pool instead of CD_CORE.",
             "3. **The fix is methodological, not operational.** The live paper-trade basket already uses CD_CORE_K8. "
             "Cole is already running the right rule. This diagnostic just shows that the walk-forward validation "
-            "report was penalized by a selector bug, not by a real edge weakness.",
+            "report was penalized by a selector-mechanism weakness, not by a real edge weakness.",
             "4. **If the walk-forward selector is ever updated**, the selection score should dampen the ROI term "
             "(e.g., log or sqrt) and/or include a cost penalty. High train ROI on a small sample with expensive "
             "tickets is an overfit signal, not an edge signal.",
@@ -333,7 +368,7 @@ def main() -> None:
 
     h2h.to_csv(OUT_CSV, index=False)
     report = build_report(h2h, cf, agg)
-    OUT_REPORT.write_text(report)
+    OUT_REPORT.write_text(report, encoding="utf-8")
 
     print("=== CD Selection Diagnostic ===\n")
     print(h2h[["test_year", "selected", "core_test_roi", "refined_test_roi", "better_oos"]].to_string(index=False))

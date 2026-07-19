@@ -1,5 +1,15 @@
 # Selector Scoring Experiment
 
+## Current Evidence Boundary
+
+- This is historical selector-scoring research on frozen walk-forward artifacts. It is useful for understanding why ROI dampening improved the selector replay, but it is not a live paper-trade ledger, settled ROI evidence, promotion readiness, live profitability, bankroll guidance, or real-money evidence.
+- Valid evidence scope: `valid_evidence_scope=selector_scoring_replay_diagnostic_only`.
+- Valid use: compare ROI-dampening variants against the original +22.46% train-only selector and explain why `sqrt|strict` looked better in replay. Do not treat the `Recommended action` line below as permission to change the current paper basket or override `forward_evidence_scorecard.txt`.
+- Current posture still comes from the frozen scorecard plus paper-observation lane: keep `OP_DURABLE_K7` as the safest anchor, `CD_CORE_K8` as the primary OP/CD paper-basket companion, and `OP_REFINED_K7` in shadow/watch until ROI-complete paper evidence clears the scorecard gates.
+- The fold-2017 improvement, BEL bridge rows, and CD selection details are replay diagnostics on already-mined candidate rules, not a fresh from-scratch discovery loop and not proof that CD_REFINED, CD_CORE, or a selector variant should displace OP anchor evidence.
+- If this selector-research report is regenerated after scorecard/rules/signals/settlement-ledger byte changes, follow `current_evidence_summary.json.rebuild_validation_contract`: `python3 paper_trade_settlement_audit.py` -> `python3 current_evidence_summary.py` -> `python3 validate_current_evidence_summary.py`; this rebuild route is provenance metadata only, not settled ROI, promotion readiness, live profitability, bankroll guidance, or real-money evidence.
+- Do not substitute `BAQ` for dormant `BEL`, and validate this boundary with `python3 validate_selector_experiment_caution.py`.
+
 ## Purpose
 
 Test whether dampening the ROI term in the walk-forward selection score
@@ -130,48 +140,23 @@ Some variants changed OP selection:
 
 ## What Actually Happened
 
-The mechanism of improvement is NOT what we initially hypothesized:
+The mechanism of improvement is not a clean CD_CORE-over-CD_REFINED fix:
 
-1. **CD_CORE_K8 is still only selected in 1/10 folds** — same as baseline. sqrt dampening
-   compresses the CD_REFINED/CD_CORE score ratio from ~10x to ~3x, but CD_CORE's lower
-   positive-year ratio (0.36–0.50 vs 0.57–0.71) and the races factor cap at 150 prevent
-   it from overtaking CD_REFINED.
-2. **The real win is in fold 2017:** sqrt dampened CD_REFINED_K9's score enough that
-   OP_DURABLE_K7 displaced it in the top-3 portfolio. CD_REFINED had -88.28% test ROI
-   in 2017, so removing it was worth +71.84pp in that single fold.
-3. **Minor regressions in 2023 (-1.71pp) and 2024 (-4.54pp)** from BEL variant changes.
-4. **Guardrail relaxation (relaxed_n150) has zero effect.** In early folds, CD_CORE has
-   <150 races so relaxation doesn't apply. In later folds, CD_CORE qualifies through
-   relaxation but its score is still well below CD_REFINED's.
+1. **CD_CORE_K8 is still selected in 1/10 folds** — the same as the baseline. ROI dampening compresses the CD_REFINED/CD_CORE score ratio, but CD_CORE's lower positive-year ratio and the races-factor cap at 150 still prevent it from overtaking CD_REFINED in most folds.
+2. **The largest replay win is fold 2017:** dampening reduced CD_REFINED_K9 enough that OP_DURABLE_K7 entered the top-3 portfolio. CD_REFINED had -88.28% test ROI in 2017, so removing it drove most of the headline improvement.
+3. **BEL bridge rows remain replay diagnostics only.** Any fold that uses `BEL_BROAD1_K7_BRIDGE_BAQ` is not permission to substitute BAQ for dormant BEL in current paper observation.
+4. **Guardrail relaxation (`relaxed_n150`) has zero effect** in this dataset: each relaxed variant ties its strict counterpart.
 
-### Why CD_CORE can't win on scoring alone
-
-Even after sqrt:
-- CD_REFINED: sqrt(66%) × 0.62 pos_yr × 0.90 races_factor ≈ 4.5
-- CD_CORE: sqrt(7%) × 0.46 pos_yr × 1.0 races_factor ≈ 1.2
-
-The pos_year_ratio gap (0.62 vs 0.46) and the races factor cap (no credit above 150)
-mean CD_CORE needs ~4x better other factors to compete. The races factor ceiling is the
-structural bottleneck — CD_CORE's 400+ races get the same credit as CD_REFINED's 135.
-
-### Unrealized improvement
-
-The `diagnose_cd_selection.py` counterfactual showed "always CD_CORE" = +36.20%.
-This experiment's best (sqrt|strict) = +30.42%. The remaining ~5.8pp gap requires
-either a higher races factor ceiling (giving credit for N>150) or a structural
-change to the selection logic that isn't achievable through ROI dampening alone.
+The selector result is useful for understanding why raw train ROI was too dominant, but it does not create new forward evidence and does not change the current OP_DURABLE_K7 / CD_CORE_K8 / OP_REFINED_K7 posture by itself.
 
 ## Recommendation
 
-**sqrt|strict should be adopted.** The +7.96pp improvement is real, honest, and comes
-from reducing CD_REFINED's ability to crowd out better rules — exactly the kind of
-correction the dampened scoring was designed to make.
+The **sqrt|strict** variant improves the historical walk-forward replay by **+7.96pp** (+22.46% → +30.42%).
 
-**It does NOT fully solve the CD_CORE vs CD_REFINED problem.** The next experiment
-should test raising the races factor ceiling (e.g., `min(1.0, races/150) * (1 + 0.15 * min(1, max(0, races-150)/300))`)
-to give additional credit for sample sizes above 150. This is the structural
-bottleneck preventing CD_CORE from being selected.
+CD_CORE_K8 is selected in **1/10** folds (unchanged from 1/10 under baseline).
 
-**The guardrail relaxation is not needed** — it has no effect in this dataset.
+The improvement is best read as a historical selector-scoring diagnostic: dampening raw train ROI helps stop high-ROI-but-fragile rules from crowding out better portfolio choices in some folds, especially fold 2017. It is not a current paper-basket change or promotion signal.
+
+**Recommended action:** keep `sqrt|strict` as the best tested selector-replay variant for research comparisons, but do not change the current paper basket from this experiment alone. Current posture still comes from `forward_evidence_scorecard.txt` plus ROI-complete paper observations.
 
 Artifacts: `selector_experiment_summary.csv`, `selector_experiment_detail.csv`, `SELECTOR_EXPERIMENT.md`.

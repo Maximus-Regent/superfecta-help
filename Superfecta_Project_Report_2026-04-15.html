@@ -9,24 +9,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0e16;
-      --bg-2: #101826;
-      --panel: rgba(15, 22, 35, 0.88);
-      --panel-solid: #0f1623;
-      --panel-soft: #131d2f;
-      --ink: #ecf2ff;
-      --muted: #9fb0cc;
-      --line: rgba(182, 201, 233, 0.16);
-      --line-strong: rgba(223, 190, 122, 0.30);
-      --gold: #dfbe7a;
-      --gold-soft: rgba(223, 190, 122, 0.14);
-      --green: #60d7a7;
-      --green-soft: rgba(96, 215, 167, 0.14);
-      --blue: #8fb2ff;
-      --blue-soft: rgba(143, 178, 255, 0.16);
-      --red: #ff8c84;
-      --red-soft: rgba(255, 140, 132, 0.14);
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      --bg: #eef3f8;
+      --bg-2: #f8fbfe;
+      --panel: rgba(255, 255, 255, 0.92);
+      --panel-solid: #ffffff;
+      --panel-soft: #f7f9fc;
+      --ink: #162033;
+      --muted: #5f6b7f;
+      --line: rgba(21, 35, 57, 0.12);
+      --line-strong: rgba(42, 88, 165, 0.22);
+      --gold: #2a58a5;
+      --gold-soft: rgba(42, 88, 165, 0.10);
+      --green: #2f8b70;
+      --green-soft: rgba(47, 139, 112, 0.10);
+      --blue: #456fba;
+      --blue-soft: rgba(69, 111, 186, 0.10);
+      --red: #c96565;
+      --red-soft: rgba(201, 101, 101, 0.10);
+      --shadow: 0 18px 46px rgba(22, 32, 51, 0.10);
       --max: 1220px;
     }
 
@@ -34,9 +34,9 @@
 
     html {
       background:
-        radial-gradient(circle at 15% 20%, rgba(223, 190, 122, 0.08), transparent 26%),
-        radial-gradient(circle at 82% 14%, rgba(113, 160, 255, 0.10), transparent 28%),
-        linear-gradient(180deg, #070a11 0%, var(--bg) 42%, #06090f 100%);
+        radial-gradient(circle at 12% 14%, rgba(69, 111, 186, 0.08), transparent 24%),
+        radial-gradient(circle at 88% 10%, rgba(47, 139, 112, 0.05), transparent 26%),
+        linear-gradient(180deg, #f8fbfe 0%, var(--bg) 46%, #edf2f7 100%);
       min-height: 100%;
     }
 
@@ -47,8 +47,8 @@
       line-height: 1.65;
       letter-spacing: 0.01em;
       background:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        linear-gradient(rgba(21,35,57,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(21,35,57,0.035) 1px, transparent 1px);
       background-size: 32px 32px;
     }
 
@@ -58,11 +58,11 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 50% 0%, rgba(223, 190, 122, 0.08), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,0.03), transparent 18%),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 140px);
-      mix-blend-mode: screen;
-      opacity: 0.6;
+        radial-gradient(circle at 50% 0%, rgba(69, 111, 186, 0.08), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,0.40), transparent 18%),
+        repeating-linear-gradient(90deg, rgba(21,35,57,0.015) 0 1px, transparent 1px 140px);
+      mix-blend-mode: normal;
+      opacity: 0.55;
     }
 
     .page {
@@ -76,8 +76,8 @@
       position: relative;
       overflow: hidden;
       background:
-        linear-gradient(135deg, rgba(24, 33, 52, 0.96), rgba(10, 14, 22, 0.96)),
-        linear-gradient(135deg, #13203a, #0f1623);
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(243, 247, 252, 0.98)),
+        linear-gradient(135deg, #ffffff, #f3f7fc);
       border: 1px solid var(--line-strong);
       border-radius: 28px;
       box-shadow: var(--shadow);
@@ -99,7 +99,7 @@
       height: 340px;
       right: -80px;
       top: -110px;
-      background: radial-gradient(circle, rgba(223, 190, 122, 0.18), transparent 68%);
+      background: radial-gradient(circle, rgba(69, 111, 186, 0.14), transparent 68%);
     }
 
     .hero::after {
@@ -107,7 +107,7 @@
       height: 320px;
       left: -120px;
       bottom: -160px;
-      background: radial-gradient(circle, rgba(143, 178, 255, 0.15), transparent 70%);
+      background: radial-gradient(circle, rgba(47, 139, 112, 0.10), transparent 70%);
     }
 
     .hero-grid {
@@ -153,7 +153,7 @@
     .subtitle {
       margin: 18px 0 0;
       max-width: 760px;
-      color: #d7e2f8;
+      color: #42536b;
       font-size: 18px;
     }
 
@@ -170,8 +170,8 @@
       gap: 8px;
       padding: 10px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(21,35,57,0.10);
+      background: rgba(255,255,255,0.82);
       color: var(--ink);
       font-size: 13px;
       font-weight: 600;
@@ -182,21 +182,21 @@
       margin-top: 24px;
       padding: 18px 18px 17px;
       border-radius: 18px;
-      background: linear-gradient(180deg, rgba(223, 190, 122, 0.14), rgba(223, 190, 122, 0.06));
-      border: 1px solid rgba(223, 190, 122, 0.24);
-      color: #fff6df;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      background: linear-gradient(180deg, rgba(69, 111, 186, 0.10), rgba(69, 111, 186, 0.04));
+      border: 1px solid rgba(69, 111, 186, 0.16);
+      color: #28405f;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.40);
     }
 
     .hero-note strong {
-      color: #ffe9b8;
+      color: #1f3350;
     }
 
     .hero-panel {
       align-self: stretch;
       border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border: 1px solid rgba(21,35,57,0.10);
+      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(248,250,252,0.92));
       padding: 22px;
       display: grid;
       gap: 14px;
@@ -206,7 +206,7 @@
     .hero-panel h2 {
       margin: 0 0 6px;
       font-size: 26px;
-      color: #fff7e6;
+      color: #162033;
     }
 
     .score-item {
@@ -282,11 +282,11 @@
 
     .metric {
       position: relative;
-      background: linear-gradient(180deg, rgba(18, 27, 43, 0.95), rgba(12, 18, 29, 0.96));
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.98));
       border: 1px solid var(--line);
       border-radius: 22px;
       padding: 18px 18px 16px;
-      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.26);
+      box-shadow: 0 12px 28px rgba(22, 32, 51, 0.08);
       overflow: hidden;
     }
 
@@ -294,7 +294,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(145deg, rgba(223,190,122,0.08), transparent 40%);
+      background: linear-gradient(145deg, rgba(69,111,186,0.05), transparent 40%);
       pointer-events: none;
     }
 
@@ -316,7 +316,7 @@
 
     .metric .small {
       margin-top: 9px;
-      color: #c7d5f0;
+      color: #58697f;
       font-size: 13px;
     }
 
@@ -332,11 +332,11 @@
     }
 
     .card {
-      background: linear-gradient(180deg, rgba(16, 24, 38, 0.96), rgba(11, 17, 27, 0.98));
+      background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(249,251,253,0.99));
       border: 1px solid var(--line);
       border-radius: 24px;
       padding: 24px;
-      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 12px 28px rgba(22, 32, 51, 0.08);
       position: relative;
       overflow: hidden;
     }
@@ -346,7 +346,7 @@
       position: absolute;
       inset: 0 0 auto 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(223, 190, 122, 0.45), transparent);
+      background: linear-gradient(90deg, transparent, rgba(42, 88, 165, 0.24), transparent);
     }
 
     .section-top {
@@ -390,7 +390,7 @@
       border-radius: 18px;
       padding: 18px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
+      background: rgba(247,249,252,0.95);
     }
 
     .split-callout .cell strong {
@@ -419,7 +419,7 @@
     .story {
       border-radius: 18px;
       padding: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      background: linear-gradient(180deg, rgba(248,250,252,0.96), rgba(255,255,255,0.98));
       border: 1px solid var(--line);
     }
 
@@ -504,7 +504,7 @@
       border-radius: 18px;
       margin-top: 10px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.96);
     }
 
     .compare-table th,
@@ -517,8 +517,8 @@
 
     .compare-table thead th {
       border-top: 0;
-      background: rgba(255,255,255,0.04);
-      color: #f4f7ff;
+      background: #eef3f8;
+      color: #22324a;
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.14em;
@@ -526,7 +526,7 @@
     }
 
     .compare-table tbody tr:nth-child(even) td {
-      background: rgba(255,255,255,0.012);
+      background: #f8fafc;
     }
 
     .mono {
@@ -566,7 +566,7 @@
       padding: 18px;
       border-radius: 18px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
+      background: #f8fafc;
     }
 
     .decision h3 {
@@ -574,7 +574,7 @@
       font-size: 24px;
     }
 
-    .decision p { margin: 0; color: #d5def2; }
+    .decision p { margin: 0; color: #506277; }
 
     .timeline {
       display: grid;
@@ -602,7 +602,7 @@
     }
 
     .timeline-body {
-      border-left: 1px solid rgba(223, 190, 122, 0.22);
+      border-left: 1px solid rgba(42, 88, 165, 0.18);
       padding-left: 18px;
     }
 
@@ -611,7 +611,7 @@
       font-size: 24px;
     }
 
-    .timeline-body p { margin: 0; color: #d5def2; }
+    .timeline-body p { margin: 0; color: #506277; }
 
     .checklist {
       display: grid;
@@ -626,7 +626,7 @@
       align-items: start;
       padding: 12px 14px;
       border-radius: 16px;
-      background: rgba(255,255,255,0.03);
+      background: #fafbfd;
       border: 1px solid var(--line);
     }
 
@@ -660,7 +660,7 @@
       border-radius: 18px;
       padding: 18px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
+      background: #f8fafc;
     }
 
     .ladder {
@@ -696,12 +696,45 @@
     .pull-quote {
       margin-top: 16px;
       padding: 18px 18px 18px 22px;
-      border-left: 2px solid rgba(223, 190, 122, 0.5);
-      background: rgba(223, 190, 122, 0.08);
+      border-left: 2px solid rgba(42, 88, 165, 0.40);
+      background: rgba(69, 111, 186, 0.08);
       border-radius: 0 18px 18px 0;
-      color: #fff0c9;
+      color: #1f3554;
       font-size: 16px;
       font-weight: 600;
+    }
+
+    .master-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .master-card {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff, #f7f9fc);
+    }
+
+    .master-card h3 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    .master-card p {
+      margin: 0;
+      color: #506277;
+    }
+
+    .master-card ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+    }
+
+    .master-card li {
+      margin: 6px 0;
     }
 
     .footer {
@@ -720,7 +753,8 @@
       .live-status,
       .decision-grid,
       .split-callout,
-      .story-grid {
+      .story-grid,
+      .master-grid {
         grid-template-columns: 1fr;
       }
 
@@ -816,7 +850,9 @@
       .metric .small,
       .metric .kicker,
       .bar-value,
-      .timeline-body p { color: #162033 !important; }
+      .timeline-body p,
+      .master-card p,
+      .decision p { color: #162033 !important; }
 
       .status-chip,
       .badge,
@@ -837,7 +873,7 @@
           <div class="summary-ribbon">
             <span class="tag">Phase 7 = primary paper baseline</span>
             <span class="tag">Phase 8 = shadow challenger</span>
-            <span class="tag">Selective rules = only live-worthy family</span>
+            <span class="tag">Selective rules = only paper-worthy family</span>
           </div>
           <div class="hero-note">
             <strong>Main conclusion:</strong> the project got meaningfully better through <strong>validation cleanup</strong>, <strong>decision clarity</strong>, and <strong>operational hardening</strong>, not through fake “overnight edge” claims.
@@ -845,21 +881,21 @@
         </div>
         <aside class="hero-panel">
           <div>
-            <span class="status-chip gold">Best clean gain</span>
+            <span class="status-chip gold">Best clean historical gain</span>
             <h2>+7.96 pts</h2>
-            <p style="margin:0;color:#d6e0f5;">Walk-forward selector ROI improved from <strong>+22.46%</strong> to <strong>+30.42%</strong> with sqrt-dampened scoring.</p>
+            <p style="margin:0;color:#516378;">Historical selector-scoring improvement: walk-forward ROI improved from <strong>+22.46%</strong> to <strong>+30.42%</strong> with sqrt-dampened scoring, but the current frozen selector benchmark still remains the <strong>Train-only yearly selector</strong> at <strong>+22.46%</strong> walk-forward and <strong>+14.36%</strong> holdout.</p>
           </div>
           <div class="score-item">
             <div>
               <div class="label">Primary baseline</div>
-              <div>Phase 7 live portfolio</div>
+              <div>Phase 7 OP/CD rule-component basket • 2024 +0.37% on 109 • 2025 +105.38% on 66</div>
             </div>
             <div class="value">+38.68%</div>
           </div>
           <div class="score-item">
             <div>
               <div class="label">Shadow challenger</div>
-              <div>Phase 8 frozen portfolio</div>
+              <div>Phase 8 frozen portfolio • 2024 +9.50% on 85 • 2025 +50.26% on 33</div>
             </div>
             <div class="value">+21.45%</div>
           </div>
@@ -885,23 +921,190 @@
       <article class="metric">
         <div class="kicker">Holdout winner</div>
         <div class="big">+38.68%</div>
-        <div class="small">Phase 7 holdout ROI on <strong>175 races</strong>, currently the strongest practical paper baseline.</div>
+        <div class="small">Phase 7 holdout ROI on <strong>175 races</strong>, currently the strongest practical paper baseline, but with an uneven recent path: <strong>2024 +0.37% on 109</strong>, <strong>2025 +105.38% on 66</strong>.</div>
       </article>
       <article class="metric">
-        <div class="kicker">Selector upgrade</div>
+        <div class="kicker">Historical selector upgrade</div>
         <div class="big">+30.42%</div>
-        <div class="small">Best validated walk-forward selector result after scoring cleanup, up from <strong>+22.46%</strong>.</div>
+        <div class="small">Historical selector-scoring result after cleanup. The current frozen selector benchmark still remains <strong>+22.46%</strong> walk-forward and <strong>+14.36%</strong> holdout for the <strong>Train-only yearly selector</strong>.</div>
       </article>
       <article class="metric">
         <div class="kicker">Operational shift</div>
         <div class="big">Paperable</div>
-        <div class="small">Daily paper-trade, settlement, forward-check, lane monitor, and preflight note path are now in place.</div>
+        <div class="small">Daily paper-trade, settlement, forward-check, lane monitor, and preflight note path are now in place. That is workflow hardening, not new forward evidence by itself.</div>
       </article>
       <article class="metric">
         <div class="kicker">Live status</div>
         <div class="big">No +30 yet</div>
         <div class="small">Demo/watcher lane is working, but today’s best live EV stayed below the real alert threshold.</div>
       </article>
+    </section>
+
+    <section class="card" style="margin-bottom:18px;">
+      <span class="eyeline">Master report</span>
+      <div class="section-top">
+        <div>
+          <h2>Master findings register</h2>
+          <p>This is the one-section synthesis of the entire project state, combining the strongest findings from the strategy, validation, portfolio, model, operations, and live-demo lanes.</p>
+        </div>
+      </div>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Core finding</th>
+            <th>Evidence</th>
+            <th>Decision</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Category"><strong>Portfolio hierarchy</strong></td>
+            <td data-label="Core finding">Phase 7 is still the best current deployment baseline.</td>
+            <td data-label="Evidence" class="mono">Phase 7: +38.68% on 175 (2024 +0.37% on 109; 2025 +105.38% on 66) vs Phase 8: +21.45% on 118 (2024 +9.50% on 85; 2025 +50.26% on 33)</td>
+            <td data-label="Decision">Run Phase 7 as primary paper baseline and keep Phase 8 in shadow, but do not talk about that win like it was a smooth two-year glide.</td>
+          </tr>
+          <tr>
+            <td data-label="Category"><strong>Selector quality</strong></td>
+            <td data-label="Core finding">Validation improved materially after selector cleanup, but the historical scoring win is not the same thing as the current frozen benchmark.</td>
+            <td data-label="Evidence" class="mono">Historical scoring: +22.46% → +30.42%; current benchmark: +22.46% WF / +14.36% holdout</td>
+            <td data-label="Decision">Keep the sqrt-dampened result as a historical research improvement, while the current frozen selector read stays the Train-only yearly selector in BENCHMARK ONLY status.</td>
+          </tr>
+          <tr>
+            <td data-label="Category"><strong>Rule stack</strong></td>
+            <td data-label="Core finding">OP_DURABLE_K7 remains the safest anchor, with CD_CORE_K8 still paper-worthy.</td>
+            <td data-label="Evidence" class="mono">Forward trust scorecard + holdout / WF comparisons</td>
+            <td data-label="Decision">Keep the active trust stack conservative instead of chasing smaller-sample spikes.</td>
+          </tr>
+          <tr>
+            <td data-label="Category"><strong>Method families</strong></td>
+            <td data-label="Core finding">Selective rules are the only family that earned current-paper credibility.</td>
+            <td data-label="Evidence" class="mono">Selective path positive; Harville -24.05%; ML betting line -24.16%</td>
+            <td data-label="Decision">Selective rules = paper now, Harville = benchmark, XGBoost = research only.</td>
+          </tr>
+          <tr>
+            <td data-label="Category"><strong>ML / features</strong></td>
+            <td data-label="Core finding">Horse-history features improved prediction quality, but not enough to change downstream betting behavior.</td>
+            <td data-label="Evidence" class="mono">Better RMSE / R², negligible EV-engine pass-through change</td>
+            <td data-label="Decision">Do not promote the enriched residual model as if it solved the betting problem.</td>
+          </tr>
+          <tr>
+            <td data-label="Category"><strong>Full-data retrain caveat</strong></td>
+            <td data-label="Core finding">Full-data XGBoost retrain artifacts are command and diagnostic reproducibility only.</td>
+            <td data-label="Evidence" class="mono">FULL_DATA_RETRAIN_ARTIFACTS.md + validate_full_data_retrain_artifacts.py; RMSE / MAE model-fit diagnostics</td>
+            <td data-label="Decision">Do not treat exact retrain/prediction commands or RMSE / MAE gains as paper-trade evidence, promotion readiness, live profitability, bankroll guidance, or real-money evidence.</td>
+          </tr>
+          <tr>
+            <td data-label="Category"><strong>Operations</strong></td>
+            <td data-label="Core finding">The paper-trade and reporting stack is now operationally real.</td>
+            <td data-label="Evidence" class="mono">Settlement sync, helper, forward checks, lane monitors, preflight notes</td>
+            <td data-label="Decision">Treat this as an operating system for forward evidence, not just a research folder; genuinely new forward evidence still requires settled paper trades. Only settled paper-trade rows with usable ROI coverage should change deployment posture; clean scans, open signals, historical replay rows, calibration-only summaries, or another odds-only rerun should not.</td>
+          </tr>
+          <tr>
+            <td data-label="Category"><strong>Current paper bridge</strong></td>
+            <td data-label="Core finding">Current paper totals must route through the source-checked current-evidence bridge before they are quoted.</td>
+            <td data-label="Evidence" class="mono">CURRENT_EVIDENCE_SUMMARY.md / current_evidence_summary.json; source consistency matched; combined operator-status/source-freshness/operator-read-gate route is fresh against the bridge reference date but still goes through operator read-gate routing before right-now instruction or evidence use; gate source forward_evidence_scorecard.json decision_gate_minimums anchor_displacement=30, phase8_promotion_review=20, real_money_discussion=100; scorecard audit route current_evidence_summary.json scorecard_audit_route -> SCORECARD_RANKING_CONTRACT_AUDIT.md / scorecard_ranking_contract_audit.json + python3 validate_scorecard_ranking_contract_audit.py; rebuild order current_evidence_summary.json rebuild_validation_contract -> python3 paper_trade_settlement_audit.py -> python3 current_evidence_summary.py -> python3 validate_current_evidence_summary.py; primary paper 6/30 first-read, 6/100 broader-review; CD_CORE_K8 6 ROI-complete rows, OP_DURABLE_K7 0</td>
+            <td data-label="Decision">Treat the 6 settled CD rows as operational context only, not OP-anchor proof, Phase 8 promotion readiness, live profitability, bankroll guidance, or real-money evidence; use the combined operator_status_context + source_freshness.requires_refresh_before_right_now_use=false + operator_read_gate.requires_refresh_before_evidence_read=false route before using the saved PAPER_TRADE_NOW best-action card as today's operator instruction or evidence; repair any source_consistency.overall_match=false mismatch before quoting totals.</td>
+          </tr>
+          <tr>
+            <td data-label="Category"><strong>Live / demo lane</strong></td>
+            <td data-label="Core finding">The live scanner works, but today still has no honest +30% edge.</td>
+            <td data-label="Evidence" class="mono">Best seen today +23.24%; watcher threshold +30.00%</td>
+            <td data-label="Decision">Keep the silent watcher discipline and do not oversell live edge until it actually clears the bar.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="master-grid">
+        <div class="master-card">
+          <span class="status-chip green">Primary conclusion</span>
+          <h3>Phase 7 still owns the room</h3>
+          <p>The project’s prettiest headline is no longer the thing that matters most. The strongest practical evidence still belongs to the Phase 7 OP/CD rule-component basket, not the bigger Phase 8 expansion.</p>
+          <ul>
+            <li>Best current holdout: <strong>+38.68% on 175 races</strong></li>
+            <li>Recent split: <strong>2024 +0.37% on 109</strong>, <strong>2025 +105.38% on 66</strong> — real edge, but not a smooth two-year path</li>
+            <li>Best choice for the main paper-trade lane right now</li>
+          </ul>
+        </div>
+
+        <div class="master-card">
+          <span class="status-chip gold">Validation upgrade</span>
+          <h3>Selector cleanup was worth it</h3>
+          <p>The most defensible quantitative improvement in the whole project came from cleaning the selection logic, not from inventing a new strategy family, but it should still be read as a historical scoring improvement rather than the current frozen deployment benchmark.</p>
+          <ul>
+            <li>Historical selector-scoring result improved from <strong>+22.46%</strong> to <strong>+30.42%</strong></li>
+            <li>Current frozen selector benchmark still remains the <strong>Train-only yearly selector</strong> at <strong>+22.46%</strong> walk-forward and <strong>+14.36%</strong> holdout</li>
+            <li>No new rule mining, no fake re-ranking of history</li>
+          </ul>
+        </div>
+
+        <div class="master-card">
+          <span class="status-chip blue">Rule hierarchy</span>
+          <h3>Trust is now easier to explain</h3>
+          <p>The project finally has a clearer answer to the question “which rules do we actually trust?” instead of spreading that answer across ten files. The year split is what makes the hierarchy easier to defend honestly.</p>
+          <ul>
+            <li><strong>OP_DURABLE_K7</strong> = safest anchor: mixed holdout, but on the largest OP holdout sample (<strong>2024 -47.41% on 68; 2025 +124.61% on 47</strong>) plus the strongest walk-forward support (<strong>7/10 folds</strong>)</li>
+            <li><strong>CD_CORE_K8</strong> = paper-worthy, still useful in the primary paper lane: the steadier current paper candidate because it stayed positive in both holdout years (<strong>2024 +45.65% on 41; 2025 +78.21% on 19</strong>)</li>
+            <li><strong>OP_REFINED_K7</strong> = interesting, but still a challenger not a replacement: prettier aggregate ROI, but still a smaller mixed-year spike (<strong>2024 -25.47% on 33; 2025 +210.02% on 16</strong>)</li>
+          </ul>
+          <p>So the real read is not “highest ROI wins.” It is that CD currently looks steadier, OP_DURABLE still has the stronger anchor-grade evidence base, and OP_REFINED still needs more forward sample before it can challenge the anchor seriously.</p>
+        </div>
+
+        <div class="master-card">
+          <span class="status-chip red">Rejected hype</span>
+          <h3>Some improvements were real, but not promotable</h3>
+          <p>One of the best things about the current report is that it explicitly rejects seductive but weak stories instead of pretending every metric bump deserves deployment.</p>
+          <ul>
+            <li>Harville remains a benchmark, not a live system</li>
+            <li>XGBoost residual correction remains research, not a betting engine</li>
+            <li>Full-data XGBoost retrain commands and RMSE / MAE gains stay in <code>FULL_DATA_RETRAIN_ARTIFACTS.md</code> / <code>validate_full_data_retrain_artifacts.py</code> as model-fit diagnostics only</li>
+            <li>Horse-history features helped prediction, but not enough downstream to change the bet path</li>
+          </ul>
+        </div>
+
+        <div class="master-card">
+          <span class="status-chip green">Operational maturity</span>
+          <h3>This is no longer just a research pile</h3>
+          <p>The paper-trade system now behaves like something you can actually run and interpret day to day, instead of a loose set of scripts with unclear status.</p>
+          <ul>
+            <li>Primary + shadow lanes</li>
+            <li>Settlement sync and entry helper</li>
+            <li>Forward-check and lane-monitor artifacts</li>
+            <li>Preflight note for “OP/CD not racing today” cases</li>
+          </ul>
+        </div>
+
+        <div class="master-card">
+          <span class="status-chip blue">Current paper bridge</span>
+          <h3>Quote the bridge before the totals</h3>
+          <p>For short Cole updates, read <code>CURRENT_EVIDENCE_SUMMARY.md</code> / <code>current_evidence_summary.json</code> before quoting <code>PAPER_TRADE_NOW</code>, ops-bucket/operator-status context, settlement-audit, or primary-ledger totals.</p>
+          <ul>
+            <li>Source consistency is <strong>matched</strong> across the top card, audit, and primary settlement CSV.</li>
+            <li>Combined operator read route says check <code>operator_status_context</code>, <code>source_freshness.requires_refresh_before_right_now_use=false</code>, and <code>operator_read_gate.requires_refresh_before_evidence_read=false</code>; the saved <code>PAPER_TRADE_NOW</code> best-action card is fresh against the bridge reference date but still goes through operator read-gate routing before right-now instruction or evidence use. This is not no-target, clean-empty, bet-readiness, settled-ROI, promotion, live-profitability, bankroll, or real-money evidence.</li>
+            <li>Gate source is <code>forward_evidence_scorecard.json</code> <code>decision_gate_minimums</code>: <strong>anchor_displacement=30</strong>, <strong>phase8_promotion_review=20</strong>, <strong>real_money_discussion=100</strong>; these are future ROI-complete observation floors, not cleared gates.</li>
+            <li>Scorecard audit route: <code>current_evidence_summary.json</code> source path <code>scorecard_audit_route</code> points copied gate/ranking/CI-only/timezone/no-BAQ synchronization checks to <code>SCORECARD_RANKING_CONTRACT_AUDIT.md</code> / <code>scorecard_ranking_contract_audit.json</code> plus <code>python3 validate_scorecard_ranking_contract_audit.py</code>; this route is report-synchronization metadata only, not forward performance, settled ROI, promotion readiness, live profitability, bankroll guidance, or real-money evidence.</li>
+            <li>Rebuild-order route: <code>current_evidence_summary.json</code> source path <code>rebuild_validation_contract</code> routes scorecard/rules/signals/settlement-ledger byte changes through <code>python3 paper_trade_settlement_audit.py</code> -> <code>python3 current_evidence_summary.py</code> -> <code>python3 validate_current_evidence_summary.py</code> before quoting <code>CURRENT_EVIDENCE_SUMMARY.*</code>; this is provenance/rebuild metadata only, not settled ROI, promotion readiness, live profitability, bankroll guidance, or real-money evidence.</li>
+            <li>Primary paper is still <strong>6/30</strong> ROI-complete toward a first read and <strong>6/100</strong> toward broader review.</li>
+            <li>Current settled sample is <strong>CD-only</strong>: <strong>CD_CORE_K8 6</strong>, <strong>OP_DURABLE_K7 0</strong>; this is not OP-anchor proof, promotion readiness, live profitability, bankroll guidance, real-money evidence, or cross-family promotion evidence. For anchor / paper / watch caveats, read <code>CROSS_FAMILY_DECISION.md</code> and run <code>python3 validate_cross_family_decision.py</code>; stale-card refresh routing, CD-only settled rows, source-published settlement-queue state/context, and green HTML/PDF validation are not OP-anchor proof.</li>
+            <li>OP_REFINED CI-only check: Scorecard CI-only promotion check: <code>forward_evidence_scorecard.json:ci_only_promotion_diagnostics.OP_REFINED_K7</code> keeps <code>ci_only_promotion_allowed=false</code>; OP_REFINED's positive CI lower bound is support context only, not a current-paper promotion trigger, OP-anchor proof, promotion readiness, live profitability, bankroll guidance, or real-money evidence.</li>
+          </ul>
+          <p style="font-size: 8px; line-height: 1.25; color: #5f6b7f;">PDF bridge text: Combined operator read route says check operator_status_context, source_freshness.requires_refresh_before_right_now_use=false, and operator_read_gate.requires_refresh_before_evidence_read=false; the saved PAPER_TRADE_NOW best-action card is fresh against the bridge reference date but still goes through operator read-gate routing before right-now instruction or evidence use. This is not no-target, clean-empty, bet-readiness, settled-ROI, promotion, live-profitability, bankroll, or real-money evidence.</p>
+          <p>Gate source is forward_evidence_scorecard.json decision_gate_minimums: anchor_displacement=30, phase8_promotion_review=20, real_money_discussion=100; these are future ROI-complete observation floors, not cleared gates.</p>
+          <p>If <code>source_consistency.overall_match=false</code>, repair the top-card / audit / CSV mismatch before quoting current paper numbers. Then use the combined <code>operator_status_context</code> + <code>source_freshness.requires_refresh_before_right_now_use=false</code> + <code>operator_read_gate.requires_refresh_before_evidence_read=false</code> route before using the saved right-now card as current-day guidance or evidence.</p>
+        </div>
+
+        <div class="master-card">
+          <span class="status-chip gold">Live reality</span>
+          <h3>Working lane, disciplined trigger</h3>
+          <p>The demo lane is real now, and that matters. But the discipline matters just as much: a functioning scanner is not the same thing as a live edge.</p>
+          <ul>
+            <li>Best live number seen today: <strong>+23.24%</strong></li>
+            <li>Alert threshold remains <strong>+30.00%</strong></li>
+            <li>Correct behavior is still to stay quiet until the number actually earns it</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section class="layout">
@@ -919,12 +1122,12 @@
             <div class="story">
               <div class="num">1</div>
               <h3>Validation got sharper</h3>
-              <p>The strongest clean numeric gain is the selector improvement from <strong>+22.46%</strong> to <strong>+30.42%</strong>, using frozen artifacts and no new rule mining.</p>
+              <p>The strongest clean historical numeric gain is the selector-scoring improvement from <strong>+22.46%</strong> to <strong>+30.42%</strong>, using frozen artifacts and no new rule mining, while the current frozen selector benchmark still remains the <strong>Train-only yearly selector</strong>.</p>
             </div>
             <div class="story">
               <div class="num">2</div>
               <h3>Portfolio hierarchy got clearer</h3>
-              <p>Phase 7 remains the live paper baseline. Phase 8 stays useful, but only as a shadow challenger until it beats Phase 7 on better forward evidence.</p>
+              <p>Phase 7 remains the live paper baseline. Phase 8 stays useful, but only as a shadow challenger until it beats Phase 7 on better forward evidence. The current edge is real, but the year split shows it was uneven rather than smooth.</p>
             </div>
             <div class="story">
               <div class="num">3</div>
@@ -964,7 +1167,7 @@
           <div class="bar-list">
             <div class="bar-row">
               <div class="bar-head">
-                <div class="bar-title">Walk-forward selector ROI</div>
+                <div class="bar-title">Historical selector-scoring ROI</div>
                 <div class="bar-value mono">+22.46% → +30.42%</div>
               </div>
               <div class="bar-track"><div class="bar-fill" style="width: 76%;"></div></div>
@@ -972,14 +1175,14 @@
             <div class="bar-row">
               <div class="bar-head">
                 <div class="bar-title">Phase 7 holdout ROI</div>
-                <div class="bar-value mono">+38.68% on 175 races</div>
+                <div class="bar-value mono">+38.68% on 175 races • 2024 +0.37% on 109 • 2025 +105.38% on 66</div>
               </div>
               <div class="bar-track"><div class="bar-fill" style="width: 97%;"></div></div>
             </div>
             <div class="bar-row">
               <div class="bar-head">
                 <div class="bar-title">Phase 8 holdout ROI</div>
-                <div class="bar-value mono">+21.45% on 118 races</div>
+                <div class="bar-value mono">+21.45% on 118 races • 2024 +9.50% on 85 • 2025 +50.26% on 33</div>
               </div>
               <div class="bar-track"><div class="bar-fill" style="width: 54%;"></div></div>
             </div>
@@ -993,7 +1196,7 @@
           </div>
 
           <div class="pull-quote">
-            The cleanest sentence in the whole project is still this: <strong>Phase 7 beats Phase 8 on the current holdout, even though Phase 8 looks prettier on paper.</strong>
+            The cleanest sentence in the whole project is still this: <strong>Phase 7 beats Phase 8 on the current holdout, even though Phase 8 looks prettier on paper — but the winning Phase 7 path was uneven, not a smooth two-year glide.</strong>
           </div>
         </article>
 
@@ -1017,16 +1220,16 @@
             </thead>
             <tbody>
               <tr>
-                <td data-label="Approach"><strong>Phase 7 live portfolio</strong></td>
+                <td data-label="Approach"><strong>Phase 7 OP/CD rule-component basket</strong></td>
                 <td data-label="Role"><span class="badge paper">Paper now</span></td>
-                <td data-label="Holdout" class="mono">+38.68% • 175 races</td>
+                <td data-label="Holdout" class="mono">+38.68% • 175 races • 2024 +0.37% on 109 • 2025 +105.38% on 66</td>
                 <td data-label="Walk-forward" class="mono">+31.34% • 806 races</td>
-                <td data-label="Read">Strongest current paper baseline. BEL is dormant, so this is effectively the OP+CD lane.</td>
+                <td data-label="Read">Strongest current paper baseline. BEL is dormant, so this is effectively the OP+CD lane, but the recent edge was uneven rather than smooth.</td>
               </tr>
               <tr>
                 <td data-label="Approach"><strong>Phase 8 frozen portfolio</strong></td>
                 <td data-label="Role"><span class="badge shadow">Shadow only</span></td>
-                <td data-label="Holdout" class="mono">+21.45% • 118 races</td>
+                <td data-label="Holdout" class="mono">+21.45% • 118 races • 2024 +9.50% on 85 • 2025 +50.26% on 33</td>
                 <td data-label="Walk-forward" class="mono">+55.04% • 625 races</td>
                 <td data-label="Read">Useful challenger, but weaker on the current holdout despite looking hotter in broader mined views.</td>
               </tr>
@@ -1044,7 +1247,7 @@
             <div class="decision">
               <span class="status-chip green">Primary call</span>
               <h3>Phase 7 first</h3>
-              <p>Use the Phase 7 live basket as the real paper-trade default because it owns the best current holdout evidence.</p>
+              <p>Use the Phase 7 OP/CD rule-component basket as the real paper-trade default, with target cards confirmed by daily preflight, because it owns the best current holdout evidence.</p>
             </div>
             <div class="decision">
               <span class="status-chip gold">Challenge lane</span>
@@ -1055,11 +1258,11 @@
         </article>
 
         <article class="card">
-          <span class="eyeline">Method-family triage</span>
+          <span class="eyeline">Method-family guardrail</span>
           <div class="section-top">
             <div>
               <h2>Which family deserves trust?</h2>
-              <p>This may be the most useful cleanup in the whole repo: what belongs in the real decision path versus what should stay benchmark or research.</p>
+              <p>This is intentionally separate from the selective-method ranking. First rule out dead-end families, then compare the serious selective contenders against each other.</p>
             </div>
           </div>
           <table class="compare-table">
@@ -1075,8 +1278,8 @@
               <tr>
                 <td data-label="Method family"><strong>Selective rule path</strong></td>
                 <td data-label="Status"><span class="badge paper">Paper now</span></td>
-                <td data-label="Best honest evidence" class="mono">+38.68% holdout • +31.34% WF</td>
-                <td data-label="Read">Only family with positive current frozen holdout evidence and a practical live paper-trade path.</td>
+                <td data-label="Best honest evidence" class="mono">+38.68% holdout • 2024 +0.37% on 109 • 2025 +105.38% on 66 • +31.34% WF</td>
+                <td data-label="Read">Only family with positive current frozen holdout evidence and a practical paper-trade observation path, but the recent path was uneven rather than smooth.</td>
               </tr>
               <tr>
                 <td data-label="Method family"><strong>Harville-ranked probabilities</strong></td>
@@ -1092,6 +1295,7 @@
               </tr>
             </tbody>
           </table>
+          <p class="note" style="margin-top:14px;">The broader selective-family secondary lines elsewhere in the repo are replay context on walk-forward test years, not extra train-only validation.</p>
         </article>
       </div>
 
@@ -1141,7 +1345,7 @@
           <div class="section-top">
             <div>
               <h2>Why the project feels more real now</h2>
-              <p>The strongest practical gain is not a headline stat, it’s that the daily operating path stopped being hand-wavy.</p>
+              <p>The strongest practical gain is not a headline stat, it’s that the daily operating path stopped being hand-wavy. That makes the workflow more reproducible, not newly profitable by itself.</p>
             </div>
           </div>
           <div class="timeline">
@@ -1188,7 +1392,7 @@
             <div class="live-box">
               <span class="status-chip blue">Working now</span>
               <h3 style="margin:10px 0 8px;font-size:28px;">Separate demo lane</h3>
-              <p style="margin:0;color:#d7e1f4;">`demo_live_predictions.py` now handles real available cards without pretending the production OP/CD basket changed.</p>
+              <p style="margin:0;color:#516378;">`demo_live_predictions.py` now handles real available cards without pretending the production OP/CD basket changed.</p>
               <ul style="margin:14px 0 0;padding-left:18px;">
                 <li>Best-live selection mode</li>
                 <li>PLAY / FLOW / PASS labeling</li>
@@ -1200,7 +1404,7 @@
             <div class="live-box">
               <span class="status-chip gold">Today’s best</span>
               <h3 style="margin:10px 0 8px;font-size:28px;">Laurel R9 • +23.24%</h3>
-              <p style="margin:0;color:#d7e1f4;">Encouraging, but still below the alert bar. That is why the watcher stays quiet.</p>
+              <p style="margin:0;color:#516378;">Encouraging, but still below the alert bar. That is why the watcher stays quiet.</p>
               <div class="ladder">
                 <div>
                   <div class="ladder-row"><strong>Best seen today</strong><span class="mono">+23.24%</span></div>

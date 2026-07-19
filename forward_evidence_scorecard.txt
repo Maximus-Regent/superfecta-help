@@ -1,32 +1,108 @@
-====================================================================================================================================
+==========================================================================================================================================================================
 FORWARD EVIDENCE SCORECARD
-Generated: 2026-04-14 23:11
-Rules ranked by forward evidence quality, then bucketed conservatively for deployment.
-====================================================================================================================================
+Generated: 2026-07-17 01:08 CEST
+Generated timezone contract: generated_at must include an explicit timezone label; the default CLI render uses Europe/Zagreb local time so copied scorecard excerpts are not timezone-ambiguous.
+Valid evidence scope: valid_evidence_scope=frozen_holdout_walk_forward_scorecard_only.
+Source scope: frozen 2024-2025 holdout summary + train-only walk-forward folds; bootstrap CI lows are hardcoded inputs with report-fingerprint and source-note provenance.
+Evidence boundary: this is not a live paper-trade ledger; does not consume current-day scanner, settlement-audit, or profitability results.
+Source fingerprints (exact input bytes; same values are copied into the JSON sidecar):
+- frozen_summary: frozen_portfolio_eval_summary.csv (5184 bytes, sha256=98ac5d1cd74861c080e4fc096fe4f3a5bc4102100a950a8186cc9f9c0af9f18d)
+- walk_forward_folds: walk_forward_validation_folds.csv (1424 bytes, sha256=89f1be7dc878f25b52dfe2f4e892ccc4e8c57ea84c6e98c1cbd8442f37a690b8)
+- bootstrap_phase7_report: PHASE7_REPORT.md (20902 bytes, sha256=1883266a6a2d6dc020e91a76ba34d900ce6ac45c13eb8486cc19edf768f67d41)
+- bootstrap_phase8_report: PHASE8_REPORT.md (17762 bytes, sha256=8f4b83bf777570142a9435c71c64e9a514b67bf2981f0006cec759e6858669dc)
+Rules ranked by tier-first conservative decision order, then by forward_trust within tier.
+Rank is not raw-score order: PAPER CD_CORE_K8 intentionally ranks ahead of WATCH OP_REFINED_K7 even though OP_REFINED_K7 has the higher raw Score.
+Main table stays split-aware on purpose so an aggregate holdout ROI does not outrun the year-specific sample support behind it.
+Bootstrap CI lower bounds are hardcoded scorecard inputs with text/CSV/JSON source notes; CD_CORE_K8 is flagged as a legacy hardcoded value that is not printed as a standalone CI line in the Phase 7/8 reports.
+==========================================================================================================================================================================
 
-Rank  Rule                   Ph     HO ROI   HO N   Yrs+     WF   CI Lo   Score Tier     Note
----------------------------------------------------------------------------------------------
-1     OP_DURABLE_K7          P7     +22.9%   115    1/2   7/10   -3.4%   71.0 ANCHOR   best current OP anchor; mixed holdout years (1/2); CI crosses zero
-2     CD_CORE_K8             P7     +56.0%    60    2/2   1/10  -15.0%   65.0 PAPER    positive holdout in both years; low WF selection (1/10); CI crosses zero
-3     OP_REFINED_K7          P8     +51.4%    49    1/2   2/10  +11.2%   66.7 WATCH    small holdout (49); mixed holdout years (1/2); low WF selection (2/10)
-4     DMR_FALL_K7            P8    +103.4%    14    1/1   0/10  -28.8%   55.3 WATCH    small holdout (14); low WF selection (0/10); CI crosses zero
-5     KEE_K9                 P8     +13.3%    20    2/2   3/10   -3.0%   55.0 WATCH    small holdout (20); CI crosses zero
-6     SA_K9                  P8     +39.3%    11    2/2   0/10   -6.3%   50.6 WATCH    small holdout (11); low WF selection (0/10); CI crosses zero
-7     BEL_BROAD1_K7          P7      +0.0%     0    0/0   3/10  +44.4%   27.2 DORMANT  no 2024-2025 forward races
-8     CD_REFINED_K9          P8     -26.2%    16    0/2   7/10  -26.4%   37.4 SKIP     negative holdout; small holdout (16); mixed holdout years (0/2)
-9     AQU_K9                 P8      -4.3%     8    1/2   0/10   +3.1%   36.5 SKIP     negative holdout; small holdout (8); mixed holdout years (1/2)
+Rank  Rule                   Ph     HO ROI   HO N     2024 ROI/N     2025 ROI/N   Yrs+     WF   CI Lo   Score Tier     Note
+---------------------------------------------------------------------------------------------------------------------------
+1     OP_DURABLE_K7          P7     +22.9%   115      -47.4%/68     +124.6%/47    1/2   7/10   -3.4%   71.0 ANCHOR   best current OP anchor; mixed holdout years (1/2); CI crosses zero
+2     CD_CORE_K8             P7     +56.0%    60      +45.6%/41      +78.2%/19    2/2   1/10  -15.0%   65.0 PAPER    positive holdout in both years; low WF selection (1/10); CI crosses zero
+3     OP_REFINED_K7          P8     +51.4%    49      -25.5%/33     +210.0%/16    1/2   2/10  +11.2%   66.7 WATCH    small holdout (49); mixed holdout years (1/2); low WF selection (2/10)
+4     DMR_FALL_K7            P8    +103.4%    14     +103.4%/14        +0.0%/0    1/1   0/10  -28.8%   55.3 WATCH    small holdout (14); low WF selection (0/10); CI crosses zero
+5     KEE_K9                 P8     +13.3%    20       +0.3%/14       +43.8%/6    2/2   3/10   -3.0%   55.0 WATCH    small holdout (20); CI crosses zero
+6     SA_K9                  P8     +39.3%    11       +29.8%/7       +55.9%/4    2/2   0/10   -6.3%   50.6 WATCH    small holdout (11); low WF selection (0/10); CI crosses zero
+7     BEL_BROAD1_K7          P7      +0.0%     0        +0.0%/0        +0.0%/0    0/0   3/10  +44.4%   27.2 DORMANT  no 2024-2025 forward races
+8     CD_REFINED_K9          P8     -26.2%    16      -14.5%/12       -61.1%/4    0/2   7/10  -26.4%   37.4 SKIP     negative holdout; small holdout (16); mixed holdout years (0/2)
+9     AQU_K9                 P8      -4.3%     8       +53.1%/5      -100.0%/3    1/2   0/10   +3.1%   36.5 SKIP     negative holdout; small holdout (8); mixed holdout years (1/2)
+
+HOLDOUT YEAR SPLIT (2024 vs 2025)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Use this when an aggregate holdout ROI looks prettier than the underlying two-year path.
+- OP_DURABLE_K7: 2024 -47.4% on 68 | 2025 +124.6% on 47
+- CD_CORE_K8: 2024 +45.6% on 41 | 2025 +78.2% on 19
+- OP_REFINED_K7: 2024 -25.5% on 33 | 2025 +210.0% on 16
+- DMR_FALL_K7: 2024 +103.4% on 14 | 2025 +0.0% on 0
+- KEE_K9: 2024 +0.3% on 14 | 2025 +43.8% on 6
+- SA_K9: 2024 +29.8% on 7 | 2025 +55.9% on 4
+- BEL_BROAD1_K7: 2024 +0.0% on 0 | 2025 +0.0% on 0
+- CD_REFINED_K9: 2024 -14.5% on 12 | 2025 -61.1% on 4
+- AQU_K9: 2024 +53.1% on 5 | 2025 -100.0% on 3
+
+BOOTSTRAP CI LOWER-BOUND PROVENANCE
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+These values affect the compact score only. They are reproducibility/caution metadata, not fresh forward evidence.
+- OP_DURABLE_K7: -3.4% | report_text_exact | PHASE7_REPORT.md | exact Phase 7 OP report line
+- CD_CORE_K8: -15.0% | legacy_hardcoded_unprinted | forward_evidence_scorecard.py | legacy hardcoded CI lower-bound input; keep as caution metadata, not extracted report proof
+- OP_REFINED_K7: +11.2% | report_text_exact | PHASE8_REPORT.md | exact Phase 8 OP refined report line
+- DMR_FALL_K7: -28.8% | report_text_exact | PHASE8_REPORT.md | exact Phase 8 DMR report line
+- KEE_K9: -3.0% | report_text_exact | PHASE8_REPORT.md | exact Phase 8 KEE report line
+- SA_K9: -6.3% | report_text_exact | PHASE8_REPORT.md | exact Phase 8 SA rule-table report line
+- BEL_BROAD1_K7: +44.4% | report_text_exact | PHASE7_REPORT.md | exact Phase 7 broadened-rule report line
+- CD_REFINED_K9: -26.4% | report_text_exact | PHASE8_REPORT.md | exact Phase 8 CD refined report line
+- AQU_K9: +3.1% | report_text_exact | PHASE8_REPORT.md | exact Phase 8 AQU report line
+
+CI-ONLY PROMOTION CHECK
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Use this when a positive bootstrap CI lower bound starts to look like a decision trigger.
+- OP_REFINED_K7: positive CI lower bound (+11.2%) is support context only; ci_only_promotion_allowed=false.
+  It remains WATCH because the holdout sample is 49 vs OP_DURABLE_K7's 115, 2024 was losing, walk-forward recurrence is 2/10 vs 7/10, and the separate 20-row promotion-review / 30-row anchor-displacement paper-observation gates are uncleared.
+
+WATCH-LIST TRIAGE (shadow only, not a promotion queue)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Use this when a WATCH rule's aggregate holdout ROI starts to look stronger than the sample behind it.
+Rule                     HO N     2024 ROI/N     2025 ROI/N     WF Why still WATCH
+----------------------------------------------------------------------------------
+OP_REFINED_K7              49      -25.5%/33     +210.0%/16   2/10 closest OP challenger, but mixed years and only 49 forward races
+DMR_FALL_K7                14     +103.4%/14        +0.0%/0   0/10 only 1 observed holdout year so far; no train-only support yet
+KEE_K9                     20       +0.3%/14       +43.8%/6   3/10 clean two-year sign, but still only 20 forward races and CI crosses zero
+SA_K9                      11       +29.8%/7       +55.9%/4   0/10 clean two-year sign, but still only 11 forward races and CI crosses zero
+
+Bottom line: OP_REFINED_K7 is the closest shadow challenger because it stays inside the strongest current family,
+but none of the WATCH rules has enough forward support to displace OP_DURABLE_K7 or join the primary paper basket yet.
+
+DECISION-CHANGE GATES (what would actually change the tiers)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Use this section to avoid treating a pretty score, clean rebuild, or empty live run as posture-changing proof.
+Machine-readable threshold summary (also copied into the JSON sidecar): anchor_displacement=30 ROI-complete same-candidate settled observations; phase8_promotion_review=20 ROI-complete shadow observations; real_money_discussion=100 total settled observations with usable ROI.
+- anchor_displacement: Keep OP_DURABLE_K7 as the safest current anchor.
+  Would change only if: A challenger needs 30+ ROI-complete settled paper observations plus a cleaner split-aware forward read than the OP anchor before any anchor-review discussion.
+  Does not count: Historical replay rows, clean empty scans, open paper signals, source fingerprints, or green validators do not count as new anchor-changing evidence.
+- primary_companion: Keep CD_CORE_K8 as the primary OP/CD paper-basket companion, not an anchor replacement and not a Phase 8 shadow-lane promotion.
+  Would change only if: Changing companion status needs ROI-complete settled OP/CD paper evidence or a new frozen-standard evaluation input, not a wording-only or compatibility-key change.
+  Does not count: The legacy primary_shadow key, a regenerated scorecard, or a validation pass by itself does not prove promotion readiness or live profitability.
+- phase8_promotion_review: Keep OP_REFINED_K7 and the rest of Phase 8 in shadow/watch mode.
+  Would change only if: Promotion review needs 20+ ROI-complete settled shadow observations for the candidate with complete ROI coverage and cleaner split-aware/walk-forward support than the current anchor/companion pair.
+  Does not count: A hotter small-sample aggregate holdout ROI or a WATCH label does not make the rule promotion-ready.
+- real_money_discussion: Keep this as paper-trade observation, not a real-money claim.
+  Would change only if: Real-money discussion waits for 100+ total settled paper observations with usable ROI coverage, concentration checks, payout sanity checks, and no BAQ-as-BEL substitution.
+  Does not count: Frozen holdout P&L, daily top-card readiness, clean validators, or empty/no-target wrapper runs are not real-money evidence.
 
 ------------------------------------------------------------------------------------------------------------------------------------
 LEGEND:
   HO ROI / HO N = 2024-2025 holdout ROI and race count
+  2024 ROI/N    = year-specific holdout ROI and race count for 2024
+  2025 ROI/N    = year-specific holdout ROI and race count for 2025
   Yrs+          = profitable holdout years / observed holdout years (2024, 2025)
   WF            = walk-forward folds selected / total folds
-  CI Lo         = bootstrap 95% CI lower bound from report text
-  Score         = forward-trust ordering score, not an automatic deployment instruction
-  Tier          = ANCHOR (safest current live-paper anchor), PAPER (paper trade now),
+  CI Lo         = bootstrap 95% CI lower bound from scorecard source notes
+  Score         = forward_trust score used inside a tier; rank is tier-first and not raw-score order
+  Tier          = ANCHOR (safest current paper anchor), PAPER (paper trade now),
                   WATCH (shadow only / not enough evidence), DORMANT (no forward races), SKIP (negative holdout)
 
 KEY INSIGHT: OP_DURABLE_K7 is the safest anchor because it has the largest real holdout sample
 plus the strongest walk-forward selection frequency. Small-sample Phase 8 winners stay in WATCH until
 they earn more forward races.
-------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------

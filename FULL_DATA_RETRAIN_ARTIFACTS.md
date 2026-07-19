@@ -1,7 +1,16 @@
 # Full Data Retrain Artifacts
 
 ## Status
-Completed successfully end-to-end on `14years.csv`.
+Completed successfully end-to-end on `14years.csv` as a model-fit / research artifact.
+
+## Evidence boundary
+- Valid evidence scope: `valid_evidence_scope=full_data_xgboost_retrain_model_fit_diagnostic_only`.
+- This file documents a full-data XGBoost retrain and its saved artifacts; it is not a paper-trade signal, current-day scanner output, settled ROI, live-profitability evidence, promotion readiness, bankroll guidance, or real-money evidence.
+- The payout RMSE / MAE improvements below are model-fit diagnostics only. They do not reopen the current odds-only XGBoost betting path or change the current paper hierarchy by themselves.
+- For the deployment read, use `compare_main_approaches.md`, `OP_ANCHOR_METHOD_COMPARISON.md`, and `AB_DOWNSTREAM_COMPARISON.md`: the selective OP/CD rule path remains the paper path, Harville remains benchmark-only, and XGBoost remains research-only unless its evidence class changes materially and produces downstream betting pass-through plus settled paper observations.
+- Current bridge rebuild route for source-byte changes before quoting current paper context: `current_evidence_summary.json.rebuild_validation_contract` routes through `python3 paper_trade_settlement_audit.py` -> `python3 current_evidence_summary.py` -> `python3 validate_current_evidence_summary.py` as provenance/rebuild metadata only; it is not full-data retrain evidence, settled ROI, promotion readiness, live profitability, bankroll guidance, or real-money evidence.
+- Machine-readable validation boundary: `out/status_validation/full_data_retrain_artifacts/full_data_retrain_artifacts_validation.json` publishes `evidence_boundary_metadata.artifact_role=full-data XGBoost retrain diagnostic metadata`.
+- Validate this artifact's boundary with `python3 validate_full_data_retrain_artifacts.py`.
 
 ## Exact training command run
 ```bash
@@ -16,6 +25,8 @@ python3 -u XGBoost/train_test_residual.py \
 ```
 
 ## Key metrics
+These are model-fit diagnostics, not betting-edge evidence.
+
 - Valid races loaded before outlier trim: 559,786
 - Final training dataset: 552,927 races
 - Feature count: 55
@@ -49,7 +60,7 @@ python3 -u XGBoost/train_test_residual.py \
 - Added metrics JSON output
 
 ## Recommended next prediction command
-Replace `path/to/single_race.csv` with the horse-level CSV for one target race.
+Diagnostic/research use only: replace `path/to/single_race.csv` with the horse-level CSV for one target race. Do not route this output into the paper-trade path without a separate evidence-class review.
 
 ```bash
 cd "/Users/maximusregent_ai/Shared/Superfecta Help"

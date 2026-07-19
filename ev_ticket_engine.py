@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -41,6 +41,29 @@ DEFAULT_MIN_PROB = 0.0005
 DEFAULT_MAX_TICKETS = 4
 DEFAULT_MAX_RACE_RISK = 0.02
 DEFAULT_MAX_TICKET_RISK = 0.0075
+EV_TICKET_ENGINE_VALID_EVIDENCE_SCOPE = "ev_ticket_stake_sizing_metadata_only"
+EV_TICKET_ENGINE_BOUNDARY_TEXT = (
+    "EV ticket-engine output is source-layer paper stake-sizing metadata only; it is not a current-day "
+    "scanner result, not a live paper-trade ledger, not settled ROI evidence, not promotion readiness, "
+    "not live-profitability evidence, and not real-money support. BET plans remain hypothetical paper "
+    "sizing candidates until the recommender, logger, settlement sync, actual result, return, cost, "
+    "settled_ts, and later audit or forward-check review are complete."
+)
+EV_TICKET_ENGINE_EVIDENCE_BOUNDARY = {
+    "artifact_role": "EV ticket-engine stake plan",
+    "valid_use": "source-layer paper stake-sizing metadata before recommendation, ledger, and settlement review",
+    "not_current_day_scanner_result": True,
+    "not_live_paper_trade_ledger": True,
+    "not_settled_roi_evidence": True,
+    "not_promotion_readiness_evidence": True,
+    "not_live_profitability_evidence": True,
+    "not_real_money_evidence": True,
+    "requires_recommender_context_before_paper_plan": True,
+    "requires_logger_append_before_ledger_row": True,
+    "requires_settlement_sync_before_open_settlement_row": True,
+    "requires_actual_result_return_cost_and_settled_ts_before_roi_complete": True,
+    "requires_later_audit_or_forward_check_review_before_sample_gate_use": True,
+}
 
 
 @dataclass
@@ -74,6 +97,9 @@ class RacePlan:
     total_expected_profit: float
     portfolio_expected_roi_pct: float
     tickets: list[dict[str, Any]]
+    valid_evidence_scope: str = EV_TICKET_ENGINE_VALID_EVIDENCE_SCOPE
+    evidence_boundary_text: str = EV_TICKET_ENGINE_BOUNDARY_TEXT
+    evidence_boundary: dict[str, Any] = field(default_factory=lambda: dict(EV_TICKET_ENGINE_EVIDENCE_BOUNDARY))
 
 
 def _round_down(value: float, increment: float) -> float:
@@ -285,6 +311,8 @@ def build_race_plan(df: pd.DataFrame, config: EngineConfig) -> RacePlan:
             ticket_rows[col] = ticket_rows[col].map(
                 lambda x: round(float(x), 6) if pd.notna(x) else x
             )
+    ticket_rows["valid_evidence_scope"] = EV_TICKET_ENGINE_VALID_EVIDENCE_SCOPE
+    ticket_rows["evidence_boundary_text"] = EV_TICKET_ENGINE_BOUNDARY_TEXT
 
     return RacePlan(
         decision="BET",
@@ -307,6 +335,8 @@ def format_plan(plan: RacePlan) -> str:
         f"EV ticket plan for {plan.race_label}",
         f"Decision: {plan.decision}",
         f"Reason: {plan.reason}",
+        f"valid_evidence_scope={plan.valid_evidence_scope}",
+        f"Evidence boundary: {plan.evidence_boundary_text}",
         f"Bankroll: ${plan.bankroll:,.2f} | Race risk budget: ${plan.race_risk_budget:,.2f}",
         f"Tickets considered: {plan.tickets_considered} | selected: {plan.tickets_selected}",
     ]

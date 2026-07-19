@@ -3,7 +3,7 @@
   "notes": [
     "Conservative OP-first anchor ruleset for live scanning and paper trading.",
     "Use this when you want the safest current forward-evidence entrypoint, not the broadest research coverage.",
-    "Rationale: OP_DURABLE_K7 has the largest 2024-2025 holdout sample among active rules and the strongest walk-forward selection frequency.",
+    "Rationale: OP_DURABLE_K7 has the largest 2024-2025 OP holdout sample among current candidates and the strongest walk-forward selection frequency.",
     "No unsupported track aliasing is applied. BAQ is not treated as BEL."
   ],
   "rules": [

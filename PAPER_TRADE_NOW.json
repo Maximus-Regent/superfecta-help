@@ -1,0 +1,358 @@
+{
+  "run_root": "out/daily_portfolio_runs/2026-07-19",
+  "run_date": "2026-07-19",
+  "run_freshness": {
+    "run_date": "2026-07-19",
+    "as_of_date": "2026-07-19",
+    "age_days": 0,
+    "is_stale": false,
+    "freshness_state": "current_run_date",
+    "summary": "Latest run date matches the as-of date (`2026-07-19`), so this top card is current for today."
+  },
+  "stale_snapshot_note": null,
+  "preflight_note": "Preflight context: no primary paper-basket target tracks (OP / CD) are racing today across 55 NYRA card(s). Shadow-only tracks present: DMR.",
+  "preflight_note_path": "out/daily_portfolio_runs/2026-07-19/preflight_note.txt",
+  "preflight_excluded_tracks": [],
+  "preflight_excluded_track_count": 0,
+  "preflight_excluded_track_summary": "",
+  "daily_summary": "out/daily_portfolio_runs/2026-07-19/daily_summary.txt",
+  "settlement_audit": "out/paper_trade_settlement_audit.md",
+  "shadow_settlement_audit_promotion_gate": "Shadow/watch phase8_promotion_review gate is per-rule: every expected shadow rule needs 20 ROI-complete settled row(s) before review; the 20-row count is a review floor, not a promotion entitlement; lane totals alone do not promote OP_REFINED_K7 or any other Phase 8 pocket; scorecard tiers remain binding (forward_evidence_scorecard.json); negative-holdout/SKIP rules still need cleaner split-aware evidence before any promotion discussion; weakest current rule coverage is 0/20.",
+  "shadow_settlement_audit_rule_progress": "OP_REFINED_K7 (WATCH) 0/20 (0.0%); AQU_K9 (SKIP) 0/20 (0.0%); SA_K9 (WATCH) 0/20 (0.0%); KEE_K9 (WATCH) 0/20 (0.0%); CD_REFINED_K9 (SKIP) 1/20 (5.0%); DMR_FALL_K7 (WATCH) 0/20 (0.0%)",
+  "best_action": {
+    "headline": "Stand down, no OP / CD target action tonight",
+    "lane_key": "primary",
+    "lane": "Phase 7 current paper lane",
+    "command": "python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json",
+    "why": "Latest ops bucket is NO TARGETS, so the quiet primary lane is explained by the race calendar, not by a rules miss. This is 5 straight no-target days at the top of the ops log.",
+    "timing": "next OP / CD race day"
+  },
+  "operator_read_gate": {
+    "valid_use": "operator instruction/evidence-read gating only",
+    "gate_status": "operator_action_routing_only",
+    "requires_refresh_before_evidence_read": false,
+    "requires_settlement_or_roi_repair_before_forward_read": false,
+    "has_api_access_failure_context": false,
+    "has_scanner_failure_boundary": false,
+    "has_stale_cache_fallback_context": false,
+    "recommended_command": "python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json",
+    "reasons": [
+      "single-action operator routing only"
+    ],
+    "read": "Use this as a single-action operator routing card only; performance movement still requires ROI-complete settlements and the dedicated forward-check/settlement-audit reads.",
+    "current_top_card_counts_as_no_target_evidence": false,
+    "current_top_card_counts_as_clean_empty_evidence": false,
+    "current_top_card_counts_as_bet_readiness_evidence": false,
+    "current_top_card_counts_as_settled_roi_evidence": false,
+    "not_forward_performance_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_bankroll_guidance": true,
+    "not_real_money_evidence": true
+  },
+  "valid_evidence_scope": "operator_action_routing_only",
+  "evidence_boundary": {
+    "artifact_role": "paper-trade right-now operator action-priority top card",
+    "valid_evidence_scope": "operator_action_routing_only",
+    "not_new_forward_evidence": true,
+    "not_settled_roi_evidence": true,
+    "not_live_profitability_evidence": true,
+    "not_promotion_readiness_evidence": true,
+    "not_anchor_displacement_evidence": true,
+    "not_real_money_evidence": true,
+    "decision_gate_advancement_requires_roi_complete_settlements": true,
+    "boundary_text": "PAPER_TRADE_NOW is a single-action operator top card driven by current run artifacts and frozen hierarchy metadata; it is not new forward evidence, settled ROI evidence, live profitability evidence, promotion readiness evidence, anchor-displacement evidence, or real-money evidence."
+  },
+  "action_priority_contract": {
+    "contract": "single_best_operator_action",
+    "primary_action_field": "best_action",
+    "freshness_field": "run_freshness",
+    "stale_context_field": "stale_snapshot_note",
+    "boundary_field": "evidence_boundary",
+    "source_fields": [
+      "preflight_note",
+      "primary",
+      "shadow",
+      "ops",
+      "settlement_audit",
+      "active_decision_gates",
+      "live_hierarchy",
+      "operator_read_gate"
+    ],
+    "action_contract_text": "Single best-action routing only: read `best_action` with `run_freshness` / `stale_snapshot_note` before treating lane context as current; the card routes settlement, refresh, stand-down, or forward-check next steps but does not advance decision gates by itself."
+  },
+  "evidence_frame": {
+    "label": "Operational priority surface",
+    "summary": "This card is an operational priority read, not a profit-proof or CI-backed forward-validation surface.",
+    "detail": "The action is driven by current run artifacts (preflight note, pipeline/scanner status, ledger coverage, and ops streaks), while the lane hierarchy is inherited from the frozen evidence standard: OP_DURABLE_K7 as anchor, CD_CORE_K8 as the primary OP/CD paper-basket companion (not a Phase 8 shadow-lane promotion), and OP_REFINED_K7 as the closest shadow-lane challenger, while KEE_K9 / SA_K9 / DMR_FALL_K7 remain observation-only pockets rather than promotion candidates. The broader selective-family secondary lines stay replay context on walk-forward test years, not extra train-only validation.",
+    "limitation": "Treat this as an operator runbook for what to do next; forward performance still needs settled paper trades before the lane says anything new about live edge."
+  },
+  "decision_gate_minimums": {
+    "source_path": "forward_evidence_scorecard.json",
+    "source_loaded": true,
+    "fallback_used": false,
+    "fallback_reason": "",
+    "anchor_displacement_min_roi_complete_settled_observations": 30,
+    "phase8_promotion_review_min_roi_complete_settled_observations": 20,
+    "real_money_discussion_min_total_settled_observations_with_usable_roi": 100,
+    "real_money_discussion_also_requires": [
+      "positive paper ROI",
+      "concentration checks",
+      "payout-distribution sanity checks",
+      "no BAQ-as-BEL substitution"
+    ],
+    "real_money_no_baq_as_bel_required": true,
+    "active_first_read_gate": "anchor_displacement",
+    "active_first_read_gate_key": "anchor_displacement_min_roi_complete_settled_observations",
+    "active_min_settled": 30,
+    "active_portfolio_review_settled": 100,
+    "cli_overrides": {},
+    "alignment_read": "forward-check sample milestones are source-matched to forward_evidence_scorecard.json decision_gate_minimums using anchor_displacement for this lane"
+  },
+  "active_decision_gates": {
+    "source_path": "forward_evidence_scorecard.json",
+    "source_loaded": true,
+    "fallback_used": false,
+    "min_settled": 30,
+    "portfolio_review_settled": 100,
+    "primary_min_settled": 30,
+    "shadow_min_settled": 20,
+    "primary_portfolio_review_settled": 100,
+    "shadow_portfolio_review_settled": 100,
+    "first_read_gate_parity": false,
+    "portfolio_review_gate_parity": true,
+    "primary_shadow_gate_parity": false,
+    "alignment_read": "right-now action gates are source-matched to forward_evidence_scorecard.json decision_gate_minimums"
+  },
+  "live_hierarchy": {
+    "current_anchor": "OP_DURABLE_K7",
+    "primary_shadow": "CD_CORE_K8",
+    "primary_companion": "CD_CORE_K8",
+    "primary_companion_note": "CD_CORE_K8 is in the primary OP/CD paper-basket, not the Phase 8 shadow/watch lane.",
+    "secondary_shadow": "OP_REFINED_K7",
+    "observation_only_pockets": [
+      "KEE_K9",
+      "SA_K9",
+      "DMR_FALL_K7"
+    ]
+  },
+  "primary": {
+    "valid_evidence_scope": "paper_trade_next_step_action_routing_only",
+    "evidence_boundary": {
+      "valid_evidence_scope": "paper_trade_next_step_action_routing_only",
+      "artifact_role": "paper-trade next-steps source output",
+      "valid_use": "operator action routing for settlement, refresh, repair, and sample-readiness commands",
+      "not_new_forward_evidence": true,
+      "not_current_day_scanner_result": true,
+      "not_live_paper_trade_ledger": true,
+      "not_settled_roi_evidence": true,
+      "not_promotion_readiness_evidence": true,
+      "not_live_profitability_evidence": true,
+      "not_real_money_evidence": true,
+      "baq_as_bel_substitution_allowed": false
+    },
+    "evidence_boundary_text": "Next-steps output is operator action-routing metadata only: exact commands, settlement/refresh/repair guidance, sample-readiness wording, issue routing, and scorecard gate visibility are not scanner evidence, live paper-trade ledger evidence, settled ROI, promotion readiness, live profitability, real-money support, or BAQ-as-BEL evidence.",
+    "lane_label": "Phase 7 current paper lane",
+    "state": "COLLECTING SAMPLE",
+    "why": "There are 6 ROI-complete settled races (6 outcome-settled), which is still below the first statistical-read threshold of 30 (24 more needed). The broader portfolio review gate is still 6/100, so keep refreshing the lane read but do not treat it as promotion-grade evidence yet.",
+    "assessment": "TOO EARLY",
+    "settled": 6,
+    "open": 0,
+    "open_settlements": 0,
+    "incomplete_settlements": 0,
+    "roi_gap_settlements": 0,
+    "roi_gap_reason_summary": "missing return/cost/timestamp coverage",
+    "roi_covered_settled": 6,
+    "roi_missing_settled": 0,
+    "min_settled": 30,
+    "portfolio_review_settled": 100,
+    "decision_gate_minimums": {
+      "source_path": "forward_evidence_scorecard.json",
+      "source_loaded": true,
+      "fallback_used": false,
+      "fallback_reason": "",
+      "anchor_displacement_min_roi_complete_settled_observations": 30,
+      "phase8_promotion_review_min_roi_complete_settled_observations": 20,
+      "real_money_discussion_min_total_settled_observations_with_usable_roi": 100,
+      "real_money_discussion_also_requires": [
+        "positive paper ROI",
+        "concentration checks",
+        "payout-distribution sanity checks",
+        "no BAQ-as-BEL substitution"
+      ],
+      "real_money_no_baq_as_bel_required": true,
+      "active_first_read_gate": "anchor_displacement",
+      "active_first_read_gate_key": "anchor_displacement_min_roi_complete_settled_observations",
+      "active_min_settled": 30,
+      "active_portfolio_review_settled": 100,
+      "cli_overrides": {},
+      "alignment_read": "forward-check sample milestones are source-matched to forward_evidence_scorecard.json decision_gate_minimums using anchor_displacement for this lane"
+    },
+    "decision_gate_caution": "",
+    "sample_progress": {
+      "first_read": {
+        "threshold": 30,
+        "current": 6,
+        "ready": false,
+        "remaining": 24,
+        "pct_complete": 20.0
+      },
+      "portfolio_review": {
+        "threshold": 100,
+        "current": 6,
+        "ready": false,
+        "remaining": 94,
+        "pct_complete": 6.0
+      }
+    },
+    "recent_run_context": "Latest run context: the latest live scan completed cleanly and found no qualifying races across 55 card(s) and 488 race(s).",
+    "scanner_failure_operator_action": null,
+    "scanner_failure_recheck_command": null,
+    "has_api_access_failure_context": false,
+    "has_scanner_failure_boundary": false,
+    "has_stale_cache_fallback_context": false,
+    "operator_read_gate_issue_flags": {
+      "has_api_access_failure_context": false,
+      "has_scanner_failure_boundary": false,
+      "has_stale_cache_fallback_context": false
+    },
+    "status_artifact_issue": null,
+    "preflight_note": "Preflight context: no primary paper-basket target tracks (OP / CD) are racing today across 55 NYRA card(s). Shadow-only tracks present: DMR.",
+    "commands": [
+      "python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json",
+      "python3 paper_trade_forward_check.py --signals-ledger paper_trades/phase7_current_paper_paper_trade_signals.csv --recommendation-ledger paper_trades/phase7_current_paper_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase7_current_paper_paper_trade_settlements.csv --rules phase7_current_paper_rules.json",
+      "./run_daily_portfolio_observation.sh"
+    ],
+    "files": {
+      "signals_ledger": "paper_trades/phase7_current_paper_paper_trade_signals.csv",
+      "recommendation_ledger": "paper_trades/phase7_current_paper_paper_trade_recommendations.csv",
+      "settlement_ledger": "paper_trades/phase7_current_paper_paper_trade_settlements.csv",
+      "rules": "phase7_current_paper_rules.json"
+    },
+    "lane_key": "primary",
+    "lane_name": "phase7_current_paper",
+    "lane_dir": "out/daily_portfolio_runs/2026-07-19/phase7_current_paper",
+    "next_steps_md": "out/daily_portfolio_runs/2026-07-19/phase7_current_paper/next_steps.md",
+    "lane_monitor_md": "out/daily_portfolio_runs/2026-07-19/phase7_current_paper/lane_monitor.md",
+    "forward_check_md": "out/daily_portfolio_runs/2026-07-19/phase7_current_paper/forward_check.md",
+    "summary_txt": "out/daily_portfolio_runs/2026-07-19/phase7_current_paper/summary.txt",
+    "pipeline_status_json": "out/daily_portfolio_runs/2026-07-19/phase7_current_paper/pipeline_status.json",
+    "scanner_status_json": "out/daily_portfolio_runs/2026-07-19/phase7_current_paper/live_scan.status.json"
+  },
+  "shadow": {
+    "valid_evidence_scope": "paper_trade_next_step_action_routing_only",
+    "evidence_boundary": {
+      "valid_evidence_scope": "paper_trade_next_step_action_routing_only",
+      "artifact_role": "paper-trade next-steps source output",
+      "valid_use": "operator action routing for settlement, refresh, repair, and sample-readiness commands",
+      "not_new_forward_evidence": true,
+      "not_current_day_scanner_result": true,
+      "not_live_paper_trade_ledger": true,
+      "not_settled_roi_evidence": true,
+      "not_promotion_readiness_evidence": true,
+      "not_live_profitability_evidence": true,
+      "not_real_money_evidence": true,
+      "baq_as_bel_substitution_allowed": false
+    },
+    "evidence_boundary_text": "Next-steps output is operator action-routing metadata only: exact commands, settlement/refresh/repair guidance, sample-readiness wording, issue routing, and scorecard gate visibility are not scanner evidence, live paper-trade ledger evidence, settled ROI, promotion readiness, live profitability, real-money support, or BAQ-as-BEL evidence.",
+    "lane_label": "Phase 8 shadow lane",
+    "state": "COLLECTING SAMPLE",
+    "why": "There are 1 ROI-complete settled races (1 outcome-settled), which is still below the first statistical-read threshold of 20 (19 more needed). The broader portfolio review gate is still 1/100, so keep refreshing the lane read but do not treat it as promotion-grade evidence yet. Phase 8 shadow first-read status is a review floor, not a promotion entitlement; lane totals alone do not promote any Phase 8 pocket, scorecard tiers remain binding, and negative-holdout/SKIP rules still need cleaner split-aware evidence before any promotion discussion.",
+    "assessment": "TOO EARLY",
+    "settled": 1,
+    "open": 0,
+    "open_settlements": 0,
+    "incomplete_settlements": 0,
+    "roi_gap_settlements": 0,
+    "roi_gap_reason_summary": "missing return/cost/timestamp coverage",
+    "roi_covered_settled": 1,
+    "roi_missing_settled": 0,
+    "min_settled": 20,
+    "portfolio_review_settled": 100,
+    "decision_gate_minimums": {
+      "source_path": "forward_evidence_scorecard.json",
+      "source_loaded": true,
+      "fallback_used": false,
+      "fallback_reason": "",
+      "anchor_displacement_min_roi_complete_settled_observations": 30,
+      "phase8_promotion_review_min_roi_complete_settled_observations": 20,
+      "real_money_discussion_min_total_settled_observations_with_usable_roi": 100,
+      "real_money_discussion_also_requires": [
+        "positive paper ROI",
+        "concentration checks",
+        "payout-distribution sanity checks",
+        "no BAQ-as-BEL substitution"
+      ],
+      "real_money_no_baq_as_bel_required": true,
+      "active_first_read_gate": "phase8_promotion_review",
+      "active_first_read_gate_key": "phase8_promotion_review_min_roi_complete_settled_observations",
+      "active_min_settled": 20,
+      "active_portfolio_review_settled": 100,
+      "cli_overrides": {},
+      "alignment_read": "forward-check sample milestones are source-matched to forward_evidence_scorecard.json decision_gate_minimums using phase8_promotion_review for this lane"
+    },
+    "decision_gate_caution": "Phase 8 shadow first-read status is a review floor, not a promotion entitlement; lane totals alone do not promote any Phase 8 pocket, scorecard tiers remain binding, and negative-holdout/SKIP rules still need cleaner split-aware evidence before any promotion discussion.",
+    "sample_progress": {
+      "first_read": {
+        "threshold": 20,
+        "current": 1,
+        "ready": false,
+        "remaining": 19,
+        "pct_complete": 5.0
+      },
+      "portfolio_review": {
+        "threshold": 100,
+        "current": 1,
+        "ready": false,
+        "remaining": 99,
+        "pct_complete": 1.0
+      }
+    },
+    "recent_run_context": "Latest run context: the latest live scan completed cleanly and found no qualifying races across 55 card(s) and 488 race(s).",
+    "scanner_failure_operator_action": null,
+    "scanner_failure_recheck_command": null,
+    "has_api_access_failure_context": false,
+    "has_scanner_failure_boundary": false,
+    "has_stale_cache_fallback_context": false,
+    "operator_read_gate_issue_flags": {
+      "has_api_access_failure_context": false,
+      "has_scanner_failure_boundary": false,
+      "has_stale_cache_fallback_context": false
+    },
+    "status_artifact_issue": null,
+    "preflight_note": "Preflight context: no primary paper-basket target tracks (OP / CD) are racing today across 55 NYRA card(s). Shadow-only tracks present: DMR.",
+    "commands": [
+      "python3 paper_trade_lane_monitor.py --signals-ledger paper_trades/phase8_shadow_paper_trade_signals.csv --recommendation-ledger paper_trades/phase8_shadow_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase8_shadow_paper_trade_settlements.csv --rules phase8_shadow_rules.json",
+      "python3 paper_trade_forward_check.py --signals-ledger paper_trades/phase8_shadow_paper_trade_signals.csv --recommendation-ledger paper_trades/phase8_shadow_paper_trade_recommendations.csv --settlement-ledger paper_trades/phase8_shadow_paper_trade_settlements.csv --rules phase8_shadow_rules.json",
+      "./run_daily_portfolio_observation.sh"
+    ],
+    "files": {
+      "signals_ledger": "paper_trades/phase8_shadow_paper_trade_signals.csv",
+      "recommendation_ledger": "paper_trades/phase8_shadow_paper_trade_recommendations.csv",
+      "settlement_ledger": "paper_trades/phase8_shadow_paper_trade_settlements.csv",
+      "rules": "phase8_shadow_rules.json"
+    },
+    "lane_key": "shadow",
+    "lane_name": "phase8_shadow",
+    "lane_dir": "out/daily_portfolio_runs/2026-07-19/phase8_shadow",
+    "next_steps_md": "out/daily_portfolio_runs/2026-07-19/phase8_shadow/next_steps.md",
+    "lane_monitor_md": "out/daily_portfolio_runs/2026-07-19/phase8_shadow/lane_monitor.md",
+    "forward_check_md": "out/daily_portfolio_runs/2026-07-19/phase8_shadow/forward_check.md",
+    "summary_txt": "out/daily_portfolio_runs/2026-07-19/phase8_shadow/summary.txt",
+    "pipeline_status_json": "out/daily_portfolio_runs/2026-07-19/phase8_shadow/pipeline_status.json",
+    "scanner_status_json": "out/daily_portfolio_runs/2026-07-19/phase8_shadow/live_scan.status.json"
+  },
+  "ops": {
+    "day_bucket": "NO TARGETS",
+    "takeaway": "No active OP/CD cards. Empty primary lane is expected, not evidence of a miss.",
+    "streaks": {
+      "no_target": 5,
+      "active_zero_hit": 0,
+      "active_limited_coverage": 0,
+      "active_limited_coverage_with_activity": 0,
+      "active_hit_found": 0,
+      "issue": 0
+    },
+    "ops_history_md": "OPS_HISTORY.md"
+  }
+}

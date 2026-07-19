@@ -1,5 +1,15 @@
 # Sample-Size-Aware Selector Experiment
 
+## Current Evidence Boundary
+
+- This is historical selector-tuning research on frozen walk-forward artifacts. It is useful for understanding why races-factor tuning did not beat `sqrt_r150`, but it is not a live paper-trade ledger, settled ROI evidence, promotion readiness, live profitability, bankroll guidance, or real-money evidence.
+- Valid evidence scope: `valid_evidence_scope=sample_size_selector_replay_diagnostic_only`.
+- Valid use: compare selector-scoring variants against the original +22.46% train-only selector and the prior `sqrt_r150` benchmark. Do not treat the `keep sqrt_r150` recommendation as permission to change the current paper basket or override `forward_evidence_scorecard.txt`.
+- Current posture still comes from the frozen scorecard plus paper-observation lane: keep `OP_DURABLE_K7` as the safest anchor, `CD_CORE_K8` as the primary OP/CD paper-basket companion, and `OP_REFINED_K7` in shadow/watch until ROI-complete paper evidence clears the scorecard gates.
+- The always-CD_CORE counterfactual and selector variants are replay diagnostics on already-mined candidate rules, not a fresh from-scratch discovery loop and not proof that CD_CORE should displace OP as anchor evidence.
+- If this selector-research report is regenerated after scorecard/rules/signals/settlement-ledger byte changes, follow `current_evidence_summary.json.rebuild_validation_contract`: `python3 paper_trade_settlement_audit.py` -> `python3 current_evidence_summary.py` -> `python3 validate_current_evidence_summary.py`; this rebuild route is provenance metadata only, not settled ROI, promotion readiness, live profitability, bankroll guidance, or real-money evidence.
+- Do not substitute `BAQ` for dormant `BEL`, and validate this boundary with `python3 validate_sample_size_experiment_caution.py`.
+
 ## Purpose
 
 Test whether adjusting the races factor / sample-size bonus in the

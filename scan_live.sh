@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Cron-safe wrapper for the Phase 7 live portfolio scanner.
+# Cron-safe wrapper for the Phase 7 current-paper scanner.
 # Logs output, handles failures gracefully, optionally posts to Discord.
 #
 # Usage:

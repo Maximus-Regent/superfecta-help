@@ -1,5 +1,14 @@
 # Walk-Forward Validation
 
+## Current Evidence Boundary
+
+- This is a historical train-only selector benchmark, not a live paper-trade ledger, current-day scanner output, settled ROI evidence, promotion readiness, live profitability, bankroll guidance, or real-money evidence.
+- Valid evidence scope: `valid_evidence_scope=train_only_walk_forward_selector_benchmark_only`.
+- Valid use: compare stricter train-only rule selection against fixed Phase 7 / Phase 8 replays and explain why the honest forward expectation is lower than full-sample discovery headlines.
+- Limitation: the candidate universe was still mined from previous full-sample research before this walk-forward, so the +22.46% selector result is useful but still optimistic versus a true from-scratch yearly rediscovery loop.
+- Current operator posture still comes from the frozen scorecard and current paper-observation lane: keep `OP_DURABLE_K7` as the safest anchor, `CD_CORE_K8` as the primary OP/CD paper-basket companion, and `OP_REFINED_K7` shadow/watch until forward paper gates are met.
+- The fixed Phase 7 / Phase 8 comparison below is replay context on the same test years, not extra train-only validation, and the BEL->BAQ bridge rows are a coverage diagnostic only. Do not substitute BAQ for dormant BEL.
+
 ## What This Is
 
 - Candidate universe: existing promoted rules from `phase7_live_rules.json` and the frozen Phase 8 rules.
@@ -28,7 +37,7 @@
 
 ## Full-Sample-Mined Portfolio Comparison
 
-- Fixed Phase 7 live portfolio over the same test years: +31.34% ROI on 806 races, 9/10 positive years.
+- Fixed Phase 7 current-paper rule portfolio over the same test years: +31.34% ROI on 806 races, 9/10 positive years.
 - Fixed Phase 8 frozen portfolio over the same test years: +48.39% ROI on 579 races, 9/10 positive years.
 - Train-only selection result: +22.46% ROI on 470 races, 8/10 positive years.
 
